@@ -12,7 +12,7 @@ This is a playground for:
 - Novel approaches to pattern recognition
 - Creative problem-solving strategies
 - Experimental algorithms and architectures
-- Unconventional solutions to visual reasoning tasks
+- Unconventional solutions and fun approaches
 
 ## Getting Started
 
