@@ -13,10 +13,10 @@ We formalize **human-like curiosity** as a first-class decision signal in a neur
 
 ## 1) Curiosity: The Core Principle
 
-Humans aren’t maximally novelty-seeking; we’re drawn to **learnable novelty**—situations that promise progress. Define curiosity as
-\[
+Humans aren't maximally novelty-seeking; we're drawn to **learnable novelty**—situations that promise progress. Define curiosity as
+$$
 \mathbf{Curiosity}(\cdot) \;=\; \underbrace{\text{Novelty}}_{\text{we haven't seen this}} \times \underbrace{\text{Learnability}}_{\text{we can improve here}} \times \underbrace{\text{Usefulness}}_{\text{it helps future tasks}}.
-\]
+$$
 
 We implement this with measurable signals: **Bayesian surprise**, **epistemic uncertainty**, **learning progress (LP)**, **empowerment** (control over outcomes), and **task informativeness (IG)**.
 
@@ -24,38 +24,38 @@ We implement this with measurable signals: **Bayesian surprise**, **epistemic un
 
 ## 2) Curiosity Signals (Concrete, Computable)
 
-### A. Bayesian Surprise (any model or module \(M\))
-Given prior \(p(\theta)\), posterior \(p(\theta\mid \mathcal{D}\cup\{e\})\) after evidence \(e\):
-\[
+### A. Bayesian Surprise (any model or module $M$)
+Given prior $p(\theta)$, posterior $p(\theta\mid \mathcal{D}\cup\{e\})$ after evidence $e$:
+$$
 \mathrm{Surprise}_M(e) \;=\; \mathrm{KL}\!\left[p(\theta\mid \mathcal{D}\cup\{e\}) \,\|\, p(\theta\mid \mathcal{D})\right].
-\]
+$$
 **Use:** Generator (schema priors), Workspace (rule proposer), Navigator (edge utilities).
 
 ### B. Epistemic Uncertainty (predictive variance)
 Approximate with ensembles / MC-dropout / SWAG:
-\[
+$$
 \mathrm{Var}_{\text{epistemic}}\!\left[\mathrm{score}(h)\right].
-\]
+$$
 High variance flags promising knowledge gaps.
 
 ### C. Learning Progress (LP)
-For any metric \(m\) (accuracy, solve rate, time-to-solve, stability variance):
-\[
+For any metric $m$ (accuracy, solve rate, time-to-solve, stability variance):
+$$
 \mathrm{LP}(t) \;=\; m(t) - m(t-\Delta).
-\]
+$$
 Prioritize contexts where LP has been positive recently (the **Goldilocks** zone).
 
 ### D. Information Gain (IG) about policies or priors)
-\[
+$$
 \mathrm{IG} \;=\; \mathbb{E}_{\text{outcome}}\!\left[\mathrm{KL}\big(p(\phi \mid \text{outcome}) \,\|\, p(\phi)\big)\right],
-\]
-where \(\phi\) are parameters of proposer/critic/executor.
+$$
+where $\phi$ are parameters of proposer/critic/executor.
 
 ### E. Empowerment (controllability)
-Maximize mutual information between actions \(A\) and reachable states \(S\):
-\[
+Maximize mutual information between actions $A$ and reachable states $S$:
+$$
 \mathrm{Empower}(s) \;\approx\; I(A; S' \mid S=s).
-\]
+$$
 Prefer branches where small, interpretable actions produce reliable, diverse outcomes.
 
 ---
@@ -65,46 +65,46 @@ Prefer branches where small, interpretable actions produce reliable, diverse out
 ### 3.1 Generator (the Scientist): *What should we practice next?*
 
 **Task curiosity score**
-\[
+$$
 C_{\text{task}}(\tau) \;=\; \alpha\,\mathrm{IG}_{\text{solver}}(\tau) \;+\; \beta\,\mathrm{Surprise}_{\text{prior}}(\tau) \;+\; \gamma\,\mathrm{LP}_{\text{forecast}}(\tau) \;-\; \delta\,\mathrm{Redundancy}(\tau).
-\]
+$$
 
 **Use:** Rank sampled tasks; select a Pareto-frontier of *(difficulty, curiosity, stability)* for the batch.
 
 **Mechanic:** UCB-style scheduler per schema family:
-\[
+$$
 \mathrm{UCB}_k \;=\; \hat{\mu}_k \;+\; c\sqrt{\tfrac{\ln N}{n_k}},
-\]
-where arm \(k\) is a schema bucket, \(\hat{\mu}_k\) = recent LP, \(n_k\) pulls, \(N\) total pulls.
+$$
+where arm $k$ is a schema bucket, $\hat{\mu}_k$ = recent LP, $n_k$ pulls, $N$ total pulls.
 
 ---
 
 ### 3.2 Workspace (the Conductor): *Which hypothesis is worth thinking about next?*
 
-For each candidate hypothesis \(h\) (program edit / parameter set):
-\[
+For each candidate hypothesis $h$ (program edit / parameter set):
+$$
 \mathrm{Score}(h) \;=\; \underbrace{\mathrm{Fit}(h)}_{\text{critic}} \;-\; \lambda \underbrace{\mathrm{Instability}(h)}_{\text{navigator}} \;+\; \eta \underbrace{\mathrm{Curiosity}(h)}_{\text{below}}.
-\]
+$$
 with
-\[
+$$
 \mathrm{Curiosity}(h) \;=\; \alpha\,\mathrm{Var}_{\text{epistemic}}[\mathrm{Fit}(h)] \;+\; \beta\,\mathrm{IG}(h) \;+\; \rho\,\mathrm{Empower}(h).
-\]
+$$
 
-**Behavior:** hypotheses that are *plausible* but *uncertain and informative* win workspace admission—“I can learn something here.”
+**Behavior:** hypotheses that are *plausible* but *uncertain and informative* win workspace admission—"I can learn something here."
 
 ---
 
 ### 3.3 Graph Pendulum (the Navigator): *Where is interesting but not chaotic?*
 
 **Basin curiosity** combines stability with novelty:
-\[
+$$
 C_{\text{basin}}(b) \;=\; \underbrace{\exp\!\big(-\mathrm{Var}_{\text{stab}}(b)\big)}_{\text{stable}} \cdot \underbrace{\mathrm{Novelty}(b)}_{\text{rare motif}} \cdot \underbrace{\mathrm{LP}(b)}_{\text{recent gains}}.
-\]
+$$
 
-**Edge curiosity** for trying new transitions \(i\!\to\!j\):
-\[
+**Edge curiosity** for trying new transitions $i\!\to\!j$:
+$$
 C_{i\to j} \;=\; \omega_1\,\mathrm{IG}_{i\to j} \;+\; \omega_2\,\mathrm{Surprise}_{i\to j} \;+\; \omega_3\,\mathrm{CoverageGap}_{\mathrm{schema}(j)}.
-\]
+$$
 
 **Policy:** prefer **stable-but-uncertain** regions; downweight **chaotic** (high sensitivity, entropy) unless expected IG justifies a **bounded probe**.
 
@@ -113,17 +113,17 @@ C_{i\to j} \;=\; \omega_1\,\mathrm{IG}_{i\to j} \;+\; \omega_2\,\mathrm{Surprise
 ## 4) Unifying Objective (per Decision)
 
 At any choice point (task selection, hypothesis selection, path expansion), maximize
-\[
+$$
 U \;=\; \underbrace{\mathbb{E}[\mathrm{SolveGain}]}_{\text{exploitation}} \;-\; \lambda \underbrace{\mathrm{Compute}}_{\text{budget}} \;-\; \mu \underbrace{\mathrm{Instability}}_{\text{navigator}} \;+\; \kappa \underbrace{\mathrm{Curiosity}}_{\text{IG/LP/Surprise}}.
-\]
+$$
 
-Tune \((\lambda,\mu,\kappa)\) via meta-optimization; or adapt online with a **curiosity budget**.
+Tune $(\lambda,\mu,\kappa)$ via meta-optimization; or adapt online with a **curiosity budget**.
 
 ---
 
 ## 5) The Curiosity Budget & Ledger (Practical Control)
 
-- **Budget:** allocate a fraction \(B\in[0,1]\) of steps/evals to curiosity-driven choices. Start higher, anneal as confidence grows.  
+- **Budget:** allocate a fraction $B\in[0,1]$ of steps/evals to curiosity-driven choices. Start higher, anneal as confidence grows.  
 - **Ledger:** per module/basin/edge, track *curiosity spend* vs. *learning gain*. Reassign budget toward components with best **LP-per-cost**.
 
 ```text
@@ -143,7 +143,7 @@ else:
 - *LP:* recent improvement when such rules were explored on similar tasks.
 
 **B. Curiosity for program edits**  
-- *Uncertainty:* ensemble variance of executor-fit after a proposed edit (e.g., “reflect+translate” with unknown offset).  
+- *Uncertainty:* ensemble variance of executor-fit after a proposed edit (e.g., "reflect+translate" with unknown offset).  
 - *Empowerment:* edit families that historically yield diverse controllable outcomes (offset tweaks reliably fix placement).
 
 **C. Curiosity for generator curricula**  
@@ -180,9 +180,9 @@ def navigator_expand(path):
 
 ## 8) Guardrails (to Keep Curiosity Healthy)
 
-- **Stability gate:** curiosity expansions only if predicted instability < \(\tau\), or run as **bounded probes** (tiny budget, hard stop).  
+- **Stability gate:** curiosity expansions only if predicted instability < $\tau$, or run as **bounded probes** (tiny budget, hard stop).  
 - **De-leak novelty:** compute novelty on **intrinsic** descriptors (I/O signatures, grammar stats), not post-hoc solved outputs.  
-- **Reproducibility:** deterministic decoding in analysis passes; inject noise only via controlled \(\varepsilon\)-perturbations.  
+- **Reproducibility:** deterministic decoding in analysis passes; inject noise only via controlled $\varepsilon$-perturbations.  
 - **Ethical/compute limits:** curiosity budget cap per batch; prefer low-cost IG estimators (linear probes, small ensembles).
 
 ---
@@ -194,7 +194,7 @@ def navigator_expand(path):
 - **Data efficiency:** solves per training pair; executions per solve.  
 - **Generalization:** improvement on held-out schema combos targeted by curiosity.  
 - **Stability impact:** variance & trajectory entropy under curiosity schedules.  
-- **Ablations:** remove IG, remove LP, remove empowerment, swap UCB with \(\varepsilon\)-greedy.
+- **Ablations:** remove IG, remove LP, remove empowerment, swap UCB with $\varepsilon$-greedy.
 
 ---
 
