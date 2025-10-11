@@ -1,6 +1,5 @@
 # Generative Task Discovery via Learned Priors for ARC: From Solver to Scientist
 
-**Authors:** _You & Collaborators_  
 **Keywords:** ARC, program synthesis, neurosymbolic AI, self-curriculum, generative modeling, meta-reasoning, GNNs, transformers
 
 ---
