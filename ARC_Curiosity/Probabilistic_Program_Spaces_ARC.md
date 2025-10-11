@@ -30,7 +30,7 @@ where h represents candidate transformation programs and 𝒟ₜ represents accu
 
 The continuous dynamics emerge from how this distribution evolves:
 
-![Belief Evolution](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\frac{dP(h)}{dt}%20=%20\text{evidence\_flow}(h,%20\text{new\_observations}))
+![Belief Evolution](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\frac{dP(h)}{dt}%20=%20\text{evidence%20flow}(h,%20\text{new%20observations}))
 
 ---
 
