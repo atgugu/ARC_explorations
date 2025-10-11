@@ -26,9 +26,9 @@ Core contributions include: (1) a typed **Node/Edge/Trajectory/Basin** abstracti
 
 ### 2.1 Node (skill/specialist)
 A typed function:
-\[
+$$
 f: x \;\mapsto\; (y,\ \text{artifacts},\ \text{telemetry})
-\]
+$$
 with a predictable **contract** and **hashable inputs** for caching. Nodes are **pure** by default; LLM-driven nodes can run in **deterministic** mode for analysis passes.
 
 ### 2.2 Edge (compatibility)
@@ -65,23 +65,23 @@ A **cluster of trajectories** with **low sensitivity** to small upstream perturb
 ## 5. Graph Geometry & Learning
 
 ### 5.1 Behavior vectors
-For each node \(i\), build a vector by concatenating:
+For each node $i$, build a vector by concatenating:
 1. **I/O signatures** on a probe bank of mini-cases,  
 2. **Latent descriptors** (primitive/rule histograms),  
 3. **Downstream enablement deltas** (what the node enables for later stages).
 
 ### 5.2 Angle and distance
-Define **angle** between nodes \(i,j\) as:
-\[
+Define **angle** between nodes $i,j$ as:
+$$
 \theta(i,j) = \arccos\big(\operatorname{cos\_sim}(b_i, b_j)\big)
-\]
-**Distance** can be **path length** with edge costs \(c(i,j)=1-\operatorname{cos\_sim}(b_i, b_j)\) or \(1/\operatorname{cos\_sim}\) when appropriate.
+$$
+**Distance** can be **path length** with edge costs $c(i,j)=1-\operatorname{cos\_sim}(b_i, b_j)$ or $1/\operatorname{cos\_sim}$ when appropriate.
 
 ### 5.3 Utility updates (causal credit)
-Edges \(i \to j\) accrue **causal credit** via counterfactuals:
-\[
+Edges $i \to j$ accrue **causal credit** via counterfactuals:
+$$
 \Delta u_{i\to j} \;=\; \Delta \text{success}\big(\text{using } i\!\to\!j \text{ vs. skipping } j\big) \;-\; \lambda \cdot \text{variance},
-\]
+$$
 tempered by variance penalties to avoid credit from lucky runs.
 
 ---
@@ -92,7 +92,7 @@ tempered by variance penalties to avoid credit from lucky runs.
 2. **Composer nodes** propose hypotheses/programs guided by facts and historical edge utilities.  
 3. **Executor** runs candidates; **Critics** compute scores and failure taxonomies.  
 4. **Local repair loops** attempt minimal edits (translate/scale/remap) for localized failures.  
-5. **Stability meter** probes sensitivity via small \(\varepsilon\)-perturbations; controller prefers **low-variance basins**, explores alternatives when **chaos** is detected.  
+5. **Stability meter** probes sensitivity via small $\varepsilon$-perturbations; controller prefers **low-variance basins**, explores alternatives when **chaos** is detected.  
 6. **Logging** streams all trajectory summaries to a **landscape index** for basin discovery and reuse.
 
 ---
@@ -100,7 +100,7 @@ tempered by variance penalties to avoid credit from lucky runs.
 ## 7. Measuring Chaos vs. Stability
 
 ### 7.1 Local stability probes (Lyapunov-like)
-Duplicate run \(K\) times with \(\varepsilon\)-perturbations in early nodes; track divergence of final metrics (IoU, object mapping accuracy). A positive empirical “exponent” indicates **chaotic** region.
+Duplicate run $K$ times with $\varepsilon$-perturbations in early nodes; track divergence of final metrics (IoU, object mapping accuracy). A positive empirical “exponent” indicates **chaotic** region.
 
 ### 7.2 Sensitivity sweep
 Finite-difference sensitivity of final score to early-node knobs (thresholds, seed). **Low sensitivity ⇒ stable basin.**
@@ -116,9 +116,9 @@ Vary one upstream parameter; plot **regime shifts** in success pattern (e.g., se
 ## 8. Landscape Construction
 
 Represent each trajectory by a fixed-length summary vector:
-\[
+$$
 [\ \text{visited-nodes histogram} \ |\ \overline{\theta}\ \text{along path}\ |\ \text{cumulative utility}\ |\ \text{final scores}\ |\ \text{failure taxonomy}\ ].
-\]
+$$
 Reduce with **UMAP/t-SNE**; **cluster** to find stable regions (tight clusters, low intra-variance, consistent success) vs. **chaotic spray**. Maintain **region descriptors**: recurring node motifs, successful rule families, typical failures.
 
 ---
@@ -184,9 +184,9 @@ Prefer **minimal-delta** repairers over regeneration.
 
 1. **Probe bank:** 50–100 tiny synthetic ARC-like snippets covering primitives (mirror, flood fill, object copy/move, color remap, crop, tiling).  
 2. **Node library (minimal):** segmentation/objects (connected components), symmetry detector, periodicity, bbox grouper; transformation proposers (translate/rotate/scale, paint-by-rule, color map); program synthesizer over DSL (ICECUBER) with ~20 templates; critic (IoU, object alignment, failure taxonomy).  
-3. **Angles:** run each node on the probe bank; create **256-d behavior vectors** (primitive counts, success flags, output descriptors). Cosine for \(\theta\); costs \(= 1 - \cos\).  
-4. **Controller:** best-first over paths of length \(\le L\) with **utility = predicted success − sensitivity penalty**; keep top-\(k\) trajectories (beam).  
-5. **Stability meter:** for current best path, run **5 \(\varepsilon\)-perturbations** up front; if variance \(>\tau\), **demote basin** and branch to nearest **low-variance junction**.  
+3. **Angles:** run each node on the probe bank; create **256-d behavior vectors** (primitive counts, success flags, output descriptors). Cosine for $\theta$; costs $= 1 - \cos$.  
+4. **Controller:** best-first over paths of length $\le L$ with **utility = predicted success − sensitivity penalty**; keep top-$k$ trajectories (beam).  
+5. **Stability meter:** for current best path, run **5 $\varepsilon$-perturbations** up front; if variance $>\tau$, **demote basin** and branch to nearest **low-variance junction**.  
 6. **Repair loop:** route by failure report (placement → translation; color → remap; etc.).  
 7. **Analytics:** log every trajectory vector; project with UMAP; mark clusters as basins; persist edge utilities.
 
@@ -202,9 +202,9 @@ Prefer **minimal-delta** repairers over regeneration.
 ## 15. Learning Over Time
 
 - **Edge utility updates:**  
-  \[
+  $$
   \Delta w(A\!\to\!B) \leftarrow \alpha \cdot \big(\text{final\_score\_gain} - \text{expected\_gain}\big)
-  \]
+  $$
 - **Meta-parameters:** learn per-node **trust** to adapt exploration budgets.  
 - **Option policies:** collapse successful **subpaths into macro-nodes** (“detect-objects → align → copy”) with their own angle/utility signatures.  
 - **Stability regularizer:** add a **preference term** in the controller objective for **low-sensitivity** subgraphs (acts like a **Lyapunov prior**).
