@@ -26,11 +26,11 @@ ARC tasks map small integer-valued grids (≤30×30) to outputs via underlying r
 
 ## 3. Problem Formulation
 
-Let \(\mathcal{X}\) denote the space of ARC grids and \(\mathcal{T}\) the space of **tasks** \( \tau \), each a set of training pairs \(\{(x_i,y_i)\}_{i=1}^k\) plus a test input \(x^\star\). A **task program** \(p\in\mathcal{P}\) maps inputs to outputs: \(y = f_p(x)\). Our aim is to learn a **prior** \(p_\theta(p, L)\) over programs \(p\) and object layouts \(L\) (scene graphs), from observed tasks \(\mathcal{D}\), such that sampling \((p,L)\sim p_\theta\) and rendering yields **valid ARC-like tasks**. A solver \(S_\phi\) maps \(\tau \mapsto \hat{y}^\star\). We seek a **closed loop**:
+Let $\mathcal{X}$ denote the space of ARC grids and $\mathcal{T}$ the space of **tasks** $ \tau $, each a set of training pairs $\{(x_i,y_i)\}_{i=1}^k$ plus a test input $x^\star$. A **task program** $p\in\mathcal{P}$ maps inputs to outputs: $y = f_p(x)$. Our aim is to learn a **prior** $p_\theta(p, L)$ over programs $p$ and object layouts $L$ (scene graphs), from observed tasks $\mathcal{D}$, such that sampling $(p,L)\sim p_\theta$ and rendering yields **valid ARC-like tasks**. A solver $S_\phi$ maps $\tau \mapsto \hat{y}^\star$. We seek a **closed loop**:
 
-\[
+$$
 \text{learn } p_\theta \ \Rightarrow \ \text{sample tasks } \tilde{\tau} \ \Rightarrow \ \text{train } S_\phi \ \Rightarrow \ \text{update } p_\theta \text{ using solvability/novelty feedback.}
-\]
+$$
 
 ---
 
@@ -39,7 +39,7 @@ Let \(\mathcal{X}\) denote the space of ARC grids and \(\mathcal{T}\) the space 
 We specify a **typed, factorized program space**:
 
 - **Types.**  
-  - **Grid** \(G\), **Object** \(O\) (connected components), **Mask** \(M\), **Color** \(C\), **Relation** \(R\), **Set** \(S\).
+  - **Grid** $G$, **Object** $O$ (connected components), **Mask** $M$, **Color** $C$, **Relation** $R$, **Set** $S$.
 - **Primitives.**  
   - **Perceptual:** `components(G)→S[O]`, `bbox(O)`, `centroid(O)`, `shape(O)`, `area(O)`.  
   - **Geometric:** `rotate(G,k)`, `reflect(G,axis)`, `translate(G,dx,dy)`, `scale(O,s)`.  
@@ -48,65 +48,65 @@ We specify a **typed, factorized program space**:
   - **Logical/Set:** `map`, `filter`, `compose`, `union`, `difference`.  
   - **Color rules:** `remap(C→C')`, `palette(S[C])`.
 - **Schemas (rule templates).**  
-  - `copy_with_transform`: select \(S[O]\), apply \(T\), place with constraint \(K\).  
+  - `copy_with_transform`: select $S[O]$, apply $T$, place with constraint $K$.  
   - `symmetry_enforce`: reflect/rotate to enforce pattern.  
   - `role_based_recolor`: recolor object by role in a relation graph.  
   - `grow_connect`: extend objects to connect/complete shapes.  
   - `frame_and_fill`: construct borders and fill regions under constraints.
 
-Each **schema** is a graph of primitives with typed edges; **parameters** \(\psi\) (e.g., rotation \(k\), axis, palette) and **selectors** \(\sigma\) (which objects) are learned as random variables.
+Each **schema** is a graph of primitives with typed edges; **parameters** $\psi$ (e.g., rotation $k$, axis, palette) and **selectors** $\sigma$ (which objects) are learned as random variables.
 
 ---
 
 ## 5. Generative Prior Model (GPM)
 
-We model \(p_\theta(p, L)\) as a product of factors:
+We model $p_\theta(p, L)$ as a product of factors:
 
-\[
+$$
 p_\theta(p,L) = p_\theta(L)\ p_\theta(p\mid L),
-\]
+$$
 
-where \(L\) is a **scene graph** of object prototypes, spatial layouts, and palettes.
+where $L$ is a **scene graph** of object prototypes, spatial layouts, and palettes.
 
-### 5.1 Scene Graph Generator \(p_\theta(L)\)
+### 5.1 Scene Graph Generator $p_\theta(L)$
 - **Object prototypes:** shape tokens (e.g., line, block, L-shape), size distributions, colors.  
 - **Layout:** a **graph transformer** samples object counts, poses, and relations (adjacency, alignment, symmetry).  
 - **Constraints:** keep grids within ARC size, avoid degenerate overlaps unless intended.
 
-### 5.2 Program Generator \(p_\theta(p\mid L)\)
-- **Schema selection:** a **sequence model** (transformer) chooses schema nodes conditioned on \(L\).  
+### 5.2 Program Generator $p_\theta(p\mid L)$
+- **Schema selection:** a **sequence model** (transformer) chooses schema nodes conditioned on $L$.  
 - **Primitive wiring:** edges define dataflow; a **type-checker** enforces valid compositions.  
-- **Parameterization:** distributions over discrete/continuous parameters (e.g., rotation \(k \in \{0,1,2,3\}\)).  
-- **Selector policies:** GNN computes attention over \(L\) to pick objects by role.
+- **Parameterization:** distributions over discrete/continuous parameters (e.g., rotation $k \in \{0,1,2,3\}$).  
+- **Selector policies:** GNN computes attention over $L$ to pick objects by role.
 
 ### 5.3 Training Objectives for GPM
-Given observed tasks \(\mathcal{D}\), we learn \(\theta\) via **amortized maximum likelihood**:
+Given observed tasks $\mathcal{D}$, we learn $\theta$ via **amortized maximum likelihood**:
 
-\[
+$$
 \max_\theta \sum_{\tau\in\mathcal{D}} \mathbb{E}_{q_\phi(p,L\mid \tau)} \big[\log p_\theta(\tau\mid p,L) + \log p_\theta(p,L) - \log q_\phi(p,L\mid \tau)\big],
-\]
+$$
 
-with an **inference network** \(q_\phi\) that parses tasks to latent programs and layouts. The likelihood uses a **differentiable executor** (Sec. 6) to render \(f_p(x_i)\) and compare to \(y_i\).
+with an **inference network** $q_\phi$ that parses tasks to latent programs and layouts. The likelihood uses a **differentiable executor** (Sec. 6) to render $f_p(x_i)$ and compare to $y_i$.
 
 ---
 
 ## 6. Differentiable Executor and Solvability Verifier (SV)
 
 ### 6.1 Differentiable Executor
-Each primitive is a small neural/symbolic module with **piecewise-differentiable** behavior. For non-differentiable steps (argmax, connected components), we use **straight-through estimators** or **continuous relaxations** (e.g., soft labeling of components). The executor composes modules according to \(p\) to produce \(\hat{y}_i = f_p(x_i)\) and a test prediction \(\hat{y}^\star\).
+Each primitive is a small neural/symbolic module with **piecewise-differentiable** behavior. For non-differentiable steps (argmax, connected components), we use **straight-through estimators** or **continuous relaxations** (e.g., soft labeling of components). The executor composes modules according to $p$ to produce $\hat{y}_i = f_p(x_i)$ and a test prediction $\hat{y}^\star$.
 
 **Loss:**  
-\[
+$$
 \mathcal{L}_{exe} = \sum_i \ell(\hat{y}_i, y_i) + \lambda\ \Omega(p),
-\]
-where \(\ell\) includes Hamming/IoU and \(\Omega\) regularizes program length/complexity.
+$$
+where $\ell$ includes Hamming/IoU and $\Omega$ regularizes program length/complexity.
 
 ### 6.2 Solvability Verifier
 A task is **admitted** if:
-1. **Consistency:** the same program \(p\) solves all training pairs.  
-2. **Generalization sanity:** \(p\) is **deterministic** and type-safe on \(x^\star\).  
-3. **Non-triviality:** ablations of critical edges in \(p\) worsen \(\ell\) beyond a margin.  
-4. **Bounded search proof:** a neural proof-search attempts \(K\)-step repairs; if found, store the **witness** \(p^\dagger\).
+1. **Consistency:** the same program $p$ solves all training pairs.  
+2. **Generalization sanity:** $p$ is **deterministic** and type-safe on $x^\star$.  
+3. **Non-triviality:** ablations of critical edges in $p$ worsen $\ell$ beyond a margin.  
+4. **Bounded search proof:** a neural proof-search attempts $K$-step repairs; if found, store the **witness** $p^\dagger$.
 
 SV returns `(is_solvable, p^\dagger, diagnostics)`; unsolvable samples are rejected or recycled via **guided resampling** of weak factors.
 
@@ -116,14 +116,14 @@ SV returns `(is_solvable, p^\dagger, diagnostics)`; unsolvable samples are rejec
 
 The SCE controls **which generated tasks** reach the solver and when.
 
-- **Difficulty estimator \(d(\tau)\):** predicts solver loss, minimal program length, branching factor, symmetry order, etc.  
-- **Information gain \(IG(\tau) = \Delta H(\Phi)\):** estimated reduction in parameter entropy for solver modules or rule posteriors.  
-- **Scheduling:** sample a batch maximizing a **utility** \(U(\tau) = \alpha\ d(\tau) + \beta\ IG(\tau) - \gamma\ \text{redundancy}(\tau, \mathcal{B})\).  
+- **Difficulty estimator $d(\tau)$:** predicts solver loss, minimal program length, branching factor, symmetry order, etc.  
+- **Information gain $IG(\tau) = \Delta H(\Phi)$:** estimated reduction in parameter entropy for solver modules or rule posteriors.  
+- **Scheduling:** sample a batch maximizing a **utility** $U(\tau) = \alpha\ d(\tau) + \beta\ IG(\tau) - \gamma\ \text{redundancy}(\tau, \mathcal{B})$.  
 - **Anti-overfitting:** penalize tasks too similar to recent batches; enforce **coverage** over schema families.
 
 ---
 
-## 8. Solver Architecture \(S_\phi\)
+## 8. Solver Architecture $S_\phi$
 
 A **neurosymbolic solver** with:
 1. **Perception**: multi-expert feature bank (CNN/ViT/GNN/LSTM) producing object candidates and relations.  
@@ -137,14 +137,14 @@ A **neurosymbolic solver** with:
 
 **Algorithm 1: Self-Generating ARC Curriculum**
 
-1. **Initialize** \(p_\theta, q_\phi, S_\psi\).  
-2. **Parse** \(\mathcal{D}\) with \(q_\phi\) to warm-start \(p_\theta\).  
+1. **Initialize** $p_\theta, q_\phi, S_\psi$.  
+2. **Parse** $\mathcal{D}$ with $q_\phi$ to warm-start $p_\theta$.  
 3. **Repeat**:  
-   a. Sample \((p,L) \sim p_\theta\); render task \(\tilde{\tau}\).  
-   b. **Verify** via SV → keep \((\tilde{\tau}, p^\dagger)\) if solvable & non-trivial; else resample.  
-   c. **Score** difficulty and IG; schedule batch \(\mathcal{B}\).  
-   d. **Train solver** \(S_\psi\) on \(\mathcal{B}\) (supervised on \(p^\dagger\) where available + RL on held-out test).  
-   e. **Update prior** \(p_\theta\) with feedback: increase probability mass around fruitful but underexplored schemas; reduce collapsed modes.  
+   a. Sample $(p,L) \sim p_\theta$; render task $\tilde{\tau}$.  
+   b. **Verify** via SV → keep $(\tilde{\tau}, p^\dagger)$ if solvable & non-trivial; else resample.  
+   c. **Score** difficulty and IG; schedule batch $\mathcal{B}$.  
+   d. **Train solver** $S_\psi$ on $\mathcal{B}$ (supervised on $p^\dagger$ where available + RL on held-out test).  
+   e. **Update prior** $p_\theta$ with feedback: increase probability mass around fruitful but underexplored schemas; reduce collapsed modes.  
    f. Periodically **evaluate** on held-out ARC and **diversity metrics**.
 
 ---
@@ -152,10 +152,10 @@ A **neurosymbolic solver** with:
 ## 10. Objectives and Regularization
 
 - **Prior learning:** ELBO (Sec. 5.3) + **minimum description length** penalty on programs.  
-- **Executor training:** \(\mathcal{L}_{exe}\) with **consistency** and **equivariance** constraints (e.g., rotation-equivariant when appropriate).  
+- **Executor training:** $\mathcal{L}_{exe}$ with **consistency** and **equivariance** constraints (e.g., rotation-equivariant when appropriate).  
 - **Solver training:**  
-  - **Supervised**: \(\mathcal{L}_{prog} = \text{XE}(\hat{p}, p^\dagger) + \eta\ \text{XE}(\hat{\sigma}, \sigma^\dagger)\).  
-  - **RL**: reward \(r = \mathbb{1}[\hat{y}^\star=y^\star] - \lambda |p|\).  
+  - **Supervised**: $\mathcal{L}_{prog} = \text{XE}(\hat{p}, p^\dagger) + \eta\ \text{XE}(\hat{\sigma}, \sigma^\dagger)$.  
+  - **RL**: reward $r = \mathbb{1}[\hat{y}^\star=y^\star] - \lambda |p|$.  
 - **Curriculum utility:** optimize scheduler parameters to maximize downstream validation accuracy subject to **diversity** constraints.
 
 ---
@@ -184,13 +184,13 @@ A **neurosymbolic solver** with:
 
 ## 12. Implementation Details
 
-- **Grids:** 30×30 with values in \(\{0,\dots,9\}\) (colors).  
+- **Grids:** 30×30 with values in $\{0,\dots,9\}$ (colors).  
 - **Objects:** connected components under 4-connectivity; also maintain soft component maps for differentiability.  
 - **Scene graphs:** nodes = object prototypes; edges = adjacency, alignment, symmetry relations.  
 - **Executor library:** compiled set of ~40 primitives with typed signatures and gradient surrogates.  
-- **Parsing network \(q_\phi\):** encoder-decoder over pairs \((x_i,y_i)\); predicts schema skeleton, then fills parameters.  
+- **Parsing network $q_\phi$:** encoder-decoder over pairs $(x_i,y_i)$; predicts schema skeleton, then fills parameters.  
 - **GPM backbone:** transformer decoder over TRG tokens with cross-attention to scene graph embeddings (from a GNN).  
-- **SV search:** beam width \(B\), max steps \(K\), learned priority queue.  
+- **SV search:** beam width $B$, max steps $K$, learned priority queue.  
 - **SCE:** difficulty predictors trained from solver logs; IG approximated with Bayesian linear probes on solver internal representations.
 
 ---
@@ -198,7 +198,7 @@ A **neurosymbolic solver** with:
 ## 13. Theoretical Notes
 
 - **Identifiability up to symmetries.** Different programs may be functionally equivalent; we quotient by a **congruence** over TRG graphs when computing diversity and MDL.  
-- **Generalization via priors.** The learned \(p_\theta(p)\) is a **simplicity-biased prior**: shorter, compositional programs with reusable substructures have higher probability, encouraging **Occam-consistent** solutions.  
+- **Generalization via priors.** The learned $p_\theta(p)$ is a **simplicity-biased prior**: shorter, compositional programs with reusable substructures have higher probability, encouraging **Occam-consistent** solutions.  
 - **Curriculum as active learning.** SCE approximates **Bayesian experimental design**: select tasks maximizing posterior contraction of solver parameters.
 
 ---
@@ -287,15 +287,15 @@ We present a principled route to turn an ARC solver into an **ARC scientist** by
 ### Appendix A: Concrete TRG Snippet (Illustrative)
 
 - `schema: role_based_recolor`
-  - inputs: \(G\)  
+  - inputs: $G$  
   - steps:  
-    1. \(S[O] = \text{components}(G)\)  
-    2. \(R = \text{group}(S[O], \text{by=shape})\)  
-    3. \(\pi = \text{role\_assign}(R, \text{by=size→rank})\)  
-    4. \(\text{map}(O \in S[O], \text{fill}(O, \text{palette}[\pi(O)]))\)
+    1. $S[O] = \text{components}(G)$  
+    2. $R = \text{group}(S[O], \text{by=shape})$  
+    3. $\pi = \text{role\_assign}(R, \text{by=size→rank})$  
+    4. $\text{map}(O \in S[O], \text{fill}(O, \text{palette}[\pi(O)]))$
 
 - `schema: copy_with_transform`
-  - select: `selector` over \(S[O]\) (e.g., largest; unique color)  
+  - select: `selector` over $S[O]$ (e.g., largest; unique color)  
   - transform: `T ∈ {rotate k, reflect axis, translate dx,dy}`  
   - place: avoid overlaps or define compositing rule (overwrite/maximum).
 
