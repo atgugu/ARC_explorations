@@ -110,7 +110,7 @@ Confidence about the confidence (second-order uncertainty):
 
 Activation level of working memory slot k:
 
-![Working Memory](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\frac{dW_k}{dt}%20=%20\text{input}_k(t)%20-%20\text{capacity\_competition}%20-%20\text{temporal\_decay})
+![Working Memory](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\frac{dW_k}{dt}%20=%20\text{input}_k(t)%20-%20\text{capacity%20competition}%20-%20\text{temporal%20decay})
 
 **Capacity Constraint**: Σ_k W_k(t) ≤ 7±2 (Miller's limit)
 
@@ -126,7 +126,7 @@ competition_k = capacity_pressure × W_k / Σ_j W_j
 
 Activation of meta-cognitive strategy s (e.g., "focus on symmetry", "count objects"):
 
-![Strategy Control](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\frac{d\Psi_s}{dt}%20=%20\text{success\_history}_s%20+%20\text{context\_relevance}_s%20-%20\text{effort\_cost}_s)
+![Strategy Control](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\frac{d\Psi_s}{dt}%20=%20\text{success%20history}_s%20+%20\text{context%20relevance}_s%20-%20\text{effort%20cost}_s)
 
 Strategies influence lower-level processing by modulating attention and hypothesis generation.
 
@@ -167,7 +167,7 @@ Strategies modulate the dynamics of attention, hypothesis generation, and memory
 
 The complete system evolves according to:
 
-![System Evolution](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\frac{d\mathbf{x}}{dt}%20=%20\mathbf{F}(\mathbf{x}(t),%20\text{sensory\_input},%20\text{parameters}))
+![System Evolution](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\frac{d\mathbf{x}}{dt}%20=%20\mathbf{F}(\mathbf{x}(t),%20\text{sensory%20input},%20\text{parameters}))
 
 Where **F** is a nonlinear vector field encoding all the interactions described above.
 
