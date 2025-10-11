@@ -26,11 +26,9 @@ ARC tasks map small integer-valued grids (≤30×30) to outputs via underlying r
 
 ## 3. Problem Formulation
 
-Let $\mathcal{X}$ denote the space of ARC grids and $\mathcal{T}$ the space of **tasks** $ \tau $, each a set of training pairs $\{(x_i,y_i)\}_{i=1}^k$ plus a test input $x^\star$. A **task program** $p\in\mathcal{P}$ maps inputs to outputs: $y = f_p(x)$. Our aim is to learn a **prior** $p_\theta(p, L)$ over programs $p$ and object layouts $L$ (scene graphs), from observed tasks $\mathcal{D}$, such that sampling $(p,L)\sim p_\theta$ and rendering yields **valid ARC-like tasks**. A solver $S_\phi$ maps $\tau \mapsto \hat{y}^\star$. We seek a **closed loop**:
+Let ![X](https://latex.codecogs.com/svg.latex?\bg_white&space;\mathcal{X}) denote the space of ARC grids and ![T](https://latex.codecogs.com/svg.latex?\bg_white&space;\mathcal{T}) the space of **tasks** ![tau](https://latex.codecogs.com/svg.latex?\bg_white&space;\tau), each a set of training pairs ![training pairs](https://latex.codecogs.com/svg.latex?\bg_white&space;\{(x_i,y_i)\}_{i=1}^k) plus a test input ![x star](https://latex.codecogs.com/svg.latex?\bg_white&space;x^\star). A **task program** ![p in P](https://latex.codecogs.com/svg.latex?\bg_white&space;p\in\mathcal{P}) maps inputs to outputs: ![y equals f_p(x)](https://latex.codecogs.com/svg.latex?\bg_white&space;y%20=%20f_p(x)). Our aim is to learn a **prior** ![p_theta](https://latex.codecogs.com/svg.latex?\bg_white&space;p_\theta(p,%20L)) over programs ![p](https://latex.codecogs.com/svg.latex?\bg_white&space;p) and object layouts ![L](https://latex.codecogs.com/svg.latex?\bg_white&space;L) (scene graphs), from observed tasks ![D](https://latex.codecogs.com/svg.latex?\bg_white&space;\mathcal{D}), such that sampling ![sampling](https://latex.codecogs.com/svg.latex?\bg_white&space;(p,L)\sim%20p_\theta) and rendering yields **valid ARC-like tasks**. A solver ![S_phi](https://latex.codecogs.com/svg.latex?\bg_white&space;S_\phi) maps ![tau to y hat](https://latex.codecogs.com/svg.latex?\bg_white&space;\tau%20\mapsto%20\hat{y}^\star). We seek a **closed loop**:
 
-$$
-\text{learn } p_\theta \ \Rightarrow \ \text{sample tasks } \tilde{\tau} \ \Rightarrow \ \text{train } S_\phi \ \Rightarrow \ \text{update } p_\theta \text{ using solvability/novelty feedback.}
-$$
+![Closed Loop](https://latex.codecogs.com/svg.latex?\bg_white&space;\text{learn%20}%20p_\theta%20\%20\Rightarrow%20\%20\text{sample%20tasks%20}%20\tilde{\tau}%20\%20\Rightarrow%20\%20\text{train%20}%20S_\phi%20\%20\Rightarrow%20\%20\text{update%20}%20p_\theta%20\text{%20using%20solvability/novelty%20feedback})
 
 ---
 
@@ -38,8 +36,8 @@ $$
 
 We specify a **typed, factorized program space**:
 
-- **Types.**  
-  - **Grid** $G$, **Object** $O$ (connected components), **Mask** $M$, **Color** $C$, **Relation** $R$, **Set** $S$.
+- **Types.**
+  - **Grid** ![G](https://latex.codecogs.com/svg.latex?\bg_white&space;G), **Object** ![O](https://latex.codecogs.com/svg.latex?\bg_white&space;O) (connected components), **Mask** ![M](https://latex.codecogs.com/svg.latex?\bg_white&space;M), **Color** ![C](https://latex.codecogs.com/svg.latex?\bg_white&space;C), **Relation** ![R](https://latex.codecogs.com/svg.latex?\bg_white&space;R), **Set** ![S](https://latex.codecogs.com/svg.latex?\bg_white&space;S).
 - **Primitives.**  
   - **Perceptual:** `components(G)→S[O]`, `bbox(O)`, `centroid(O)`, `shape(O)`, `area(O)`.  
   - **Geometric:** `rotate(G,k)`, `reflect(G,axis)`, `translate(G,dx,dy)`, `scale(O,s)`.  
@@ -48,36 +46,34 @@ We specify a **typed, factorized program space**:
   - **Logical/Set:** `map`, `filter`, `compose`, `union`, `difference`.  
   - **Color rules:** `remap(C→C')`, `palette(S[C])`.
 - **Schemas (rule templates).**  
-  - `copy_with_transform`: select $S[O]$, apply $T$, place with constraint $K$.  
+  - `copy_with_transform`: select ![S[O]](https://latex.codecogs.com/svg.latex?\bg_white&space;S[O]), apply ![T](https://latex.codecogs.com/svg.latex?\bg_white&space;T), place with constraint ![K](https://latex.codecogs.com/svg.latex?\bg_white&space;K).  
   - `symmetry_enforce`: reflect/rotate to enforce pattern.  
   - `role_based_recolor`: recolor object by role in a relation graph.  
   - `grow_connect`: extend objects to connect/complete shapes.  
   - `frame_and_fill`: construct borders and fill regions under constraints.
 
-Each **schema** is a graph of primitives with typed edges; **parameters** $\psi$ (e.g., rotation $k$, axis, palette) and **selectors** $\sigma$ (which objects) are learned as random variables.
+Each **schema** is a graph of primitives with typed edges; **parameters** ![psi](https://latex.codecogs.com/svg.latex?\bg_white&space;\psi) (e.g., rotation ![k](https://latex.codecogs.com/svg.latex?\bg_white&space;k), axis, palette) and **selectors** ![sigma](https://latex.codecogs.com/svg.latex?\bg_white&space;\sigma) (which objects) are learned as random variables.
 
 ---
 
 ## 5. Generative Prior Model (GPM)
 
-We model $p_\theta(p, L)$ as a product of factors:
+We model ![p_theta(p,L)](https://latex.codecogs.com/svg.latex?\bg_white&space;p_\theta(p,%20L)) as a product of factors:
 
-$$
-p_\theta(p,L) = p_\theta(L)\ p_\theta(p\mid L),
-$$
+![GPM Factorization](https://latex.codecogs.com/svg.latex?\bg_white&space;p_\theta(p,L)%20=%20p_\theta(L)\%20p_\theta(p\mid%20L))
 
-where $L$ is a **scene graph** of object prototypes, spatial layouts, and palettes.
+where ![L](https://latex.codecogs.com/svg.latex?\bg_white&space;L) is a **scene graph** of object prototypes, spatial layouts, and palettes.
 
-### 5.1 Scene Graph Generator $p_\theta(L)$
+### 5.1 Scene Graph Generator ![p_theta(L)](https://latex.codecogs.com/svg.latex?\bg_white&space;p_\theta(L))
 - **Object prototypes:** shape tokens (e.g., line, block, L-shape), size distributions, colors.  
 - **Layout:** a **graph transformer** samples object counts, poses, and relations (adjacency, alignment, symmetry).  
 - **Constraints:** keep grids within ARC size, avoid degenerate overlaps unless intended.
 
-### 5.2 Program Generator $p_\theta(p\mid L)$
+### 5.2 Program Generator ![p_theta(p|L)](https://latex.codecogs.com/svg.latex?\bg_white&space;p_\theta(p\mid%20L))
 - **Schema selection:** a **sequence model** (transformer) chooses schema nodes conditioned on $L$.  
 - **Primitive wiring:** edges define dataflow; a **type-checker** enforces valid compositions.  
-- **Parameterization:** distributions over discrete/continuous parameters (e.g., rotation $k \in \{0,1,2,3\}$).  
-- **Selector policies:** GNN computes attention over $L$ to pick objects by role.
+- **Parameterization:** distributions over discrete/continuous parameters (e.g., rotation ![k in set](https://latex.codecogs.com/svg.latex?\bg_white&space;k%20\in%20\{0,1,2,3\})).  
+- **Selector policies:** GNN computes attention over ![L](https://latex.codecogs.com/svg.latex?\bg_white&space;L) to pick objects by role.
 
 ### 5.3 Training Objectives for GPM
 Given observed tasks $\mathcal{D}$, we learn $\theta$ via **amortized maximum likelihood**:
