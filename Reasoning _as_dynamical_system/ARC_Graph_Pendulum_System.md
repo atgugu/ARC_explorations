@@ -26,7 +26,7 @@ Core contributions include: (1) a typed **Node/Edge/Trajectory/Basin** abstracti
 
 ### 2.1 Node (skill/specialist)
 A typed function:
-![Node Function](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}f:%20x%20\;\mapsto\;%20(y,%20\%20\text{artifacts},%20\%20\text{telemetry}))
+![Node Function](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}f:%20x%20\;\mapsto\;%20(y,%20\%20\text{artifacts},%20\%20\text{telemetry}))
 with a predictable **contract** and **hashable inputs** for caching. Nodes are **pure** by default; LLM-driven nodes can run in **deterministic** mode for analysis passes.
 
 ### 2.2 Edge (compatibility)
@@ -63,19 +63,19 @@ A **cluster of trajectories** with **low sensitivity** to small upstream perturb
 ## 5. Graph Geometry & Learning
 
 ### 5.1 Behavior vectors
-For each node ![i](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}i), build a vector by concatenating:
+For each node ![i](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}i), build a vector by concatenating:
 1. **I/O signatures** on a probe bank of mini-cases,  
 2. **Latent descriptors** (primitive/rule histograms),  
 3. **Downstream enablement deltas** (what the node enables for later stages).
 
 ### 5.2 Angle and distance
 Define **angle** between nodes $i,j$ as:
-![Angle Formula](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\theta(i,j)%20=%20\arccos\big(\operatorname{cos\_sim}(b_i,%20b_j)\big))
-**Distance** can be **path length** with edge costs ![c(i,j)](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}c(i,j)=1-\operatorname{cos\_sim}(b_i,%20b_j)) or ![1/cos_sim](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}1/\operatorname{cos\_sim}) when appropriate.
+![Angle Formula](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\theta(i,j)%20=%20\arccos\big(\operatorname{cos\_sim}(b_i,%20b_j)\big))
+**Distance** can be **path length** with edge costs ![c(i,j)](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}c(i,j)=1-\operatorname{cos\_sim}(b_i,%20b_j)) or ![1/cos_sim](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}1/\operatorname{cos\_sim}) when appropriate.
 
 ### 5.3 Utility updates (causal credit)
-Edges ![i to j](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}i%20\to%20j) accrue **causal credit** via counterfactuals:
-![Causal Credit](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\Delta%20u_{i\to%20j}%20\;=\;%20\Delta%20\text{success}\big(\text{using%20}%20i\!\to\!j%20\text{%20vs.%20skipping%20}%20j\big)%20\;-\;%20\lambda%20\cdot%20\text{variance})
+Edges ![i to j](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}i%20\to%20j) accrue **causal credit** via counterfactuals:
+![Causal Credit](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\Delta%20u_{i\to%20j}%20\;=\;%20\Delta%20\text{success}\big(\text{using%20}%20i\!\to\!j%20\text{%20vs.%20skipping%20}%20j\big)%20\;-\;%20\lambda%20\cdot%20\text{variance})
 tempered by variance penalties to avoid credit from lucky runs.
 
 ---
@@ -86,7 +86,7 @@ tempered by variance penalties to avoid credit from lucky runs.
 2. **Composer nodes** propose hypotheses/programs guided by facts and historical edge utilities.  
 3. **Executor** runs candidates; **Critics** compute scores and failure taxonomies.  
 4. **Local repair loops** attempt minimal edits (translate/scale/remap) for localized failures.  
-5. **Stability meter** probes sensitivity via small ![epsilon](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\varepsilon)-perturbations; controller prefers **low-variance basins**, explores alternatives when **chaos** is detected.  
+5. **Stability meter** probes sensitivity via small ![epsilon](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\varepsilon)-perturbations; controller prefers **low-variance basins**, explores alternatives when **chaos** is detected.  
 6. **Logging** streams all trajectory summaries to a **landscape index** for basin discovery and reuse.
 
 ---
@@ -94,7 +94,7 @@ tempered by variance penalties to avoid credit from lucky runs.
 ## 7. Measuring Chaos vs. Stability
 
 ### 7.1 Local stability probes (Lyapunov-like)
-Duplicate run ![K](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}K) times with ![epsilon](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\varepsilon)-perturbations in early nodes; track divergence of final metrics (IoU, object mapping accuracy). A positive empirical “exponent” indicates **chaotic** region.
+Duplicate run ![K](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}K) times with ![epsilon](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\varepsilon)-perturbations in early nodes; track divergence of final metrics (IoU, object mapping accuracy). A positive empirical “exponent” indicates **chaotic** region.
 
 ### 7.2 Sensitivity sweep
 Finite-difference sensitivity of final score to early-node knobs (thresholds, seed). **Low sensitivity ⇒ stable basin.**
@@ -110,7 +110,7 @@ Vary one upstream parameter; plot **regime shifts** in success pattern (e.g., se
 ## 8. Landscape Construction
 
 Represent each trajectory by a fixed-length summary vector:
-![Trajectory Vector](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}[%20\text{visited-nodes%20histogram}%20%20|%20\overline{\theta}%20\text{along%20path}%20%20|%20\text{cumulative%20utility}%20%20|%20\text{final%20scores}%20%20|%20\text{failure%20taxonomy}%20])
+![Trajectory Vector](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}[%20\text{visited-nodes%20histogram}%20%20|%20\overline{\theta}%20\text{along%20path}%20%20|%20\text{cumulative%20utility}%20%20|%20\text{final%20scores}%20%20|%20\text{failure%20taxonomy}%20])
 Reduce with **UMAP/t-SNE**; **cluster** to find stable regions (tight clusters, low intra-variance, consistent success) vs. **chaotic spray**. Maintain **region descriptors**: recurring node motifs, successful rule families, typical failures.
 
 ---
@@ -176,9 +176,9 @@ Prefer **minimal-delta** repairers over regeneration.
 
 1. **Probe bank:** 50–100 tiny synthetic ARC-like snippets covering primitives (mirror, flood fill, object copy/move, color remap, crop, tiling).  
 2. **Node library (minimal):** segmentation/objects (connected components), symmetry detector, periodicity, bbox grouper; transformation proposers (translate/rotate/scale, paint-by-rule, color map); program synthesizer over DSL (ICECUBER) with ~20 templates; critic (IoU, object alignment, failure taxonomy).  
-3. **Angles:** run each node on the probe bank; create **256-d behavior vectors** (primitive counts, success flags, output descriptors). Cosine for ![theta](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\theta); costs ![cost formula](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}=%201%20-%20\cos).  
-4. **Controller:** best-first over paths of length ![leq L](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\le%20L) with **utility = predicted success − sensitivity penalty**; keep top-![k](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}k) trajectories (beam).  
-5. **Stability meter:** for current best path, run **5 ![epsilon](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\varepsilon)-perturbations** up front; if variance ![>tau](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}>\tau), **demote basin** and branch to nearest **low-variance junction**.  
+3. **Angles:** run each node on the probe bank; create **256-d behavior vectors** (primitive counts, success flags, output descriptors). Cosine for ![theta](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\theta); costs ![cost formula](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}=%201%20-%20\cos).  
+4. **Controller:** best-first over paths of length ![leq L](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\le%20L) with **utility = predicted success − sensitivity penalty**; keep top-![k](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}k) trajectories (beam).  
+5. **Stability meter:** for current best path, run **5 ![epsilon](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\varepsilon)-perturbations** up front; if variance ![>tau](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}>\tau), **demote basin** and branch to nearest **low-variance junction**.  
 6. **Repair loop:** route by failure report (placement → translation; color → remap; etc.).  
 7. **Analytics:** log every trajectory vector; project with UMAP; mark clusters as basins; persist edge utilities.
 
