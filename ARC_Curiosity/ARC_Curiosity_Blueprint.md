@@ -14,7 +14,7 @@ We formalize **human-like curiosity** as a first-class decision signal in a neur
 ## 1) Curiosity: The Core Principle
 
 Humans aren’t maximally novelty-seeking; we’re drawn to **learnable novelty**—situations that promise progress. Define curiosity as
-![Curiosity Definition](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\mathbf{Curiosity}(\cdot)%20\;=\;%20\underbrace{\text{Novelty}}_{\text{we%20haven't%20seen%20this}}%20\times%20\underbrace{\text{Learnability}}_{\text{we%20can%20improve%20here}}%20\times%20\underbrace{\text{Usefulness}}_{\text{it%20helps%20future%20tasks}})
+![Curiosity Definition](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\mathbf{Curiosity}(\cdot)%20\;=\;%20\underbrace{\text{Novelty}}_{\text{we%20haven't%20seen%20this}}%20\times%20\underbrace{\text{Learnability}}_{\text{we%20can%20improve%20here}}%20\times%20\underbrace{\text{Usefulness}}_{\text{it%20helps%20future%20tasks}})
 
 We implement this with measurable signals: **Bayesian surprise**, **epistemic uncertainty**, **learning progress (LP)**, **empowerment** (control over outcomes), and **task informativeness (IG)**.
 
@@ -22,29 +22,29 @@ We implement this with measurable signals: **Bayesian surprise**, **epistemic un
 
 ## 2) Curiosity Signals (Concrete, Computable)
 
-### A. Bayesian Surprise (any model or module ![M](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}M))
-Given prior ![p(theta)](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}p(\theta)), posterior ![p(theta|D cup e)](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}p(\theta\mid%20\mathcal{D}\cup\{e\})) after evidence ![e](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}e):
-![Bayesian Surprise](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\mathrm{Surprise}_M(e)%20\;=\;%20\mathrm{KL}\!\left[p(\theta\mid%20\mathcal{D}\cup\{e\})%20\,\|\,%20p(\theta\mid%20\mathcal{D})\right])
+### A. Bayesian Surprise (any model or module ![M](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}M))
+Given prior ![p(theta)](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}p(\theta)), posterior ![p(theta|D cup e)](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}p(\theta\mid%20\mathcal{D}\cup\{e\})) after evidence ![e](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}e):
+![Bayesian Surprise](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\mathrm{Surprise}_M(e)%20\;=\;%20\mathrm{KL}\!\left[p(\theta\mid%20\mathcal{D}\cup\{e\})%20\,\|\,%20p(\theta\mid%20\mathcal{D})\right])
 **Use:** Generator (schema priors), Workspace (rule proposer), Navigator (edge utilities).
 
 ### B. Epistemic Uncertainty (predictive variance)
 Approximate with ensembles / MC-dropout / SWAG:
-![Epistemic Uncertainty](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\mathrm{Var}_{\text{epistemic}}\!\left[\mathrm{score}(h)\right])
+![Epistemic Uncertainty](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\mathrm{Var}_{\text{epistemic}}\!\left[\mathrm{score}(h)\right])
 High variance flags promising knowledge gaps.
 
 ### C. Learning Progress (LP)
-For any metric ![m](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}m) (accuracy, solve rate, time-to-solve, stability variance):
-![Learning Progress](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\mathrm{LP}(t)%20\;=\;%20m(t)%20-%20m(t-\Delta))
+For any metric ![m](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}m) (accuracy, solve rate, time-to-solve, stability variance):
+![Learning Progress](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\mathrm{LP}(t)%20\;=\;%20m(t)%20-%20m(t-\Delta))
 Prioritize contexts where LP has been positive recently (the **Goldilocks** zone).
 
 ### D. Information Gain (IG) about policies or priors)
-![Information Gain](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\mathrm{IG}%20\;=\;%20\mathbb{E}_{\text{outcome}}\!\left[\mathrm{KL}\big(p(\phi%20\mid%20\text{outcome})%20\,\|\,%20p(\phi)\big)\right])
+![Information Gain](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\mathrm{IG}%20\;=\;%20\mathbb{E}_{\text{outcome}}\!\left[\mathrm{KL}\big(p(\phi%20\mid%20\text{outcome})%20\,\|\,%20p(\phi)\big)\right])
 
-where ![phi](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\phi) are parameters of proposer/critic/executor.
+where ![phi](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\phi) are parameters of proposer/critic/executor.
 
 ### E. Empowerment (controllability)
-Maximize mutual information between actions ![A](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}A) and reachable states ![S](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}S):
-![Empowerment](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\mathrm{Empower}(s)%20\;\approx\;%20I(A;%20S'%20\mid%20S=s))
+Maximize mutual information between actions ![A](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}A) and reachable states ![S](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}S):
+![Empowerment](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\mathrm{Empower}(s)%20\;\approx\;%20I(A;%20S'%20\mid%20S=s))
 Prefer branches where small, interpretable actions produce reliable, diverse outcomes.
 
 ---
@@ -55,25 +55,25 @@ Prefer branches where small, interpretable actions produce reliable, diverse out
 
 **Task curiosity score**
 
-![Task Curiosity Score](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}C_{\text{task}}(\tau)%20\;=\;%20\alpha\,\mathrm{IG}_{\text{solver}}(\tau)%20\;+\;%20\beta\,\mathrm{Surprise}_{\text{prior}}(\tau)%20\;+\;%20\gamma\,\mathrm{LP}_{\text{forecast}}(\tau)%20\;-\;%20\delta\,\mathrm{Redundancy}(\tau))
+![Task Curiosity Score](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}C_{\text{task}}(\tau)%20\;=\;%20\alpha\,\mathrm{IG}_{\text{solver}}(\tau)%20\;+\;%20\beta\,\mathrm{Surprise}_{\text{prior}}(\tau)%20\;+\;%20\gamma\,\mathrm{LP}_{\text{forecast}}(\tau)%20\;-\;%20\delta\,\mathrm{Redundancy}(\tau))
 
 **Use:** Rank sampled tasks; select a Pareto-frontier of *(difficulty, curiosity, stability)* for the batch.
 
 **Mechanic:** UCB-style scheduler per schema family:
 
-![UCB Formula](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\mathrm{UCB}_k%20\;=\;%20\hat{\mu}_k%20\;+\;%20c\sqrt{\frac{\ln%20N}{n_k}})
+![UCB Formula](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\mathrm{UCB}_k%20\;=\;%20\hat{\mu}_k%20\;+\;%20c\sqrt{\frac{\ln%20N}{n_k}})
 
-where arm ![k](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}k) is a schema bucket, ![mu_k](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\hat{\mu}_k) = recent LP, ![n_k](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}n_k) pulls, ![N](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}N) total pulls.
+where arm ![k](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}k) is a schema bucket, ![mu_k](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\hat{\mu}_k) = recent LP, ![n_k](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}n_k) pulls, ![N](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}N) total pulls.
 
 ---
 
 ### 3.2 Workspace (the Conductor): *Which hypothesis is worth thinking about next?*
 
-For each candidate hypothesis ![h](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}h) (program edit / parameter set):
-![Hypothesis Score](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\mathrm{Score}(h)%20\;=\;%20\underbrace{\mathrm{Fit}(h)}_{\text{critic}}%20\;-\;%20\lambda%20\underbrace{\mathrm{Instability}(h)}_{\text{navigator}}%20\;+\;%20\eta%20\underbrace{\mathrm{Curiosity}(h)}_{\text{below}})
+For each candidate hypothesis ![h](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}h) (program edit / parameter set):
+![Hypothesis Score](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\mathrm{Score}(h)%20\;=\;%20\underbrace{\mathrm{Fit}(h)}_{\text{critic}}%20\;-\;%20\lambda%20\underbrace{\mathrm{Instability}(h)}_{\text{navigator}}%20\;+\;%20\eta%20\underbrace{\mathrm{Curiosity}(h)}_{\text{below}})
 with
 
-![Hypothesis Curiosity](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\mathrm{Curiosity}(h)%20\;=\;%20\alpha\,\mathrm{Var}_{\text{epistemic}}[\mathrm{Fit}(h)]%20\;+\;%20\beta\,\mathrm{IG}(h)%20\;+\;%20\rho\,\mathrm{Empower}(h))
+![Hypothesis Curiosity](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\mathrm{Curiosity}(h)%20\;=\;%20\alpha\,\mathrm{Var}_{\text{epistemic}}[\mathrm{Fit}(h)]%20\;+\;%20\beta\,\mathrm{IG}(h)%20\;+\;%20\rho\,\mathrm{Empower}(h))
 
 **Behavior:** hypotheses that are *plausible* but *uncertain and informative* win workspace admission—“I can learn something here.”
 
@@ -82,10 +82,10 @@ with
 ### 3.3 Graph Pendulum (the Navigator): *Where is interesting but not chaotic?*
 
 **Basin curiosity** combines stability with novelty:
-![Basin Curiosity](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}C_{\text{basin}}(b)%20\;=\;%20\underbrace{\exp\!\big(-\mathrm{Var}_{\text{stab}}(b)\big)}_{\text{stable}}%20\cdot%20\underbrace{\mathrm{Novelty}(b)}_{\text{rare%20motif}}%20\cdot%20\underbrace{\mathrm{LP}(b)}_{\text{recent%20gains}})
+![Basin Curiosity](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}C_{\text{basin}}(b)%20\;=\;%20\underbrace{\exp\!\big(-\mathrm{Var}_{\text{stab}}(b)\big)}_{\text{stable}}%20\cdot%20\underbrace{\mathrm{Novelty}(b)}_{\text{rare%20motif}}%20\cdot%20\underbrace{\mathrm{LP}(b)}_{\text{recent%20gains}})
 
-**Edge curiosity** for trying new transitions ![i to j](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}i\!\to\!j):
-![Edge Curiosity](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}C_{i\to%20j}%20\;=\;%20\omega_1\,\mathrm{IG}_{i\to%20j}%20\;+\;%20\omega_2\,\mathrm{Surprise}_{i\to%20j}%20\;+\;%20\omega_3\,\mathrm{CoverageGap}_{\mathrm{schema}(j)})
+**Edge curiosity** for trying new transitions ![i to j](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}i\!\to\!j):
+![Edge Curiosity](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}C_{i\to%20j}%20\;=\;%20\omega_1\,\mathrm{IG}_{i\to%20j}%20\;+\;%20\omega_2\,\mathrm{Surprise}_{i\to%20j}%20\;+\;%20\omega_3\,\mathrm{CoverageGap}_{\mathrm{schema}(j)})
 
 **Policy:** prefer **stable-but-uncertain** regions; downweight **chaotic** (high sensitivity, entropy) unless expected IG justifies a **bounded probe**.
 
@@ -95,15 +95,15 @@ with
 
 At any choice point (task selection, hypothesis selection, path expansion), maximize
 
-![Unifying Objective](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}U%20\;=\;%20\underbrace{\mathbb{E}[\mathrm{SolveGain}]}_{\text{exploitation}}%20\;-\;%20\lambda%20\underbrace{\mathrm{Compute}}_{\text{budget}}%20\;-\;%20\mu%20\underbrace{\mathrm{Instability}}_{\text{navigator}}%20\;+\;%20\kappa%20\underbrace{\mathrm{Curiosity}}_{\text{IG/LP/Surprise}})
+![Unifying Objective](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}U%20\;=\;%20\underbrace{\mathbb{E}[\mathrm{SolveGain}]}_{\text{exploitation}}%20\;-\;%20\lambda%20\underbrace{\mathrm{Compute}}_{\text{budget}}%20\;-\;%20\mu%20\underbrace{\mathrm{Instability}}_{\text{navigator}}%20\;+\;%20\kappa%20\underbrace{\mathrm{Curiosity}}_{\text{IG/LP/Surprise}})
 
-Tune ![lambda mu kappa](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}(\lambda,\mu,\kappa)) via meta-optimization; or adapt online with a **curiosity budget**.
+Tune ![lambda mu kappa](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}(\lambda,\mu,\kappa)) via meta-optimization; or adapt online with a **curiosity budget**.
 
 ---
 
 ## 5) The Curiosity Budget & Ledger (Practical Control)
 
-- **Budget:** allocate a fraction ![B in 0,1](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}B\in[0,1]) of steps/evals to curiosity-driven choices. Start higher, anneal as confidence grows.  
+- **Budget:** allocate a fraction ![B in 0,1](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}B\in[0,1]) of steps/evals to curiosity-driven choices. Start higher, anneal as confidence grows.  
 - **Ledger:** per module/basin/edge, track *curiosity spend* vs. *learning gain*. Reassign budget toward components with best **LP-per-cost**.
 
 ```text
@@ -160,9 +160,9 @@ def navigator_expand(path):
 
 ## 8) Guardrails (to Keep Curiosity Healthy)
 
-- **Stability gate:** curiosity expansions only if predicted instability < ![tau](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\tau), or run as **bounded probes** (tiny budget, hard stop).  
+- **Stability gate:** curiosity expansions only if predicted instability < ![tau](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\tau), or run as **bounded probes** (tiny budget, hard stop).  
 - **De-leak novelty:** compute novelty on **intrinsic** descriptors (I/O signatures, grammar stats), not post-hoc solved outputs.  
-- **Reproducibility:** deterministic decoding in analysis passes; inject noise only via controlled ![epsilon](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\varepsilon)-perturbations.  
+- **Reproducibility:** deterministic decoding in analysis passes; inject noise only via controlled ![epsilon](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\varepsilon)-perturbations.  
 - **Ethical/compute limits:** curiosity budget cap per batch; prefer low-cost IG estimators (linear probes, small ensembles).
 
 ---
@@ -174,7 +174,7 @@ def navigator_expand(path):
 - **Data efficiency:** solves per training pair; executions per solve.  
 - **Generalization:** improvement on held-out schema combos targeted by curiosity.  
 - **Stability impact:** variance & trajectory entropy under curiosity schedules.  
-- **Ablations:** remove IG, remove LP, remove empowerment, swap UCB with ![epsilon](https://latex.codecogs.com/svg.latex?\bg_white&space;\color{black}\varepsilon)-greedy.
+- **Ablations:** remove IG, remove LP, remove empowerment, swap UCB with ![epsilon](https://latex.codecogs.com/svg.latex?\pagecolor{white}\color{black}\varepsilon)-greedy.
 
 ---
 
