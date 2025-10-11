@@ -896,7 +896,7 @@ Xu, Y., Khalil, E. B., & Sanner, S. (2022). Graphs, constraints, and search for 
 
 ## Appendix B: Implementation Details
 
-Full code repository available at: [github.com/example/arc-curiosity]
+*Code implementation is currently under development.*
 
 ### B.1 System Requirements
 - Python 3.8+
