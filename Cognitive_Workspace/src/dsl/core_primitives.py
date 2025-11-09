@@ -1619,3 +1619,1462 @@ def select_aligned(objects: ObjectSet, axis: Axis, tolerance: float = 0.5) -> Ob
             return max(groups.values(), key=len)
 
     return []
+
+
+# ============================================================================
+# EXTENDED PATTERN OPERATIONS (7 primitives)
+# ============================================================================
+
+def tile_with_spacing(object: Object, rows: int, cols: int, spacing: int = 1,
+                     color: Optional[Color] = None,
+                     grid_shape: Optional[Tuple[int, int]] = None) -> Grid:
+    """
+    Tile an object with spacing between copies.
+
+    Args:
+        object: Object to tile
+        rows: Number of rows in tiling
+        cols: Number of columns in tiling
+        spacing: Gap between tiles (in cells)
+        color: Color to use (if None, uses color from object context)
+        grid_shape: Output grid size (auto-computed if None)
+
+    Returns:
+        Grid with tiled pattern
+    """
+    if not object:
+        if grid_shape:
+            return np.zeros(grid_shape, dtype=int)
+        return np.zeros((10, 10), dtype=int)
+
+    # Get object bounds
+    min_r, min_c, max_r, max_c = get_object_bounds(object)
+    obj_height = max_r - min_r + 1
+    obj_width = max_c - min_c + 1
+
+    # Normalize object to start at (0, 0)
+    normalized = [(r - min_r, c - min_c) for r, c in object]
+
+    # Calculate grid size if not provided
+    if grid_shape is None:
+        total_height = rows * obj_height + (rows - 1) * spacing
+        total_width = cols * obj_width + (cols - 1) * spacing
+        grid_shape = (total_height, total_width)
+
+    result = np.zeros(grid_shape, dtype=int)
+
+    # Default color
+    if color is None:
+        color = 1
+
+    # Tile with spacing
+    for r in range(rows):
+        for c in range(cols):
+            offset_r = r * (obj_height + spacing)
+            offset_c = c * (obj_width + spacing)
+
+            for obj_r, obj_c in normalized:
+                new_r = offset_r + obj_r
+                new_c = offset_c + obj_c
+
+                if 0 <= new_r < grid_shape[0] and 0 <= new_c < grid_shape[1]:
+                    result[new_r, new_c] = color
+
+    return result
+
+
+def copy_to_pattern(object: Object, pattern_object: Object, color: Color = 1,
+                   grid_shape: Optional[Tuple[int, int]] = None) -> Grid:
+    """
+    Copy an object to each position in a pattern object.
+
+    Args:
+        object: Object to copy
+        pattern_object: Object defining positions where copies should be placed
+        color: Color for copied objects
+        grid_shape: Output grid size
+
+    Returns:
+        Grid with copies at pattern positions
+    """
+    if not object or not pattern_object:
+        if grid_shape:
+            return np.zeros(grid_shape, dtype=int)
+        return np.zeros((10, 10), dtype=int)
+
+    # Normalize object to (0, 0)
+    min_r, min_c, max_r, max_c = get_object_bounds(object)
+    normalized = [(r - min_r, c - min_c) for r, c in object]
+
+    # Determine grid size
+    if grid_shape is None:
+        all_positions = pattern_object + object
+        min_r, min_c, max_r, max_c = get_object_bounds(all_positions)
+        grid_shape = (max_r + 5, max_c + 5)
+
+    result = np.zeros(grid_shape, dtype=int)
+
+    # Copy object to each pattern position
+    for pattern_r, pattern_c in pattern_object:
+        for obj_r, obj_c in normalized:
+            new_r = pattern_r + obj_r
+            new_c = pattern_c + obj_c
+
+            if 0 <= new_r < grid_shape[0] and 0 <= new_c < grid_shape[1]:
+                result[new_r, new_c] = color
+
+    return result
+
+
+def symmetrize(grid: Grid, axis: Axis) -> Grid:
+    """
+    Make grid symmetric by mirroring across specified axis.
+
+    Args:
+        grid: Input grid
+        axis: Axis to mirror across (HORIZONTAL, VERTICAL, BOTH, DIAGONAL, ANTI_DIAGONAL)
+
+    Returns:
+        Symmetric grid
+    """
+    result = grid.copy()
+    h, w = grid.shape
+
+    if axis == Axis.HORIZONTAL:
+        # Mirror top to bottom
+        for r in range(h // 2):
+            result[h - 1 - r, :] = result[r, :]
+
+    elif axis == Axis.VERTICAL:
+        # Mirror left to right
+        for c in range(w // 2):
+            result[:, w - 1 - c] = result[:, c]
+
+    elif axis == Axis.BOTH:
+        # Mirror both axes
+        result = symmetrize(result, Axis.HORIZONTAL)
+        result = symmetrize(result, Axis.VERTICAL)
+
+    elif axis == Axis.DIAGONAL:
+        # Mirror across main diagonal (top-left to bottom-right)
+        size = max(h, w)
+        temp = np.zeros((size, size), dtype=int)
+        temp[:h, :w] = grid
+
+        for r in range(size):
+            for c in range(r + 1, size):
+                temp[c, r] = temp[r, c]
+
+        result = temp[:h, :w]
+
+    elif axis == Axis.ANTI_DIAGONAL:
+        # Mirror across anti-diagonal (top-right to bottom-left)
+        size = max(h, w)
+        temp = np.zeros((size, size), dtype=int)
+        temp[:h, :w] = grid
+
+        for r in range(size):
+            for c in range(size - r):
+                temp[size - 1 - c, size - 1 - r] = temp[r, c]
+
+        result = temp[:h, :w]
+
+    return result
+
+
+def extend_pattern(grid: Grid, direction: Direction, steps: int = 1) -> Grid:
+    """
+    Detect and extend repeating pattern in specified direction.
+
+    Args:
+        grid: Input grid with pattern
+        direction: Direction to extend
+        steps: Number of pattern repetitions to add
+
+    Returns:
+        Extended grid
+    """
+    h, w = grid.shape
+    dr, dc = direction.value
+
+    # Try to detect pattern period
+    if direction in [Direction.DOWN, Direction.UP]:
+        # Vertical pattern - try different periods
+        for period in range(1, h // 2 + 1):
+            # Check if pattern repeats with this period
+            match = True
+            for r in range(period, h - period):
+                if not np.array_equal(grid[r, :], grid[r % period, :]):
+                    match = False
+                    break
+
+            if match:
+                # Found period, extend
+                if direction == Direction.DOWN:
+                    # Need enough repetitions to cover original + extension
+                    num_reps = (h + steps * period + period - 1) // period
+                    extension = np.tile(grid[:period, :], (num_reps, 1))
+                    return extension[:h + steps * period, :]
+                else:  # UP
+                    num_reps = (h + steps * period + period - 1) // period
+                    extension = np.tile(grid[-period:, :], (num_reps, 1))
+                    return extension[-h - steps * period:, :]
+
+    elif direction in [Direction.RIGHT, Direction.LEFT]:
+        # Horizontal pattern
+        for period in range(1, w // 2 + 1):
+            match = True
+            for c in range(period, w - period):
+                if not np.array_equal(grid[:, c], grid[:, c % period]):
+                    match = False
+                    break
+
+            if match:
+                if direction == Direction.RIGHT:
+                    num_reps = (w + steps * period + period - 1) // period
+                    extension = np.tile(grid[:, :period], (1, num_reps))
+                    return extension[:, :w + steps * period]
+                else:  # LEFT
+                    num_reps = (w + steps * period + period - 1) // period
+                    extension = np.tile(grid[:, -period:], (1, num_reps))
+                    return extension[:, -w - steps * period:]
+
+    # No pattern detected, just tile the whole grid
+    if direction in [Direction.DOWN, Direction.UP]:
+        return np.tile(grid, (steps + 1, 1))
+    else:  # RIGHT or LEFT
+        return np.tile(grid, (1, steps + 1))
+
+
+def rotate_pattern(objects: ObjectSet, center: Point, angles: List[int],
+                  colors: Optional[List[Color]] = None,
+                  grid_shape: Optional[Tuple[int, int]] = None) -> Grid:
+    """
+    Create rotational copies of objects around a center point.
+
+    Args:
+        objects: Objects to rotate
+        center: Center point for rotation
+        angles: List of angles to rotate to (in degrees)
+        colors: Colors for each rotated copy (optional)
+        grid_shape: Output grid size
+
+    Returns:
+        Grid with rotational pattern
+    """
+    if not objects:
+        if grid_shape:
+            return np.zeros(grid_shape, dtype=int)
+        return np.zeros((10, 10), dtype=int)
+
+    # Determine grid size
+    if grid_shape is None:
+        all_points = []
+        for obj in objects:
+            all_points.extend(obj)
+        min_r, min_c, max_r, max_c = get_object_bounds(all_points)
+        grid_shape = (max(max_r + 10, 20), max(max_c + 10, 20))
+
+    result = np.zeros(grid_shape, dtype=int)
+
+    # Default colors
+    if colors is None:
+        colors = [1] * len(angles)
+
+    # Rotate and place each copy
+    for angle, color in zip(angles, colors):
+        for obj in objects:
+            rotated = rotate(obj, angle, center)
+            for r, c in rotated:
+                if 0 <= r < grid_shape[0] and 0 <= c < grid_shape[1]:
+                    result[r, c] = color
+
+    return result
+
+
+def kaleidoscope(object: Object, order: int, color: Optional[Color] = None,
+                grid_shape: Optional[Tuple[int, int]] = None) -> Grid:
+    """
+    Create n-fold rotational symmetry pattern (kaleidoscope effect).
+
+    Args:
+        object: Object to create pattern from
+        order: Order of symmetry (e.g., 4 for 4-fold symmetry)
+        color: Color to use
+        grid_shape: Output grid size
+
+    Returns:
+        Grid with kaleidoscope pattern
+    """
+    if not object or order < 2:
+        if grid_shape:
+            return np.zeros(grid_shape, dtype=int)
+        return np.zeros((10, 10), dtype=int)
+
+    # Determine grid size and center
+    if grid_shape is None:
+        min_r, min_c, max_r, max_c = get_object_bounds(object)
+        size = max(max_r - min_r, max_c - min_c) * 3
+        grid_shape = (size, size)
+
+    center = (grid_shape[0] // 2, grid_shape[1] // 2)
+
+    # Calculate angles for n-fold symmetry
+    angles = [i * (360 // order) for i in range(order)]
+
+    # Default color
+    if color is None:
+        color = 1
+
+    # Create rotational pattern
+    return rotate_pattern([object], center, angles, [color] * len(angles), grid_shape)
+
+
+def tessellate(objects: ObjectSet, pattern: str = 'square',
+              colors: Optional[List[Color]] = None,
+              grid_shape: Tuple[int, int] = (30, 30)) -> Grid:
+    """
+    Arrange objects in tessellation pattern.
+
+    Args:
+        objects: Objects to tessellate
+        pattern: Tessellation type ('square', 'hexagonal', 'brick', 'triangular')
+        colors: Colors for objects (cycles if fewer than objects)
+        grid_shape: Output grid size
+
+    Returns:
+        Grid with tessellation
+    """
+    if not objects:
+        return np.zeros(grid_shape, dtype=int)
+
+    result = np.zeros(grid_shape, dtype=int)
+
+    # Default colors
+    if colors is None:
+        colors = [1]
+
+    # Get object size
+    obj = objects[0]
+    min_r, min_c, max_r, max_c = get_object_bounds(obj)
+    obj_height = max_r - min_r + 1
+    obj_width = max_c - min_c + 1
+    normalized = [(r - min_r, c - min_c) for r, c in obj]
+
+    obj_idx = 0
+
+    if pattern == 'square':
+        # Regular square grid
+        for r in range(0, grid_shape[0], obj_height):
+            for c in range(0, grid_shape[1], obj_width):
+                color = colors[obj_idx % len(colors)]
+                for obj_r, obj_c in normalized:
+                    new_r, new_c = r + obj_r, c + obj_c
+                    if 0 <= new_r < grid_shape[0] and 0 <= new_c < grid_shape[1]:
+                        result[new_r, new_c] = color
+                obj_idx += 1
+
+    elif pattern == 'brick':
+        # Brick pattern (offset every other row)
+        row_idx = 0
+        for r in range(0, grid_shape[0], obj_height):
+            offset = (obj_width // 2) if row_idx % 2 == 1 else 0
+            for c in range(-offset, grid_shape[1], obj_width):
+                color = colors[obj_idx % len(colors)]
+                for obj_r, obj_c in normalized:
+                    new_r, new_c = r + obj_r, c + obj_c
+                    if 0 <= new_r < grid_shape[0] and 0 <= new_c < grid_shape[1]:
+                        result[new_r, new_c] = color
+                obj_idx += 1
+            row_idx += 1
+
+    elif pattern == 'hexagonal':
+        # Hexagonal pattern (approximate with offset rows)
+        row_idx = 0
+        spacing_v = max(1, obj_height * 3 // 4)
+        for r in range(0, grid_shape[0], spacing_v):
+            offset = (obj_width // 2) if row_idx % 2 == 1 else 0
+            for c in range(-offset, grid_shape[1], obj_width):
+                color = colors[obj_idx % len(colors)]
+                for obj_r, obj_c in normalized:
+                    new_r, new_c = r + obj_r, c + obj_c
+                    if 0 <= new_r < grid_shape[0] and 0 <= new_c < grid_shape[1]:
+                        result[new_r, new_c] = color
+                obj_idx += 1
+            row_idx += 1
+
+    elif pattern == 'triangular':
+        # Triangular pattern (alternating orientation)
+        row_idx = 0
+        for r in range(0, grid_shape[0], obj_height):
+            offset = (obj_width // 2) if row_idx % 2 == 1 else 0
+            for c in range(-offset, grid_shape[1], obj_width):
+                color = colors[obj_idx % len(colors)]
+                # Alternate between normal and rotated
+                if (row_idx + c // obj_width) % 2 == 0:
+                    obj_to_use = normalized
+                else:
+                    obj_to_use = [(obj_width - 1 - obj_c, obj_r) for obj_r, obj_c in normalized]
+
+                for obj_r, obj_c in obj_to_use:
+                    new_r, new_c = r + obj_r, c + obj_c
+                    if 0 <= new_r < grid_shape[0] and 0 <= new_c < grid_shape[1]:
+                        result[new_r, new_c] = color
+                obj_idx += 1
+            row_idx += 1
+
+    return result
+
+
+# ============================================================================
+# EXTENDED GRID OPERATIONS (4 primitives)
+# ============================================================================
+
+def split_grid(grid: Grid, rows: int, cols: int) -> List[Grid]:
+    """
+    Split grid into rows × cols subgrids.
+
+    Args:
+        grid: Input grid to split
+        rows: Number of rows to split into
+        cols: Number of columns to split into
+
+    Returns:
+        List of subgrids (row-major order)
+    """
+    h, w = grid.shape
+
+    # Calculate subgrid dimensions
+    subgrid_h = h // rows
+    subgrid_w = w // cols
+
+    subgrids = []
+
+    for r in range(rows):
+        for c in range(cols):
+            start_r = r * subgrid_h
+            end_r = start_r + subgrid_h if r < rows - 1 else h
+            start_c = c * subgrid_w
+            end_c = start_c + subgrid_w if c < cols - 1 else w
+
+            subgrid = grid[start_r:end_r, start_c:end_c].copy()
+            subgrids.append(subgrid)
+
+    return subgrids
+
+
+def merge_grids(subgrids: List[Grid], rows: int, cols: int) -> Grid:
+    """
+    Merge subgrids into single grid.
+
+    Args:
+        subgrids: List of subgrids in row-major order
+        rows: Number of rows in layout
+        cols: Number of columns in layout
+
+    Returns:
+        Merged grid
+    """
+    if not subgrids:
+        return np.zeros((10, 10), dtype=int)
+
+    if len(subgrids) != rows * cols:
+        raise ValueError(f"Expected {rows * cols} subgrids, got {len(subgrids)}")
+
+    # Get dimensions
+    subgrid_heights = []
+    subgrid_widths = []
+
+    for r in range(rows):
+        h = subgrids[r * cols].shape[0]
+        subgrid_heights.append(h)
+
+    for c in range(cols):
+        w = subgrids[c].shape[1]
+        subgrid_widths.append(w)
+
+    total_h = sum(subgrid_heights)
+    total_w = sum(subgrid_widths)
+
+    result = np.zeros((total_h, total_w), dtype=int)
+
+    # Place subgrids
+    curr_r = 0
+    for r in range(rows):
+        curr_c = 0
+        for c in range(cols):
+            idx = r * cols + c
+            subgrid = subgrids[idx]
+            h, w = subgrid.shape
+
+            result[curr_r:curr_r + h, curr_c:curr_c + w] = subgrid
+
+            curr_c += w
+        curr_r += subgrid_heights[r]
+
+    return result
+
+
+def pad(grid: Grid, padding: Union[int, Tuple[int, int, int, int]],
+       fill_color: Color = 0) -> Grid:
+    """
+    Add padding border around grid.
+
+    Args:
+        grid: Input grid
+        padding: Either single value (all sides) or (top, bottom, left, right)
+        fill_color: Color for padding
+
+    Returns:
+        Padded grid
+    """
+    if isinstance(padding, int):
+        top = bottom = left = right = padding
+    else:
+        top, bottom, left, right = padding
+
+    h, w = grid.shape
+    new_h = h + top + bottom
+    new_w = w + left + right
+
+    result = np.full((new_h, new_w), fill_color, dtype=int)
+    result[top:top + h, left:left + w] = grid
+
+    return result
+
+
+def resize_grid(grid: Grid, new_shape: Tuple[int, int],
+               method: str = 'nearest') -> Grid:
+    """
+    Resize grid to new dimensions.
+
+    Args:
+        grid: Input grid
+        new_shape: Target (height, width)
+        method: Resize method ('nearest', 'crop', 'pad')
+
+    Returns:
+        Resized grid
+    """
+    h, w = grid.shape
+    new_h, new_w = new_shape
+
+    if method == 'crop':
+        # Crop to fit
+        result = grid[:new_h, :new_w].copy()
+        if result.shape[0] < new_h or result.shape[1] < new_w:
+            # Need padding too
+            padded = np.zeros(new_shape, dtype=int)
+            padded[:result.shape[0], :result.shape[1]] = result
+            return padded
+        return result
+
+    elif method == 'pad':
+        # Pad to fit
+        result = np.zeros(new_shape, dtype=int)
+        copy_h = min(h, new_h)
+        copy_w = min(w, new_w)
+        result[:copy_h, :copy_w] = grid[:copy_h, :copy_w]
+        return result
+
+    else:  # 'nearest' - nearest neighbor interpolation
+        result = np.zeros(new_shape, dtype=int)
+
+        for r in range(new_h):
+            for c in range(new_w):
+                # Map to original coordinates
+                orig_r = int(r * h / new_h)
+                orig_c = int(c * w / new_w)
+
+                # Clamp to valid range
+                orig_r = min(orig_r, h - 1)
+                orig_c = min(orig_c, w - 1)
+
+                result[r, c] = grid[orig_r, orig_c]
+
+        return result
+
+
+# ============================================================================
+# EXTENDED COLOR OPERATIONS (5 primitives)
+# ============================================================================
+
+def gradient_color(grid: Grid, start_color: Color, end_color: Color,
+                  direction: Axis = Axis.HORIZONTAL,
+                  target_color: Optional[Color] = None) -> Grid:
+    """
+    Apply color gradient from start_color to end_color.
+
+    Args:
+        grid: Input grid
+        start_color: Starting color
+        end_color: Ending color
+        direction: Direction of gradient
+        target_color: Only apply gradient to cells of this color (None = all non-zero)
+
+    Returns:
+        Grid with gradient applied
+    """
+    result = grid.copy()
+    h, w = grid.shape
+
+    # Create color range
+    num_steps = max(h, w)
+    if start_color == end_color:
+        return result
+
+    if direction == Axis.HORIZONTAL:
+        for c in range(w):
+            # Calculate color for this column
+            ratio = c / (w - 1) if w > 1 else 0
+            color = int(start_color + ratio * (end_color - start_color))
+            color = min(max(color, 0), 9)  # Clamp to valid range
+
+            for r in range(h):
+                if target_color is None:
+                    if result[r, c] != 0:
+                        result[r, c] = color
+                else:
+                    if result[r, c] == target_color:
+                        result[r, c] = color
+
+    elif direction == Axis.VERTICAL:
+        for r in range(h):
+            ratio = r / (h - 1) if h > 1 else 0
+            color = int(start_color + ratio * (end_color - start_color))
+            color = min(max(color, 0), 9)
+
+            for c in range(w):
+                if target_color is None:
+                    if result[r, c] != 0:
+                        result[r, c] = color
+                else:
+                    if result[r, c] == target_color:
+                        result[r, c] = color
+
+    return result
+
+
+def recolor_by_neighbor(grid: Grid, object: Object,
+                       rule: str = 'most_common') -> Grid:
+    """
+    Recolor object based on neighboring colors.
+
+    Args:
+        grid: Input grid (provides color context)
+        object: Object to recolor
+        rule: Recoloring rule ('most_common', 'sum', 'max', 'min')
+
+    Returns:
+        Grid with recolored object
+    """
+    result = grid.copy()
+
+    if not object:
+        return result
+
+    # Get neighbor colors for the object
+    neighbor_colors = []
+
+    for r, c in object:
+        # Check 4-connected neighbors
+        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < grid.shape[0] and 0 <= nc < grid.shape[1]:
+                if (nr, nc) not in object:  # External neighbor
+                    color = grid[nr, nc]
+                    if color != 0:
+                        neighbor_colors.append(color)
+
+    if not neighbor_colors:
+        return result
+
+    # Apply rule
+    if rule == 'most_common':
+        from collections import Counter
+        new_color = Counter(neighbor_colors).most_common(1)[0][0]
+
+    elif rule == 'sum':
+        new_color = sum(neighbor_colors) % 10  # Wrap around
+
+    elif rule == 'max':
+        new_color = max(neighbor_colors)
+
+    elif rule == 'min':
+        new_color = min(neighbor_colors)
+
+    else:
+        new_color = neighbor_colors[0]
+
+    # Recolor object
+    for r, c in object:
+        if 0 <= r < result.shape[0] and 0 <= c < result.shape[1]:
+            result[r, c] = new_color
+
+    return result
+
+
+def palette_reduce(grid: Grid, num_colors: int = 3) -> Grid:
+    """
+    Reduce color palette to num_colors using clustering.
+
+    Args:
+        grid: Input grid
+        num_colors: Target number of colors (excluding background)
+
+    Returns:
+        Grid with reduced palette
+    """
+    result = grid.copy()
+
+    # Get unique colors (excluding 0)
+    unique_colors = sorted(set(grid.flatten()) - {0})
+
+    if len(unique_colors) <= num_colors:
+        return result
+
+    # Simple quantization: map to evenly spaced colors
+    target_colors = [i * 9 // (num_colors - 1) for i in range(num_colors)]
+    if target_colors[-1] == 0:
+        target_colors[-1] = 9
+
+    # Map each color to nearest target
+    color_map = {}
+    for color in unique_colors:
+        closest = min(target_colors, key=lambda c: abs(c - color))
+        color_map[color] = closest
+
+    # Apply mapping
+    for r in range(grid.shape[0]):
+        for c in range(grid.shape[1]):
+            if result[r, c] in color_map:
+                result[r, c] = color_map[result[r, c]]
+
+    return result
+
+
+def color_cycle(objects: ObjectSet, colors: List[Color],
+               grid_shape: Optional[Tuple[int, int]] = None) -> Grid:
+    """
+    Assign colors to objects cyclically from color list.
+
+    Args:
+        objects: Objects to color
+        colors: List of colors to cycle through
+        grid_shape: Output grid size
+
+    Returns:
+        Grid with colored objects
+    """
+    if not objects or not colors:
+        if grid_shape:
+            return np.zeros(grid_shape, dtype=int)
+        return np.zeros((10, 10), dtype=int)
+
+    # Determine grid size
+    if grid_shape is None:
+        all_points = []
+        for obj in objects:
+            all_points.extend(obj)
+        min_r, min_c, max_r, max_c = get_object_bounds(all_points)
+        grid_shape = (max_r + 1, max_c + 1)
+
+    result = np.zeros(grid_shape, dtype=int)
+
+    # Assign colors cyclically
+    for i, obj in enumerate(objects):
+        color = colors[i % len(colors)]
+        for r, c in obj:
+            if 0 <= r < grid_shape[0] and 0 <= c < grid_shape[1]:
+                result[r, c] = color
+
+    return result
+
+
+def invert_colors(grid: Grid, palette: Optional[List[Color]] = None) -> Grid:
+    """
+    Invert color mapping.
+
+    Args:
+        grid: Input grid
+        palette: Color palette to invert (None = use all colors 1-9)
+
+    Returns:
+        Grid with inverted colors
+    """
+    result = grid.copy()
+
+    if palette is None:
+        # Invert all non-zero colors: map c -> (10 - c)
+        for r in range(grid.shape[0]):
+            for c in range(grid.shape[1]):
+                if result[r, c] != 0:
+                    result[r, c] = 10 - result[r, c]
+    else:
+        # Invert within palette
+        color_map = {}
+        n = len(palette)
+        for i, color in enumerate(palette):
+            color_map[color] = palette[n - 1 - i]
+
+        for r in range(grid.shape[0]):
+            for c in range(grid.shape[1]):
+                if result[r, c] in color_map:
+                    result[r, c] = color_map[result[r, c]]
+
+    return result
+
+
+# ============================================================================
+# EXTENDED TOPOLOGICAL OPERATIONS (3 primitives)
+# ============================================================================
+
+def hollow(object: Object) -> Object:
+    """
+    Keep only the outline of an object (remove interior).
+
+    Args:
+        object: Object to hollow
+
+    Returns:
+        Object with only boundary pixels
+    """
+    if not object:
+        return []
+
+    object_set = set(object)
+    boundary = []
+
+    # A pixel is on boundary if it has at least one non-object neighbor
+    for r, c in object:
+        is_boundary = False
+        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            nr, nc = r + dr, c + dc
+            if (nr, nc) not in object_set:
+                is_boundary = True
+                break
+
+        if is_boundary:
+            boundary.append((r, c))
+
+    return boundary
+
+
+def convex_hull(object: Object) -> Object:
+    """
+    Compute convex hull of object.
+
+    Args:
+        object: Input object
+
+    Returns:
+        Convex hull as object
+    """
+    if len(object) < 3:
+        return object.copy()
+
+    # Simple gift wrapping algorithm for integer coordinates
+    points = sorted(object)
+
+    def cross_product(o, a, b):
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+
+    # Build lower hull
+    lower = []
+    for p in points:
+        while len(lower) >= 2 and cross_product(lower[-2], lower[-1], p) <= 0:
+            lower.pop()
+        lower.append(p)
+
+    # Build upper hull
+    upper = []
+    for p in reversed(points):
+        while len(upper) >= 2 and cross_product(upper[-2], upper[-1], p) <= 0:
+            upper.pop()
+        upper.append(p)
+
+    # Concatenate and remove duplicates
+    hull_points = lower[:-1] + upper[:-1]
+
+    # Fill the hull to get all interior points
+    if len(hull_points) < 3:
+        return object.copy()
+
+    # Convert hull to filled object
+    min_r = min(p[0] for p in hull_points)
+    max_r = max(p[0] for p in hull_points)
+    min_c = min(p[1] for p in hull_points)
+    max_c = max(p[1] for p in hull_points)
+
+    result = []
+
+    # Simple scan-line fill
+    for r in range(min_r, max_r + 1):
+        # Find intersections with hull boundary at this row
+        intersections = []
+
+        for i in range(len(hull_points)):
+            p1 = hull_points[i]
+            p2 = hull_points[(i + 1) % len(hull_points)]
+
+            r1, c1 = p1
+            r2, c2 = p2
+
+            # Check if edge crosses this row
+            if min(r1, r2) <= r <= max(r1, r2):
+                if r2 != r1:
+                    # Compute column intersection
+                    c = c1 + (r - r1) * (c2 - c1) / (r2 - r1)
+                    intersections.append(c)
+                elif r == r1:
+                    intersections.append(c1)
+
+        if intersections:
+            intersections = sorted(set(intersections))
+
+            # Fill between pairs of intersections
+            for i in range(0, len(intersections) - 1, 2):
+                c_start = int(intersections[i])
+                c_end = int(intersections[i + 1]) if i + 1 < len(intersections) else int(intersections[i])
+
+                for c in range(c_start, c_end + 1):
+                    result.append((r, c))
+
+    # Remove duplicates
+    return sorted(list(set(result)))
+
+
+def skeleton(object: Object, grid_shape: Optional[Tuple[int, int]] = None) -> Object:
+    """
+    Extract medial axis (skeleton) of object using thinning.
+
+    Args:
+        object: Input object
+        grid_shape: Grid size for computation
+
+    Returns:
+        Skeleton of object
+    """
+    if not object:
+        return []
+
+    # Determine grid size
+    if grid_shape is None:
+        min_r, min_c, max_r, max_c = get_object_bounds(object)
+        grid_shape = (max_r + 2, max_c + 2)
+
+    # Convert to grid
+    grid = np.zeros(grid_shape, dtype=int)
+    for r, c in object:
+        if 0 <= r < grid_shape[0] and 0 <= c < grid_shape[1]:
+            grid[r, c] = 1
+
+    # Simple thinning algorithm (Zhang-Suen)
+    def neighbors(r, c):
+        """Get 8-connected neighbors in order"""
+        return [
+            grid[r - 1, c] if r > 0 else 0,
+            grid[r - 1, c + 1] if r > 0 and c < grid_shape[1] - 1 else 0,
+            grid[r, c + 1] if c < grid_shape[1] - 1 else 0,
+            grid[r + 1, c + 1] if r < grid_shape[0] - 1 and c < grid_shape[1] - 1 else 0,
+            grid[r + 1, c] if r < grid_shape[0] - 1 else 0,
+            grid[r + 1, c - 1] if r < grid_shape[0] - 1 and c > 0 else 0,
+            grid[r, c - 1] if c > 0 else 0,
+            grid[r - 1, c - 1] if r > 0 and c > 0 else 0,
+        ]
+
+    def transitions(neighbors_list):
+        """Count 0->1 transitions"""
+        count = 0
+        for i in range(8):
+            if neighbors_list[i] == 0 and neighbors_list[(i + 1) % 8] == 1:
+                count += 1
+        return count
+
+    # Iterative thinning
+    changed = True
+    max_iterations = 100
+    iteration = 0
+
+    while changed and iteration < max_iterations:
+        changed = False
+        iteration += 1
+
+        # Step 1
+        to_remove = []
+        for r in range(1, grid_shape[0] - 1):
+            for c in range(1, grid_shape[1] - 1):
+                if grid[r, c] == 1:
+                    n = neighbors(r, c)
+                    num_neighbors = sum(n)
+                    num_transitions = transitions(n)
+
+                    if (2 <= num_neighbors <= 6 and
+                        num_transitions == 1 and
+                        n[0] * n[2] * n[4] == 0 and
+                        n[2] * n[4] * n[6] == 0):
+                        to_remove.append((r, c))
+
+        for r, c in to_remove:
+            grid[r, c] = 0
+            changed = True
+
+        # Step 2
+        to_remove = []
+        for r in range(1, grid_shape[0] - 1):
+            for c in range(1, grid_shape[1] - 1):
+                if grid[r, c] == 1:
+                    n = neighbors(r, c)
+                    num_neighbors = sum(n)
+                    num_transitions = transitions(n)
+
+                    if (2 <= num_neighbors <= 6 and
+                        num_transitions == 1 and
+                        n[0] * n[2] * n[6] == 0 and
+                        n[0] * n[4] * n[6] == 0):
+                        to_remove.append((r, c))
+
+        for r, c in to_remove:
+            grid[r, c] = 0
+            changed = True
+
+    # Convert back to object
+    result = []
+    for r in range(grid_shape[0]):
+        for c in range(grid_shape[1]):
+            if grid[r, c] == 1:
+                result.append((r, c))
+
+    return result
+
+
+# ============================================================================
+# REMAINING PRIMITIVES (9 final primitives)
+# ============================================================================
+
+def select_by_property(objects: ObjectSet, property_name: str,
+                      comparator: str, threshold: Union[int, float]) -> ObjectSet:
+    """
+    Filter objects by computed property.
+
+    Args:
+        objects: Objects to filter
+        property_name: Property to compute ('area', 'perimeter', 'compactness', 'aspect_ratio')
+        comparator: Comparison operator ('==', '<', '>', '<=', '>=', '!=')
+        threshold: Value to compare against
+
+    Returns:
+        Filtered objects
+    """
+    result = []
+
+    for obj in objects:
+        # Compute property
+        if property_name == 'area':
+            value = len(obj)
+
+        elif property_name == 'perimeter':
+            boundary = hollow(obj)
+            value = len(boundary)
+
+        elif property_name == 'compactness':
+            area = len(obj)
+            boundary = hollow(obj)
+            perimeter = len(boundary)
+            if perimeter > 0:
+                value = (4 * np.pi * area) / (perimeter ** 2)
+            else:
+                value = 0
+
+        elif property_name == 'aspect_ratio':
+            min_r, min_c, max_r, max_c = get_object_bounds(obj)
+            height = max_r - min_r + 1
+            width = max_c - min_c + 1
+            value = width / height if height > 0 else 0
+
+        else:
+            continue
+
+        # Apply comparator
+        if comparator == '==':
+            match = (value == threshold)
+        elif comparator == '<':
+            match = (value < threshold)
+        elif comparator == '>':
+            match = (value > threshold)
+        elif comparator == '<=':
+            match = (value <= threshold)
+        elif comparator == '>=':
+            match = (value >= threshold)
+        elif comparator == '!=':
+            match = (value != threshold)
+        else:
+            match = False
+
+        if match:
+            result.append(obj)
+
+    return result
+
+
+def select_unique_color(grid: Grid) -> ObjectSet:
+    """
+    Select objects that have a unique color (appear only once).
+
+    Args:
+        grid: Input grid
+
+    Returns:
+        Objects with unique colors
+    """
+    from collections import Counter
+
+    # Count objects per color
+    color_counts = Counter()
+
+    for color in range(1, 10):
+        objects = select_by_color(grid, color)
+        if objects:
+            color_counts[color] = len(objects)
+
+    # Select colors that appear exactly once
+    unique_colors = [color for color, count in color_counts.items() if count == 1]
+
+    result = []
+    for color in unique_colors:
+        objects = select_by_color(grid, color)
+        result.extend(objects)
+
+    return result
+
+
+def select_by_distance(objects: ObjectSet, reference: Object,
+                      min_dist: int = 0, max_dist: int = 100) -> ObjectSet:
+    """
+    Select objects within distance range from reference.
+
+    Args:
+        objects: Objects to filter
+        reference: Reference object
+        min_dist: Minimum distance
+        max_dist: Maximum distance
+
+    Returns:
+        Filtered objects
+    """
+    if not reference:
+        return []
+
+    # Compute reference centroid
+    ref_r, ref_c = compute_centroid(reference)
+
+    result = []
+
+    for obj in objects:
+        # Compute object centroid
+        obj_r, obj_c = compute_centroid(obj)
+
+        # Compute distance
+        dist = np.sqrt((obj_r - ref_r) ** 2 + (obj_c - ref_c) ** 2)
+
+        if min_dist <= dist <= max_dist:
+            result.append(obj)
+
+    return result
+
+
+def select_background(grid: Grid) -> Object:
+    """
+    Extract background pattern (most common color regions).
+
+    Args:
+        grid: Input grid
+
+    Returns:
+        Background object
+    """
+    # Find most common non-zero color
+    from collections import Counter
+
+    colors = grid.flatten()
+    color_counts = Counter(colors)
+
+    # Remove background (0)
+    if 0 in color_counts:
+        del color_counts[0]
+
+    if not color_counts:
+        return []
+
+    # Most common color is likely background
+    most_common_color = color_counts.most_common(1)[0][0]
+
+    # Get largest connected component of that color
+    objects = select_by_color(grid, most_common_color)
+
+    if not objects:
+        return []
+
+    # Return largest component
+    largest = select_largest(objects, k=1)
+    return largest[0] if largest else []
+
+
+def scale_to_fit(object: Object, target_width: int, target_height: int) -> Object:
+    """
+    Scale object to fit within target dimensions.
+
+    Args:
+        object: Object to scale
+        target_width: Target width
+        target_height: Target height
+
+    Returns:
+        Scaled object
+    """
+    if not object:
+        return []
+
+    # Get current bounds
+    min_r, min_c, max_r, max_c = get_object_bounds(object)
+    curr_height = max_r - min_r + 1
+    curr_width = max_c - min_c + 1
+
+    # Compute scale factor
+    scale_h = target_height / curr_height
+    scale_w = target_width / curr_width
+    scale_factor = min(scale_h, scale_w)
+
+    # Scale using existing scale primitive
+    return scale(object, int(scale_factor))
+
+
+def orbit(object: Object, center: Point, angle: int, radius: Optional[int] = None) -> Object:
+    """
+    Move object in circular orbit around center.
+
+    Args:
+        object: Object to move
+        center: Center of orbit
+        angle: Angle to rotate to (degrees)
+        radius: Orbit radius (None = use current distance)
+
+    Returns:
+        Orbited object
+    """
+    if not object:
+        return []
+
+    # Compute object centroid
+    obj_r, obj_c = compute_centroid(object)
+    center_r, center_c = center
+
+    # Current radius
+    curr_radius = np.sqrt((obj_r - center_r) ** 2 + (obj_c - center_c) ** 2)
+
+    if radius is None:
+        radius = curr_radius
+
+    # Compute new position
+    angle_rad = np.radians(angle)
+    new_r = center_r + radius * np.sin(angle_rad)
+    new_c = center_c + radius * np.cos(angle_rad)
+
+    # Translate object
+    dr = int(new_r - obj_r)
+    dc = int(new_c - obj_c)
+
+    return translate(object, dr, dc)
+
+
+def majority_vote(objects: ObjectSet, property_name: str = 'color',
+                 grid: Optional[Grid] = None) -> Union[int, str]:
+    """
+    Return most common property value among objects.
+
+    Args:
+        objects: Objects to analyze
+        property_name: Property to vote on ('color', 'size', 'shape')
+        grid: Grid context (needed for color)
+
+    Returns:
+        Most common value
+    """
+    from collections import Counter
+
+    values = []
+
+    for obj in objects:
+        if property_name == 'size':
+            values.append(len(obj))
+
+        elif property_name == 'shape':
+            shape = detect_shape(obj)
+            values.append(shape)
+
+        elif property_name == 'color' and grid is not None:
+            # Get color of object
+            if obj:
+                r, c = obj[0]
+                if 0 <= r < grid.shape[0] and 0 <= c < grid.shape[1]:
+                    values.append(grid[r, c])
+
+    if not values:
+        return 0 if property_name in ['color', 'size'] else 'unknown'
+
+    most_common = Counter(values).most_common(1)[0][0]
+    return most_common
+
+
+def distribute_evenly(objects: ObjectSet, grid_shape: Tuple[int, int],
+                     axis: Axis = Axis.HORIZONTAL) -> ObjectSet:
+    """
+    Space objects evenly across grid.
+
+    Args:
+        objects: Objects to distribute
+        grid_shape: Grid dimensions
+        axis: Axis to distribute along
+
+    Returns:
+        Objects at new positions
+    """
+    if not objects:
+        return []
+
+    h, w = grid_shape
+    n = len(objects)
+
+    result = []
+
+    if axis == Axis.HORIZONTAL:
+        # Distribute horizontally
+        spacing = w // (n + 1)
+
+        for i, obj in enumerate(objects):
+            target_c = (i + 1) * spacing
+
+            # Get current centroid
+            obj_r, obj_c = compute_centroid(obj)
+
+            # Translate to target column
+            dc = target_c - int(obj_c)
+            new_obj = translate(obj, 0, dc)
+            result.append(new_obj)
+
+    elif axis == Axis.VERTICAL:
+        # Distribute vertically
+        spacing = h // (n + 1)
+
+        for i, obj in enumerate(objects):
+            target_r = (i + 1) * spacing
+
+            # Get current centroid
+            obj_r, obj_c = compute_centroid(obj)
+
+            # Translate to target row
+            dr = target_r - int(obj_r)
+            new_obj = translate(obj, dr, 0)
+            result.append(new_obj)
+
+    else:
+        # Both axes - arrange in grid pattern
+        cols = int(np.ceil(np.sqrt(n)))
+        rows = int(np.ceil(n / cols))
+
+        spacing_r = h // (rows + 1)
+        spacing_c = w // (cols + 1)
+
+        for i, obj in enumerate(objects):
+            row = i // cols
+            col = i % cols
+
+            target_r = (row + 1) * spacing_r
+            target_c = (col + 1) * spacing_c
+
+            obj_r, obj_c = compute_centroid(obj)
+
+            dr = target_r - int(obj_r)
+            dc = target_c - int(obj_c)
+
+            new_obj = translate(obj, dr, dc)
+            result.append(new_obj)
+
+    return result
+
+
+def shortest_path(grid: Grid, start: Point, end: Point,
+                 obstacle_color: Optional[Color] = None) -> Object:
+    """
+    Find shortest path between two points using A*.
+
+    Args:
+        grid: Input grid
+        start: Start position
+        end: End position
+        obstacle_color: Color that blocks paths (None = all non-zero)
+
+    Returns:
+        Path as object (list of points)
+    """
+    from heapq import heappush, heappop
+
+    h, w = grid.shape
+    start_r, start_c = start
+    end_r, end_c = end
+
+    # Validate positions
+    if not (0 <= start_r < h and 0 <= start_c < w):
+        return []
+    if not (0 <= end_r < h and 0 <= end_c < w):
+        return []
+
+    # A* search
+    def heuristic(r, c):
+        return abs(r - end_r) + abs(c - end_c)
+
+    # Priority queue: (f_score, g_score, r, c)
+    open_set = [(heuristic(start_r, start_c), 0, start_r, start_c)]
+    came_from = {}
+    g_score = {start: 0}
+
+    while open_set:
+        _, g, r, c = heappop(open_set)
+
+        if (r, c) == end:
+            # Reconstruct path
+            path = []
+            current = end
+            while current in came_from:
+                path.append(current)
+                current = came_from[current]
+            path.append(start)
+            path.reverse()
+            return path
+
+        # Check neighbors
+        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            nr, nc = r + dr, c + dc
+
+            if not (0 <= nr < h and 0 <= nc < w):
+                continue
+
+            # Check if blocked
+            if obstacle_color is None:
+                blocked = (grid[nr, nc] != 0)
+            else:
+                blocked = (grid[nr, nc] == obstacle_color)
+
+            if blocked:
+                continue
+
+            tentative_g = g + 1
+
+            if (nr, nc) not in g_score or tentative_g < g_score[(nr, nc)]:
+                g_score[(nr, nc)] = tentative_g
+                f_score = tentative_g + heuristic(nr, nc)
+                heappush(open_set, (f_score, tentative_g, nr, nc))
+                came_from[(nr, nc)] = (r, c)
+
+    # No path found
+    return []
