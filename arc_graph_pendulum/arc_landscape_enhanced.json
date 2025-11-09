@@ -1,0 +1,6 @@
+{
+  "num_trajectories": 10,
+  "embedding_dimensions": 2,
+  "num_basins": 1,
+  "basin_statistics": {
+    
