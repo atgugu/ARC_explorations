@@ -953,3 +953,669 @@ def sort_objects(objects: ObjectSet, key: str, order: str = 'ascending') -> Obje
         return sorted(objects, key=lambda obj: compute_centroid(obj)[1], reverse=reverse)
     else:
         raise ValueError(f"Unknown key: {key}")
+
+
+# ============================================================================
+# 8. LINE & PATH OPERATIONS
+# ============================================================================
+
+def connect(obj1: Object, obj2: Object, pattern: str = 'line', color: Color = 1) -> Object:
+    """
+    Draw connection between two objects.
+
+    Args:
+        obj1: First object
+        obj2: Second object
+        pattern: Connection type ('line', 'horizontal', 'vertical', 'manhattan')
+        color: Color for the connection (used in rendering)
+
+    Returns:
+        Object representing the connection
+
+    Example:
+        >>> obj1 = [(0, 0)]
+        >>> obj2 = [(5, 5)]
+        >>> line = connect(obj1, obj2, 'line')
+    """
+    if not obj1 or not obj2:
+        return []
+
+    # Get centroids
+    c1_r, c1_c = compute_centroid(obj1)
+    c2_r, c2_c = compute_centroid(obj2)
+
+    # Use closest points for better connections
+    start = (int(round(c1_r)), int(round(c1_c)))
+    end = (int(round(c2_r)), int(round(c2_c)))
+
+    if pattern == 'line':
+        return draw_line(start, end, color)
+    elif pattern == 'horizontal':
+        # Horizontal then vertical
+        mid = (start[0], end[1])
+        h_line = draw_line(start, mid, color)
+        v_line = draw_line(mid, end, color)
+        return h_line + v_line
+    elif pattern == 'vertical':
+        # Vertical then horizontal
+        mid = (end[0], start[1])
+        v_line = draw_line(start, mid, color)
+        h_line = draw_line(mid, end, color)
+        return v_line + h_line
+    elif pattern == 'manhattan':
+        # Manhattan distance path
+        return draw_line(start, end, color)
+    else:
+        raise ValueError(f"Unknown pattern: {pattern}")
+
+
+def draw_line(start: Point, end: Point, color: Color = 1, thickness: int = 1) -> Object:
+    """
+    Draw line from point to point using Bresenham's algorithm.
+
+    Args:
+        start: Starting point (row, col)
+        end: Ending point (row, col)
+        color: Line color (for rendering)
+        thickness: Line thickness (1 = single pixel)
+
+    Returns:
+        Object representing the line
+
+    Example:
+        >>> line = draw_line((0, 0), (5, 5), color=2)
+    """
+    r0, c0 = start
+    r1, c1 = end
+
+    points = []
+
+    # Bresenham's line algorithm
+    dr = abs(r1 - r0)
+    dc = abs(c1 - c0)
+    r_step = 1 if r0 < r1 else -1
+    c_step = 1 if c0 < c1 else -1
+
+    if dr > dc:
+        # More vertical
+        error = dr / 2
+        c = c0
+        for r in range(r0, r1 + r_step, r_step):
+            points.append((r, c))
+            error -= dc
+            if error < 0:
+                c += c_step
+                error += dr
+    else:
+        # More horizontal
+        error = dc / 2
+        r = r0
+        for c in range(c0, c1 + c_step, c_step):
+            points.append((r, c))
+            error -= dr
+            if error < 0:
+                r += r_step
+                error += dc
+
+    # Apply thickness if > 1
+    if thickness > 1:
+        thick_points = []
+        for r, c in points:
+            for dr in range(-thickness//2, thickness//2 + 1):
+                for dc in range(-thickness//2, thickness//2 + 1):
+                    thick_points.append((r + dr, c + dc))
+        points = list(set(thick_points))
+
+    return points
+
+
+def draw_rectangle(top_left: Point, bottom_right: Point, fill: bool = False, color: Color = 1) -> Object:
+    """
+    Draw rectangle.
+
+    Args:
+        top_left: Top-left corner
+        bottom_right: Bottom-right corner
+        fill: Whether to fill the rectangle
+        color: Color for drawing
+
+    Returns:
+        Object representing the rectangle
+
+    Example:
+        >>> rect = draw_rectangle((2, 2), (8, 8), fill=True, color=3)
+    """
+    r0, c0 = top_left
+    r1, c1 = bottom_right
+
+    points = []
+
+    if fill:
+        # Filled rectangle
+        for r in range(r0, r1 + 1):
+            for c in range(c0, c1 + 1):
+                points.append((r, c))
+    else:
+        # Outline only
+        for c in range(c0, c1 + 1):
+            points.append((r0, c))  # Top edge
+            points.append((r1, c))  # Bottom edge
+        for r in range(r0 + 1, r1):
+            points.append((r, c0))  # Left edge
+            points.append((r, c1))  # Right edge
+
+    return points
+
+
+def fill_region(grid: Grid, seed_point: Point, new_color: Color) -> Grid:
+    """
+    Flood fill from seed point.
+
+    Args:
+        grid: Input grid
+        seed_point: Starting point for flood fill
+        new_color: Color to fill with
+
+    Returns:
+        Grid with filled region
+
+    Example:
+        >>> result = fill_region(grid, (5, 5), 3)
+    """
+    result = grid.copy()
+    r, c = seed_point
+
+    if not (0 <= r < grid.shape[0] and 0 <= c < grid.shape[1]):
+        return result
+
+    old_color = grid[r, c]
+    if old_color == new_color:
+        return result
+
+    # Flood fill using BFS
+    from collections import deque
+    queue = deque([(r, c)])
+    visited = set()
+
+    while queue:
+        curr_r, curr_c = queue.popleft()
+
+        if (curr_r, curr_c) in visited:
+            continue
+
+        if not (0 <= curr_r < grid.shape[0] and 0 <= curr_c < grid.shape[1]):
+            continue
+
+        if result[curr_r, curr_c] != old_color:
+            continue
+
+        visited.add((curr_r, curr_c))
+        result[curr_r, curr_c] = new_color
+
+        # Add neighbors (4-connectivity)
+        queue.append((curr_r - 1, curr_c))
+        queue.append((curr_r + 1, curr_c))
+        queue.append((curr_r, curr_c - 1))
+        queue.append((curr_r, curr_c + 1))
+
+    return result
+
+
+def extend_line(line_object: Object, direction: Direction, length: Union[int, str] = 'edge',
+                grid_shape: Optional[Tuple[int, int]] = None) -> Object:
+    """
+    Extend line in direction.
+
+    Args:
+        line_object: Line object to extend
+        direction: Direction to extend
+        length: Extension length (int or 'edge' for grid edge)
+        grid_shape: Grid dimensions (required if length='edge')
+
+    Returns:
+        Extended line object
+
+    Example:
+        >>> extended = extend_line(line, Direction.UP, 'edge', grid.shape)
+    """
+    if not line_object:
+        return []
+
+    # Find the endpoint in the given direction
+    dr, dc = direction.value
+
+    # Get the extreme point in the direction
+    if dr < 0:  # UP
+        endpoint = min(line_object, key=lambda p: p[0])
+    elif dr > 0:  # DOWN
+        endpoint = max(line_object, key=lambda p: p[0])
+    elif dc < 0:  # LEFT
+        endpoint = min(line_object, key=lambda p: p[1])
+    elif dc > 0:  # RIGHT
+        endpoint = max(line_object, key=lambda p: p[1])
+    else:
+        endpoint = line_object[0]
+
+    # Determine extension length
+    if length == 'edge':
+        if grid_shape is None:
+            raise ValueError("grid_shape required when length='edge'")
+
+        H, W = grid_shape
+        r, c = endpoint
+
+        if dr < 0:
+            ext_len = r
+        elif dr > 0:
+            ext_len = H - 1 - r
+        elif dc < 0:
+            ext_len = c
+        elif dc > 0:
+            ext_len = W - 1 - c
+        else:
+            ext_len = 0
+    else:
+        ext_len = length
+
+    # Create extension
+    extension = []
+    r, c = endpoint
+    for i in range(1, ext_len + 1):
+        extension.append((r + i * dr, c + i * dc))
+
+    return line_object + extension
+
+
+def detect_lines(grid: Grid, direction: Optional[Direction] = None, min_length: int = 2) -> ObjectSet:
+    """
+    Extract all lines from grid.
+
+    Args:
+        grid: Input grid
+        direction: Direction filter (None = all directions)
+        min_length: Minimum line length
+
+    Returns:
+        List of line objects
+
+    Example:
+        >>> lines = detect_lines(grid, Direction.HORIZONTAL, min_length=3)
+    """
+    lines = []
+
+    # Detect horizontal lines
+    if direction is None or direction == Direction.RIGHT:
+        for r in range(grid.shape[0]):
+            line = []
+            prev_color = 0
+            for c in range(grid.shape[1]):
+                color = grid[r, c]
+                if color != 0:
+                    if color == prev_color or not line:
+                        line.append((r, c))
+                        prev_color = color
+                    else:
+                        if len(line) >= min_length:
+                            lines.append(line)
+                        line = [(r, c)]
+                        prev_color = color
+                else:
+                    if len(line) >= min_length:
+                        lines.append(line)
+                    line = []
+                    prev_color = 0
+            if len(line) >= min_length:
+                lines.append(line)
+
+    # Detect vertical lines
+    if direction is None or direction == Direction.DOWN:
+        for c in range(grid.shape[1]):
+            line = []
+            prev_color = 0
+            for r in range(grid.shape[0]):
+                color = grid[r, c]
+                if color != 0:
+                    if color == prev_color or not line:
+                        line.append((r, c))
+                        prev_color = color
+                    else:
+                        if len(line) >= min_length:
+                            lines.append(line)
+                        line = [(r, c)]
+                        prev_color = color
+                else:
+                    if len(line) >= min_length:
+                        lines.append(line)
+                    line = []
+                    prev_color = 0
+            if len(line) >= min_length:
+                lines.append(line)
+
+    return lines
+
+
+def trace_boundary(object: Object, color: Color = 1, thickness: int = 1) -> Object:
+    """
+    Draw outline around object.
+
+    Args:
+        object: Input object
+        color: Boundary color
+        thickness: Boundary thickness
+
+    Returns:
+        Object representing the boundary
+
+    Example:
+        >>> boundary = trace_boundary(obj, color=2, thickness=1)
+    """
+    if not object:
+        return []
+
+    obj_set = set(object)
+    boundary = []
+
+    for r, c in object:
+        # Check if on boundary (has at least one non-object neighbor)
+        neighbors = [(r-1, c), (r+1, c), (r, c-1), (r, c+1)]
+        if any(n not in obj_set for n in neighbors):
+            boundary.append((r, c))
+
+    # Apply thickness
+    if thickness > 1:
+        thick_boundary = []
+        for r, c in boundary:
+            for dr in range(-thickness//2, thickness//2 + 1):
+                for dc in range(-thickness//2, thickness//2 + 1):
+                    thick_boundary.append((r + dr, c + dc))
+        boundary = list(set(thick_boundary))
+
+    return boundary
+
+
+# ============================================================================
+# EXTENDED SPATIAL TRANSFORMATIONS
+# ============================================================================
+
+def gravity(objects: ObjectSet, direction: Direction, until: str = 'edge',
+            grid_shape: Optional[Tuple[int, int]] = None) -> ObjectSet:
+    """
+    Apply gravity - move objects until collision.
+
+    Args:
+        objects: Input objects
+        direction: Gravity direction
+        until: Stop condition ('edge', 'first')
+        grid_shape: Grid dimensions (required for 'edge')
+
+    Returns:
+        Objects after gravity applied
+
+    Example:
+        >>> fallen = gravity(objects, Direction.DOWN, 'edge', grid.shape)
+    """
+    if not objects:
+        return []
+
+    if until == 'edge' and grid_shape is None:
+        raise ValueError("grid_shape required when until='edge'")
+
+    dr, dc = direction.value
+    result = []
+
+    for obj in objects:
+        # Move until collision or edge
+        moved = obj.copy()
+
+        if until == 'edge':
+            H, W = grid_shape
+
+            # Calculate max movement
+            max_move = float('inf')
+            for r, c in moved:
+                if dr < 0:  # UP
+                    max_move = min(max_move, r)
+                elif dr > 0:  # DOWN
+                    max_move = min(max_move, H - 1 - r)
+                elif dc < 0:  # LEFT
+                    max_move = min(max_move, c)
+                elif dc > 0:  # RIGHT
+                    max_move = min(max_move, W - 1 - c)
+
+            # Apply movement
+            moved = translate(moved, dr * max_move, dc * max_move)
+
+        result.append(moved)
+
+    return result
+
+
+def align(objects: ObjectSet, axis: Axis, spacing: int = 0) -> ObjectSet:
+    """
+    Align objects along axis with spacing.
+
+    Args:
+        objects: Input objects
+        axis: Alignment axis
+        spacing: Gap between objects
+
+    Returns:
+        Aligned objects
+
+    Example:
+        >>> aligned = align(objects, Axis.HORIZONTAL, spacing=2)
+    """
+    if not objects or len(objects) <= 1:
+        return objects
+
+    result = []
+    current_pos = 0
+
+    # Sort objects by position along axis
+    if axis == Axis.HORIZONTAL:
+        sorted_objs = sorted(objects, key=lambda obj: compute_centroid(obj)[1])
+    else:  # VERTICAL
+        sorted_objs = sorted(objects, key=lambda obj: compute_centroid(obj)[0])
+
+    for i, obj in enumerate(sorted_objs):
+        bounds = get_object_bounds(obj)
+
+        if i == 0:
+            # First object stays at original position
+            result.append(obj)
+            if axis == Axis.HORIZONTAL:
+                current_pos = bounds[3] + 1 + spacing  # max_col + 1 + spacing
+            else:
+                current_pos = bounds[2] + 1 + spacing  # max_row + 1 + spacing
+        else:
+            # Move subsequent objects
+            if axis == Axis.HORIZONTAL:
+                delta = current_pos - bounds[1]  # Align to current_pos
+                moved = translate(obj, 0, delta)
+                new_bounds = get_object_bounds(moved)
+                current_pos = new_bounds[3] + 1 + spacing
+            else:  # VERTICAL
+                delta = current_pos - bounds[0]  # Align to current_pos
+                moved = translate(obj, delta, 0)
+                new_bounds = get_object_bounds(moved)
+                current_pos = new_bounds[2] + 1 + spacing
+
+            result.append(moved)
+
+    return result
+
+
+def center(object: Object, grid_shape: Tuple[int, int]) -> Object:
+    """
+    Center object in grid.
+
+    Args:
+        object: Input object
+        grid_shape: Grid dimensions
+
+    Returns:
+        Centered object
+
+    Example:
+        >>> centered = center(obj, (10, 10))
+    """
+    return move_to(object, "center", grid_shape)
+
+
+# ============================================================================
+# EXTENDED SELECTION PRIMITIVES
+# ============================================================================
+
+def select_by_shape(objects: ObjectSet, shape: str) -> ObjectSet:
+    """
+    Filter objects by shape type.
+
+    Args:
+        objects: Input objects
+        shape: Shape type ("rectangle", "line", "square", "L", "T", "plus", "irregular")
+
+    Returns:
+        Objects matching the shape
+
+    Example:
+        >>> rectangles = select_by_shape(objects, "rectangle")
+    """
+    result = []
+
+    for obj in objects:
+        detected_shape = detect_shape(obj)
+        if detected_shape == shape:
+            result.append(obj)
+
+    return result
+
+
+def detect_shape(object: Object) -> str:
+    """
+    Detect the shape type of an object.
+
+    Args:
+        object: Input object
+
+    Returns:
+        Shape type as string
+    """
+    if not object:
+        return "empty"
+
+    if len(object) == 1:
+        return "point"
+
+    min_r, min_c, max_r, max_c = get_object_bounds(object)
+    width = max_c - min_c + 1
+    height = max_r - min_r + 1
+    area = len(object)
+
+    # Check for line
+    if width == 1 or height == 1:
+        if area >= 2:
+            return "line"
+
+    # Check for rectangle/square
+    if area == width * height:
+        if width == height:
+            return "square"
+        else:
+            return "rectangle"
+
+    # Check for hollow rectangle
+    expected_hollow = 2 * (width + height) - 4
+    if area == expected_hollow and width > 2 and height > 2:
+        return "hollow_rectangle"
+
+    # Otherwise irregular
+    return "irregular"
+
+
+def select_touching(reference: Object, objects: ObjectSet, connectivity: int = 4) -> ObjectSet:
+    """
+    Select objects that touch (are adjacent to) the reference object.
+
+    Args:
+        reference: Reference object
+        objects: Candidate objects
+        connectivity: 4 or 8 connectivity
+
+    Returns:
+        Objects touching the reference
+
+    Example:
+        >>> neighbors = select_touching(obj, all_objects)
+    """
+    if not reference:
+        return []
+
+    ref_set = set(reference)
+    result = []
+
+    for obj in objects:
+        if obj == reference:
+            continue
+
+        # Check if any pixel of obj is adjacent to any pixel of reference
+        touches = False
+        for r, c in obj:
+            if connectivity == 4:
+                neighbors = [(r-1, c), (r+1, c), (r, c-1), (r, c+1)]
+            else:  # 8-connectivity
+                neighbors = [(r+dr, c+dc) for dr in [-1, 0, 1] for dc in [-1, 0, 1] if (dr, dc) != (0, 0)]
+
+            if any(n in ref_set for n in neighbors):
+                touches = True
+                break
+
+        if touches:
+            result.append(obj)
+
+    return result
+
+
+def select_aligned(objects: ObjectSet, axis: Axis, tolerance: float = 0.5) -> ObjectSet:
+    """
+    Select objects aligned along an axis.
+
+    Args:
+        objects: Input objects
+        axis: Alignment axis
+        tolerance: Maximum deviation from perfect alignment
+
+    Returns:
+        Aligned objects
+
+    Example:
+        >>> row_objects = select_aligned(objects, Axis.HORIZONTAL, tolerance=1.0)
+    """
+    if not objects:
+        return []
+
+    # Compute centroids
+    centroids = [compute_centroid(obj) for obj in objects]
+
+    # Group by alignment
+    if axis == Axis.HORIZONTAL:
+        # Group by similar row position
+        groups = defaultdict(list)
+        for obj, (r, c) in zip(objects, centroids):
+            key = round(r / tolerance) * tolerance
+            groups[key].append(obj)
+
+        # Return largest group
+        if groups:
+            return max(groups.values(), key=len)
+    else:  # VERTICAL
+        # Group by similar column position
+        groups = defaultdict(list)
+        for obj, (r, c) in zip(objects, centroids):
+            key = round(c / tolerance) * tolerance
+            groups[key].append(obj)
+
+        # Return largest group
+        if groups:
+            return max(groups.values(), key=len)
+
+    return []
