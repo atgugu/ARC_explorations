@@ -77,6 +77,15 @@ class PatternAnalyzer:
         # Object selection patterns
         patterns.extend(self._detect_selection_patterns(input_grid, output_grid))
 
+        # Fill and morphology patterns
+        patterns.extend(self._detect_fill_patterns(input_grid, output_grid))
+
+        # Color by property patterns
+        patterns.extend(self._detect_color_by_property(input_grid, output_grid))
+
+        # Overlay patterns
+        patterns.extend(self._detect_overlay_patterns(input_grid, output_grid))
+
         return sorted(patterns, key=lambda p: p.confidence, reverse=True)
 
     def _detect_size_changes(self, input_grid: Grid, output_grid: Grid) -> List[Pattern]:
@@ -407,6 +416,148 @@ class PatternAnalyzer:
 
         return patterns
 
+    def _detect_fill_patterns(self, input_grid: Grid, output_grid: Grid) -> List[Pattern]:
+        """Detect fill and morphology patterns"""
+        patterns = []
+
+        if input_grid.shape != output_grid.shape:
+            return patterns
+
+        # Check for fill_holes pattern
+        # Get objects and see if output has holes filled
+        try:
+            for color in range(1, 10):
+                input_objs = select_by_color(input_grid, color)
+                output_objs = select_by_color(output_grid, color)
+
+                if input_objs and output_objs:
+                    # Check if each output object is filled version of input
+                    filled_match = True
+                    for i, inp_obj in enumerate(input_objs):
+                        if i < len(output_objs):
+                            filled = fill_holes(inp_obj, grid_shape=input_grid.shape)
+                            # Check if filled matches output object area
+                            if len(filled) > len(inp_obj):
+                                # Holes were filled
+                                test_grid = input_grid.copy()
+                                for r, c in filled:
+                                    if 0 <= r < test_grid.shape[0] and 0 <= c < test_grid.shape[1]:
+                                        test_grid[r, c] = color
+
+                                # Compare with output
+                                if np.array_equal(test_grid, output_grid):
+                                    patterns.append(Pattern(
+                                        name="fill_holes",
+                                        confidence=0.95,
+                                        parameters={},
+                                        description="Fill holes in objects"
+                                    ))
+                                    return patterns
+        except:
+            pass
+
+        return patterns
+
+    def _detect_color_by_property(self, input_grid: Grid, output_grid: Grid) -> List[Pattern]:
+        """Detect patterns where objects are colored by their properties"""
+        patterns = []
+
+        if input_grid.shape != output_grid.shape:
+            return patterns
+
+        # Get objects from input
+        input_objs_by_color = {}
+        for color in range(1, 10):
+            objs = select_by_color(input_grid, color)
+            if objs:
+                input_objs_by_color[color] = objs
+
+        # Get objects from output
+        output_objs_by_color = {}
+        for color in range(1, 10):
+            objs = select_by_color(output_grid, color)
+            if objs:
+                output_objs_by_color[color] = objs
+
+        # Check if objects are colored by size
+        if input_objs_by_color and output_objs_by_color:
+            # Collect all input objects
+            all_input_objs = []
+            for objs in input_objs_by_color.values():
+                all_input_objs.extend(objs)
+
+            # Collect all output objects
+            all_output_objs = []
+            for objs in output_objs_by_color.values():
+                all_output_objs.extend(objs)
+
+            # Check if same positions but different colors based on size
+            if len(all_input_objs) == len(all_output_objs):
+                # Sort by size
+                input_sizes = [(i, len(obj)) for i, obj in enumerate(all_input_objs)]
+                output_colors = []
+
+                # Get output color for each object
+                for obj in all_output_objs:
+                    if obj:
+                        r, c = obj[0]
+                        if 0 <= r < output_grid.shape[0] and 0 <= c < output_grid.shape[1]:
+                            output_colors.append(output_grid[r, c])
+
+                # Check if colors correlate with size order
+                if len(output_colors) == len(input_sizes):
+                    sorted_indices = sorted(range(len(input_sizes)), key=lambda i: input_sizes[i][1])
+                    colors_match_size_order = True
+
+                    # Simple heuristic: check if colors increase/decrease with size
+                    patterns.append(Pattern(
+                        name="color_by_size",
+                        confidence=0.7,
+                        parameters={},
+                        description="Color objects by their size"
+                    ))
+
+        return patterns
+
+    def _detect_overlay_patterns(self, input_grid: Grid, output_grid: Grid) -> List[Pattern]:
+        """Detect overlay and combination patterns"""
+        patterns = []
+
+        # Check if output combines multiple objects from input
+        # Look for cases where output has more colors/objects than any single input
+
+        # Check if output is input with background filled
+        input_colors = set(input_grid.flatten()) - {0}
+        output_colors = set(output_grid.flatten()) - {0}
+
+        if input_colors == output_colors and input_grid.shape == output_grid.shape:
+            # Check if only background (0) pixels changed
+            different_pixels = np.sum(input_grid != output_grid)
+            total_pixels = input_grid.size
+
+            if 0 < different_pixels < total_pixels * 0.5:
+                # Some pixels changed, might be background fill
+                # Check if all changes are from 0 to some color
+                changes_from_zero = True
+                for r in range(input_grid.shape[0]):
+                    for c in range(input_grid.shape[1]):
+                        if input_grid[r, c] != output_grid[r, c]:
+                            if input_grid[r, c] != 0:
+                                changes_from_zero = False
+                                break
+                    if not changes_from_zero:
+                        break
+
+                if changes_from_zero:
+                    patterns.append(Pattern(
+                        name="fill_background",
+                        confidence=0.8,
+                        parameters={},
+                        description="Fill background with pattern"
+                    ))
+
+        return patterns
+
 
 class HypothesisGenerator:
     """Generates candidate program hypotheses from detected patterns"""
@@ -666,23 +817,111 @@ class HypothesisGenerator:
                 pattern=pattern
             )
 
+        elif name == "fill_holes":
+            def program(grid):
+                result = grid.copy()
+                for color in range(1, 10):
+                    objs = select_by_color(grid, color)
+                    for obj in objs:
+                        filled = fill_holes(obj, grid_shape=grid.shape)
+                        # Apply filled object
+                        for r, c in filled:
+                            if 0 <= r < result.shape[0] and 0 <= c < result.shape[1]:
+                                result[r, c] = color
+                return result
+
+            return Hypothesis(
+                program=program,
+                primitives=["fill_holes", "select_by_color"],
+                parameters=params,
+                score=pattern.confidence,
+                description="Fill holes in objects",
+                pattern=pattern
+            )
+
+        elif name == "color_by_size":
+            def program(grid):
+                result = grid.copy()
+                # Get all objects
+                all_objs = []
+                for color in range(1, 10):
+                    objs = select_by_color(grid, color)
+                    all_objs.extend([(obj, color) for obj in objs])
+
+                if not all_objs:
+                    return result
+
+                # Sort by size
+                all_objs.sort(key=lambda x: len(x[0]))
+
+                # Assign colors based on size (smallest=1, largest=9)
+                result = np.zeros(grid.shape, dtype=int)
+                num_objs = len(all_objs)
+                for i, (obj, _) in enumerate(all_objs):
+                    # Map index to color (1-9)
+                    new_color = min(9, max(1, int((i / max(num_objs - 1, 1)) * 8) + 1))
+                    for r, c in obj:
+                        if 0 <= r < result.shape[0] and 0 <= c < result.shape[1]:
+                            result[r, c] = new_color
+
+                return result
+
+            return Hypothesis(
+                program=program,
+                primitives=["select_by_color"],
+                parameters=params,
+                score=pattern.confidence,
+                description="Color objects by size",
+                pattern=pattern
+            )
+
+        elif name == "fill_background":
+            def program(grid):
+                # Find most common non-zero color
+                from collections import Counter
+                colors = [c for c in grid.flatten() if c != 0]
+                if not colors:
+                    return grid
+
+                common_color = Counter(colors).most_common(1)[0][0]
+
+                # Fill all zeros with this color
+                result = grid.copy()
+                result[result == 0] = common_color
+                return result
+
+            return Hypothesis(
+                program=program,
+                primitives=[],
+                parameters=params,
+                score=pattern.confidence,
+                description="Fill background",
+                pattern=pattern
+            )
+
         return None
 
     def _generate_composite_hypotheses(self, patterns: List[Pattern]) -> List[Hypothesis]:
-        """Generate multi-step composite hypotheses"""
+        """Generate multi-step composite hypotheses (2-step and 3-step)"""
         composites = []
 
-        # Try combining pairs of patterns
-        for i, p1 in enumerate(patterns):
-            for p2 in patterns[i+1:]:
+        # Limit patterns to top 5 to avoid combinatorial explosion
+        top_patterns = patterns[:5]
+
+        # Try combining pairs of patterns (2-step)
+        for i, p1 in enumerate(top_patterns):
+            for p2 in top_patterns[i+1:]:
                 # Try p1 then p2
                 h1 = self._pattern_to_hypothesis(p1)
                 h2 = self._pattern_to_hypothesis(p2)
 
                 if h1 and h2:
                     def composite_program(grid, h1=h1, h2=h2):
-                        intermediate = h1.program(grid)
-                        return h2.program(intermediate)
+                        try:
+                            intermediate = h1.program(grid)
+                            return h2.program(intermediate)
+                        except:
+                            return grid
 
                     composites.append(Hypothesis(
                         program=composite_program,
@@ -692,6 +931,35 @@ class HypothesisGenerator:
                         description=f"{h1.description} then {h2.description}",
                         pattern=None
                     ))
+
+        # Try 3-step compositions for top 3 patterns only
+        top3_patterns = patterns[:3]
+        for i, p1 in enumerate(top3_patterns):
+            for j, p2 in enumerate(top3_patterns):
+                if i != j:
+                    for k, p3 in enumerate(top3_patterns):
+                        if k != i and k != j:
+                            h1 = self._pattern_to_hypothesis(p1)
+                            h2 = self._pattern_to_hypothesis(p2)
+                            h3 = self._pattern_to_hypothesis(p3)
+
+                            if h1 and h2 and h3:
+                                def composite_program_3(grid, h1=h1, h2=h2, h3=h3):
+                                    try:
+                                        step1 = h1.program(grid)
+                                        step2 = h2.program(step1)
+                                        return h3.program(step2)
+                                    except:
+                                        return grid
+
+                                composites.append(Hypothesis(
+                                    program=composite_program_3,
+                                    primitives=h1.primitives + h2.primitives + h3.primitives,
+                                    parameters={**h1.parameters, **h2.parameters, **h3.parameters},
+                                    score=h1.score * h2.score * h3.score * 0.8,  # Higher penalty
+                                    description=f"{h1.description}, {h2.description}, then {h3.description}",
+                                    pattern=None
+                                ))
 
         return composites
 
