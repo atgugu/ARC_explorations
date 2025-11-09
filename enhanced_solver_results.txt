@@ -1,0 +1,499 @@
+Found 400 training tasks
+
+======================================================================
+SOLVER COMPARISON: Baseline vs Enhanced (with Object Reasoning)
+Total tasks: 30
+======================================================================
+
+
+======================================================================
+Testing: 007bbfb7
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 77.8% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 77.8% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (77.8% → 77.8%)
+
+======================================================================
+Testing: 00d62c1b
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 91.8% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 91.8% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (91.8% → 91.8%)
+
+======================================================================
+Testing: 017c7c7b
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 0.0% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 0.0% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (0.0% → 0.0%)
+
+======================================================================
+Testing: 025d127b
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 98.0% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 98.0% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (98.0% → 98.0%)
+
+======================================================================
+Testing: 045e512c
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 90.2% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 90.2% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (90.2% → 90.2%)
+
+======================================================================
+Testing: 0520fde7
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 0.0% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 0.0% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (0.0% → 0.0%)
+
+======================================================================
+Testing: 05269061
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 22.4% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 22.4% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (22.4% → 22.4%)
+
+======================================================================
+Testing: 05f2a901
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 89.1% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 89.1% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (89.1% → 89.1%)
+
+======================================================================
+Testing: 06df4c85
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 94.7% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 94.7% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (94.7% → 94.7%)
+
+======================================================================
+Testing: 08ed6ac7
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 71.6% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 71.6% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (71.6% → 71.6%)
+
+Progress: 10/30 tasks tested...
+
+======================================================================
+Testing: 09629e4f
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 53.7% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 53.7% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (53.7% → 53.7%)
+
+======================================================================
+Testing: 0962bcdd
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 83.3% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 83.3% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (83.3% → 83.3%)
+
+======================================================================
+Testing: 0a938d79
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 82.2% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 82.2% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (82.2% → 82.2%)
+
+======================================================================
+Testing: 0b148d64
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 0.0% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 0.0% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (0.0% → 0.0%)
+
+======================================================================
+Testing: 0ca9ddb6
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 85.2% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 85.2% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (85.2% → 85.2%)
+
+======================================================================
+Testing: 0d3d703e
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 0.0% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 0.0% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (0.0% → 0.0%)
+
+======================================================================
+Testing: 0dfd9992
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 87.8% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 87.8% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (87.8% → 87.8%)
+
+======================================================================
+Testing: 0e206a2e
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 93.2% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 93.0% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: -0.2% (93.2% → 93.0%)
+
+======================================================================
+Testing: 10fcaaa3
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 59.2% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 55.0% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: -4.2% (59.2% → 55.0%)
+
+======================================================================
+Testing: 11852cab
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 97.0% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 97.0% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (97.0% → 97.0%)
+
+Progress: 20/30 tasks tested...
+
+======================================================================
+Testing: 1190e5a7
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 0.0% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 0.0% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (0.0% → 0.0%)
+
+======================================================================
+Testing: 137eaa0f
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 0.0% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 0.0% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (0.0% → 0.0%)
+
+======================================================================
+Testing: 150deff5
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 72.7% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 72.7% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (72.7% → 72.7%)
+
+======================================================================
+Testing: 178fcbfb
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 59.1% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 59.1% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (59.1% → 59.1%)
+
+======================================================================
+Testing: 1a07d186
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 96.4% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 96.4% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (96.4% → 96.4%)
+
+======================================================================
+Testing: 1b2d62fb
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 0.0% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 0.0% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (0.0% → 0.0%)
+
+======================================================================
+Testing: 1b60fb0c
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 91.0% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 91.0% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (91.0% → 91.0%)
+
+======================================================================
+Testing: 1bfc4729
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 50.0% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 50.0% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (50.0% → 50.0%)
+
+======================================================================
+Testing: 1c786137
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 0.0% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 0.0% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +0.0% (0.0% → 0.0%)
+
+======================================================================
+Testing: 1caeab9d
+======================================================================
+
+[Baseline Solver]
+  Accuracy: 80.0% | Solved: ✗
+
+[Enhanced Solver with Object Reasoning]
+  Accuracy: 82.0% | Solved: ✗
+  Used object reasoning: ✓
+
+[Comparison]
+  Improvement: +2.0% (80.0% → 82.0%)
+
+Progress: 30/30 tasks tested...
+
+======================================================================
+COMPARISON SUMMARY
+======================================================================
+
+📊 Overall Statistics:
+   Total tasks: 30
+
+   Baseline Solver:
+     Perfect solves: 0/30 (0.0%)
+     Average accuracy: 57.5%
+
+   Enhanced Solver:
+     Perfect solves: 0/30 (0.0%)
+     Average accuracy: 57.5%
+     Used object reasoning: 30/30 tasks
+
+📈 Improvements:
+   Newly solved: 0 tasks
+   Average accuracy gain: -0.1%
+
+   Significant improvements (>10%): 0
+   Moderate improvements (1-10%): 1
+   No change: 28
+   Regressions: 1
+
+📋 Detailed Comparison:
+Task ID         Baseline     Enhanced     Change       Status
+----------------------------------------------------------------------
+007bbfb7        77.8%        77.8%        +0.0%        = Same
+00d62c1b        91.8%        91.8%        +0.0%        = Same
+017c7c7b        0.0%         0.0%         +0.0%        = Same
+025d127b        98.0%        98.0%        +0.0%        = Same
+045e512c        90.2%        90.2%        +0.0%        = Same
+0520fde7        0.0%         0.0%         +0.0%        = Same
+05269061        22.4%        22.4%        +0.0%        = Same
+05f2a901        89.1%        89.1%        +0.0%        = Same
+06df4c85        94.7%        94.7%        +0.0%        = Same
+08ed6ac7        71.6%        71.6%        +0.0%        = Same
+09629e4f        53.7%        53.7%        +0.0%        = Same
+0962bcdd        83.3%        83.3%        +0.0%        = Same
+0a938d79        82.2%        82.2%        +0.0%        = Same
+0b148d64        0.0%         0.0%         +0.0%        = Same
+0ca9ddb6        85.2%        85.2%        +0.0%        = Same
+0d3d703e        0.0%         0.0%         +0.0%        = Same
+0dfd9992        87.8%        87.8%        +0.0%        = Same
+0e206a2e        93.2%        93.0%        -0.2%        = Same
+10fcaaa3        59.2%        55.0%        -4.2%        ↘ Worse
+11852cab        97.0%        97.0%        +0.0%        = Same
+1190e5a7        0.0%         0.0%         +0.0%        = Same
+137eaa0f        0.0%         0.0%         +0.0%        = Same
+150deff5        72.7%        72.7%        +0.0%        = Same
+178fcbfb        59.1%        59.1%        +0.0%        = Same
+1a07d186        96.4%        96.4%        +0.0%        = Same
+1b2d62fb        0.0%         0.0%         +0.0%        = Same
+1b60fb0c        91.0%        91.0%        +0.0%        = Same
+1bfc4729        50.0%        50.0%        +0.0%        = Same
+1c786137        0.0%         0.0%         +0.0%        = Same
+1caeab9d        80.0%        82.0%        +2.0%        ↗ Improved
+
+⬆️  Biggest Improvements (not yet solved):
+   1caeab9d: +2.0%
+
+======================================================================
+Comparison complete!
+======================================================================
