@@ -1,0 +1,1025 @@
+{
+  "results": [
+    {
+      "task_id": "007bbfb7",
+      "num_train": 5,
+      "num_test": 1,
+      "attempt1": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.0,
+              "shape_match": false
+            }
+          ],
+          "avg_iou": 0.0,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 1,
+          "config": {
+            "beam_width": 5,
+            "use_stability": true,
+            "use_repair_loops": true,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.0,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "attempt2": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.0,
+              "shape_match": false
+            }
+          ],
+          "avg_iou": 0.0,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 2,
+          "config": {
+            "beam_width": 8,
+            "use_stability": true,
+            "use_repair_loops": false,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.0,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "better_attempt": 1,
+      "best_avg_iou": 0.0,
+      "solved": false,
+      "any_perfect": false,
+      "categories": [
+        "many_shot",
+        "single_test",
+        "low_quality"
+      ]
+    },
+    {
+      "task_id": "6150a2bd",
+      "num_train": 2,
+      "num_test": 1,
+      "attempt1": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.2222222222222222,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 0.2222222222222222,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 1,
+          "config": {
+            "beam_width": 5,
+            "use_stability": true,
+            "use_repair_loops": true,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.3333333333333333,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "attempt2": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.2222222222222222,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 0.2222222222222222,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 2,
+          "config": {
+            "beam_width": 8,
+            "use_stability": true,
+            "use_repair_loops": false,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.3333333333333333,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "better_attempt": 1,
+      "best_avg_iou": 0.2222222222222222,
+      "solved": false,
+      "any_perfect": false,
+      "categories": [
+        "few_shot",
+        "single_test",
+        "low_quality"
+      ]
+    },
+    {
+      "task_id": "025d127b",
+      "num_train": 2,
+      "num_test": 1,
+      "attempt1": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.98,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 0.98,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 1,
+          "config": {
+            "beam_width": 5,
+            "use_stability": true,
+            "use_repair_loops": true,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.9543650793650793,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "attempt2": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.88,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 0.88,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 2,
+          "config": {
+            "beam_width": 8,
+            "use_stability": true,
+            "use_repair_loops": false,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.8531746031746033,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "better_attempt": 1,
+      "best_avg_iou": 0.98,
+      "solved": false,
+      "any_perfect": false,
+      "categories": [
+        "few_shot",
+        "single_test",
+        "high_quality",
+        "repairs_helped"
+      ]
+    },
+    {
+      "task_id": "00d62c1b",
+      "num_train": 5,
+      "num_test": 1,
+      "attempt1": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.9175,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 0.9175,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 1,
+          "config": {
+            "beam_width": 5,
+            "use_stability": true,
+            "use_repair_loops": true,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.9413888888888889,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "attempt2": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.9175,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 0.9175,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 2,
+          "config": {
+            "beam_width": 8,
+            "use_stability": true,
+            "use_repair_loops": false,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.9413888888888889,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "better_attempt": 1,
+      "best_avg_iou": 0.9175,
+      "solved": false,
+      "any_perfect": false,
+      "categories": [
+        "many_shot",
+        "single_test",
+        "high_quality"
+      ]
+    },
+    {
+      "task_id": "045e512c",
+      "num_train": 3,
+      "num_test": 1,
+      "attempt1": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.9024943310657596,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 0.9024943310657596,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 1,
+          "config": {
+            "beam_width": 5,
+            "use_stability": true,
+            "use_repair_loops": true,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.9304610733182161,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "attempt2": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.9024943310657596,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 0.9024943310657596,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 2,
+          "config": {
+            "beam_width": 8,
+            "use_stability": true,
+            "use_repair_loops": false,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.9304610733182161,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "better_attempt": 1,
+      "best_avg_iou": 0.9024943310657596,
+      "solved": false,
+      "any_perfect": false,
+      "categories": [
+        "medium_shot",
+        "single_test",
+        "high_quality"
+      ]
+    },
+    {
+      "task_id": "0d3d703e",
+      "num_train": 4,
+      "num_test": 1,
+      "attempt1": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.0,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 0.0,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 1,
+          "config": {
+            "beam_width": 5,
+            "use_stability": true,
+            "use_repair_loops": true,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.0,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "attempt2": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.0,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 0.0,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 2,
+          "config": {
+            "beam_width": 8,
+            "use_stability": true,
+            "use_repair_loops": false,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.0,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "better_attempt": 1,
+      "best_avg_iou": 0.0,
+      "solved": false,
+      "any_perfect": false,
+      "categories": [
+        "medium_shot",
+        "single_test",
+        "low_quality"
+      ]
+    },
+    {
+      "task_id": "3c9b0459",
+      "num_train": 4,
+      "num_test": 1,
+      "attempt1": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.3333333333333333,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 0.3333333333333333,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 1,
+          "config": {
+            "beam_width": 5,
+            "use_stability": true,
+            "use_repair_loops": true,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.3888888888888889,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "attempt2": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.3333333333333333,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 0.3333333333333333,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 2,
+          "config": {
+            "beam_width": 8,
+            "use_stability": true,
+            "use_repair_loops": false,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.3888888888888889,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "better_attempt": 1,
+      "best_avg_iou": 0.3333333333333333,
+      "solved": false,
+      "any_perfect": false,
+      "categories": [
+        "medium_shot",
+        "single_test",
+        "low_quality"
+      ]
+    },
+    {
+      "task_id": "017c7c7b",
+      "num_train": 3,
+      "num_test": 1,
+      "attempt1": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.0,
+              "shape_match": false
+            }
+          ],
+          "avg_iou": 0.0,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 1,
+          "config": {
+            "beam_width": 5,
+            "use_stability": true,
+            "use_repair_loops": true,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.0,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "attempt2": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.0,
+              "shape_match": false
+            }
+          ],
+          "avg_iou": 0.0,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 2,
+          "config": {
+            "beam_width": 8,
+            "use_stability": true,
+            "use_repair_loops": false,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.0,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "better_attempt": 1,
+      "best_avg_iou": 0.0,
+      "solved": false,
+      "any_perfect": false,
+      "categories": [
+        "medium_shot",
+        "single_test",
+        "low_quality"
+      ]
+    },
+    {
+      "task_id": "1e0a9b12",
+      "num_train": 3,
+      "num_test": 1,
+      "attempt1": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.6,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 0.6,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 1,
+          "config": {
+            "beam_width": 5,
+            "use_stability": true,
+            "use_repair_loops": true,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.7046296296296296,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "attempt2": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.6,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 0.6,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 1
+        },
+        "meta": {
+          "attempt": 2,
+          "config": {
+            "beam_width": 8,
+            "use_stability": true,
+            "use_repair_loops": false,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.7046296296296296,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "better_attempt": 1,
+      "best_avg_iou": 0.6,
+      "solved": false,
+      "any_perfect": false,
+      "categories": [
+        "medium_shot",
+        "single_test",
+        "medium_quality"
+      ]
+    },
+    {
+      "task_id": "25ff71a9",
+      "num_train": 4,
+      "num_test": 2,
+      "attempt1": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": true,
+              "iou": 1.0,
+              "shape_match": true
+            },
+            {
+              "test_idx": 1,
+              "perfect_match": true,
+              "iou": 1.0,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 1.0,
+          "all_perfect": true,
+          "any_perfect": true,
+          "num_perfect": 2,
+          "num_tests": 2
+        },
+        "meta": {
+          "attempt": 1,
+          "config": {
+            "beam_width": 5,
+            "use_stability": true,
+            "use_repair_loops": true,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 1.0,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "attempt2": {
+        "eval": {
+          "test_results": [
+            {
+              "test_idx": 0,
+              "perfect_match": false,
+              "iou": 0.7777777777777778,
+              "shape_match": true
+            },
+            {
+              "test_idx": 1,
+              "perfect_match": false,
+              "iou": 0.7777777777777778,
+              "shape_match": true
+            }
+          ],
+          "avg_iou": 0.7777777777777778,
+          "all_perfect": false,
+          "any_perfect": false,
+          "num_perfect": 0,
+          "num_tests": 2
+        },
+        "meta": {
+          "attempt": 2,
+          "config": {
+            "beam_width": 8,
+            "use_stability": true,
+            "use_repair_loops": false,
+            "use_landscape_analytics": false
+          },
+          "num_trajectories": 1,
+          "final_score": 0.4444444444444445,
+          "nodes_used": [
+            "color_histogram",
+            "object_detector",
+            "symmetry_detector",
+            "periodicity_detector",
+            "shape_detector",
+            "hypothesis_generator",
+            "program_synthesizer"
+          ],
+          "num_nodes": 7
+        }
+      },
+      "better_attempt": 1,
+      "best_avg_iou": 1.0,
+      "solved": true,
+      "any_perfect": true,
+      "categories": [
+        "medium_shot",
+        "multi_test",
+        "solved",
+        "repairs_helped"
+      ]
+    }
+  ],
+  "analysis": {
+    "total_tasks": 10,
+    "solved_count": 1,
+    "solved_rate": 0.1,
+    "any_perfect_count": 1,
+    "high_quality_count": 4,
+    "high_quality_rate": 0.4,
+    "overall_avg_iou": 0.49555498866213143,
+    "attempt1_better_count": 10,
+    "attempt2_better_count": 0,
+    "category_stats": {
+      "many_shot": {
+        "count": 2,
+        "solved": 0,
+        "avg_iou": 0.45875
+      },
+      "single_test": {
+        "count": 9,
+        "solved": 0,
+        "avg_iou": 0.4395055429579239
+      },
+      "low_quality": {
+        "count": 5,
+        "solved": 0,
+        "avg_iou": 0.11111111111111112
+      },
+      "few_shot": {
+        "count": 2,
+        "solved": 0,
+        "avg_iou": 0.6011111111111112
+      },
+      "high_quality": {
+        "count": 3,
+        "solved": 0,
+        "avg_iou": 0.9333314436885866
+      },
+      "repairs_helped": {
+        "count": 2,
+        "solved": 1,
+        "avg_iou": 0.99
+      },
+      "medium_shot": {
+        "count": 6,
+        "solved": 1,
+        "avg_iou": 0.47263794406651544
+      },
+      "medium_quality": {
+        "count": 1,
+        "solved": 0,
+        "avg_iou": 0.6
+      },
+      "multi_test": {
+        "count": 1,
+        "solved": 1,
+        "avg_iou": 1.0
+      },
+      "solved": {
+        "count": 1,
+        "solved": 1,
+        "avg_iou": 1.0
+      }
+    },
+    "best_tasks": [
+      [
+        "25ff71a9",
+        1.0
+      ],
+      [
+        "025d127b",
+        0.98
+      ],
+      [
+        "00d62c1b",
+        0.9175
+      ],
+      [
+        "045e512c",
+        0.9024943310657596
+      ],
+      [
+        "1e0a9b12",
+        0.6
+      ]
+    ],
+    "worst_tasks": [
+      [
+        "3c9b0459",
+        0.3333333333333333
+      ],
+      [
+        "6150a2bd",
+        0.2222222222222222
+      ],
+      [
+        "007bbfb7",
+        0.0
+      ],
+      [
+        "0d3d703e",
+        0.0
+      ],
+      [
+        "017c7c7b",
+        0.0
+      ]
+    ]
+  }
+}

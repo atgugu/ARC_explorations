@@ -1,0 +1,939 @@
+Loading ARC dataset...
+Loaded 10 tasks from training
+Loaded 10 tasks
+
+======================================================================
+COMPREHENSIVE EVALUATION
+======================================================================
+Total tasks: 10
+Attempts per task: 2
+======================================================================
+
+
+Progress: 0/10 tasks completed
+
+======================================================================
+Task: 007bbfb7
+Train: 5, Test: 1
+======================================================================
+
+--- ATTEMPT 1: Standard Enhanced ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+  Repair loops: ENABLED
+
+=== Solving task 007bbfb7 (Enhanced) ===
+Train examples: 5, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 4 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 4 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 4 programs
+
+[Phase 4: Execution & Evaluation]
+  mirror_vertical: score=0.000
+  mirror_horizontal: score=0.000
+  rotate_90: score=0.000
+  rotate_180: score=0.000
+
+[Phase 5: Test Prediction]
+Best program: None (score=0.000)
+
+--- ATTEMPT 2: Wider Beam, No Repairs ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+
+=== Solving task 007bbfb7 (Enhanced) ===
+Train examples: 5, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 4 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 4 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 4 programs
+
+[Phase 4: Execution & Evaluation]
+  mirror_vertical: score=0.000
+  mirror_horizontal: score=0.000
+  rotate_90: score=0.000
+  rotate_180: score=0.000
+
+[Phase 5: Test Prediction]
+Best program: None (score=0.000)
+
+--- RESULTS ---
+Attempt 1: IoU=0.000, Perfect=0/1
+Attempt 2: IoU=0.000, Perfect=0/1
+Best: Attempt 1
+Solved: ✗ NO
+
+======================================================================
+Task: 6150a2bd
+Train: 2, Test: 1
+======================================================================
+
+--- ATTEMPT 1: Standard Enhanced ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+  Repair loops: ENABLED
+
+=== Solving task 6150a2bd (Enhanced) ===
+Train examples: 2, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 2 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 3 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.111
+  rotate_90: score=0.333
+  rotate_180: score=0.111
+
+[Phase 4.5: Repair Loops]
+  Dominant failure type: placement_error
+  Trying placement_repairer...
+  No improvement from repairs
+
+[Phase 5: Test Prediction]
+Best program: rotate_90 (score=0.333)
+  Test 0: predicted shape (3, 3)
+
+--- ATTEMPT 2: Wider Beam, No Repairs ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+
+=== Solving task 6150a2bd (Enhanced) ===
+Train examples: 2, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 2 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 3 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.111
+  rotate_90: score=0.333
+  rotate_180: score=0.111
+
+[Phase 5: Test Prediction]
+Best program: rotate_90 (score=0.333)
+  Test 0: predicted shape (3, 3)
+
+--- RESULTS ---
+Attempt 1: IoU=0.222, Perfect=0/1
+Attempt 2: IoU=0.222, Perfect=0/1
+Best: Attempt 1
+Solved: ✗ NO
+
+======================================================================
+Task: 025d127b
+Train: 2, Test: 1
+======================================================================
+
+--- ATTEMPT 1: Standard Enhanced ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+  Repair loops: ENABLED
+
+=== Solving task 025d127b (Enhanced) ===
+Train examples: 2, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 2 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 3 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.853
+  rotate_90: score=0.000
+  rotate_180: score=0.853
+
+[Phase 4.5: Repair Loops]
+  Dominant failure type: partial_correct
+  Trying placement_repairer...
+    placement_repairer: score=0.954
+  ✓ Repair improved score: 0.853 → 0.954
+
+[Phase 5: Test Prediction]
+Best program: identity_translated (score=0.954)
+  Test 0: predicted shape (10, 10)
+
+--- ATTEMPT 2: Wider Beam, No Repairs ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+
+=== Solving task 025d127b (Enhanced) ===
+Train examples: 2, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 2 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 3 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.853
+  rotate_90: score=0.000
+  rotate_180: score=0.853
+
+[Phase 5: Test Prediction]
+Best program: identity (score=0.853)
+  Test 0: predicted shape (10, 10)
+
+--- RESULTS ---
+Attempt 1: IoU=0.980, Perfect=0/1
+Attempt 2: IoU=0.880, Perfect=0/1
+Best: Attempt 1
+Solved: ✗ NO
+
+======================================================================
+Task: 00d62c1b
+Train: 5, Test: 1
+======================================================================
+
+--- ATTEMPT 1: Standard Enhanced ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+  Repair loops: ENABLED
+
+=== Solving task 00d62c1b (Enhanced) ===
+Train examples: 5, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 2 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 3 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.941
+  rotate_90: score=0.678
+  rotate_180: score=0.941
+
+[Phase 4.5: Repair Loops]
+  Dominant failure type: partial_correct
+  Trying placement_repairer...
+  No improvement from repairs
+
+[Phase 5: Test Prediction]
+Best program: identity (score=0.941)
+  Test 0: predicted shape (20, 20)
+
+--- ATTEMPT 2: Wider Beam, No Repairs ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+
+=== Solving task 00d62c1b (Enhanced) ===
+Train examples: 5, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 2 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 3 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.941
+  rotate_90: score=0.678
+  rotate_180: score=0.941
+
+[Phase 5: Test Prediction]
+Best program: identity (score=0.941)
+  Test 0: predicted shape (20, 20)
+
+--- RESULTS ---
+Attempt 1: IoU=0.917, Perfect=0/1
+Attempt 2: IoU=0.917, Perfect=0/1
+Best: Attempt 1
+Solved: ✗ NO
+
+======================================================================
+Task: 045e512c
+Train: 3, Test: 1
+======================================================================
+
+--- ATTEMPT 1: Standard Enhanced ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+  Repair loops: ENABLED
+
+=== Solving task 045e512c (Enhanced) ===
+Train examples: 3, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 2 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 3 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.930
+  rotate_90: score=0.892
+  rotate_180: score=0.930
+
+[Phase 4.5: Repair Loops]
+  Dominant failure type: partial_correct
+  Trying placement_repairer...
+  No improvement from repairs
+
+[Phase 5: Test Prediction]
+Best program: identity (score=0.930)
+  Test 0: predicted shape (21, 21)
+
+--- ATTEMPT 2: Wider Beam, No Repairs ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+
+=== Solving task 045e512c (Enhanced) ===
+Train examples: 3, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 2 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 3 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.930
+  rotate_90: score=0.892
+  rotate_180: score=0.930
+
+[Phase 5: Test Prediction]
+Best program: identity (score=0.930)
+  Test 0: predicted shape (21, 21)
+
+--- RESULTS ---
+Attempt 1: IoU=0.902, Perfect=0/1
+Attempt 2: IoU=0.902, Perfect=0/1
+Best: Attempt 1
+Solved: ✗ NO
+
+Progress: 5/10 tasks completed
+
+======================================================================
+Task: 0d3d703e
+Train: 4, Test: 1
+======================================================================
+
+--- ATTEMPT 1: Standard Enhanced ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+  Repair loops: ENABLED
+
+=== Solving task 0d3d703e (Enhanced) ===
+Train examples: 4, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 4 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 5 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.000
+  mirror_horizontal: score=0.000
+  tile_pattern: score=0.000
+  rotate_90: score=0.000
+  rotate_180: score=0.000
+
+[Phase 5: Test Prediction]
+Best program: None (score=0.000)
+
+--- ATTEMPT 2: Wider Beam, No Repairs ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+
+=== Solving task 0d3d703e (Enhanced) ===
+Train examples: 4, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 4 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 5 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.000
+  mirror_horizontal: score=0.000
+  tile_pattern: score=0.000
+  rotate_90: score=0.000
+  rotate_180: score=0.000
+
+[Phase 5: Test Prediction]
+Best program: None (score=0.000)
+
+--- RESULTS ---
+Attempt 1: IoU=0.000, Perfect=0/1
+Attempt 2: IoU=0.000, Perfect=0/1
+Best: Attempt 1
+Solved: ✗ NO
+
+======================================================================
+Task: 3c9b0459
+Train: 4, Test: 1
+======================================================================
+
+--- ATTEMPT 1: Standard Enhanced ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+  Repair loops: ENABLED
+
+=== Solving task 3c9b0459 (Enhanced) ===
+Train examples: 4, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 2 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 3 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.333
+  rotate_90: score=0.389
+  rotate_180: score=0.333
+
+[Phase 4.5: Repair Loops]
+  Dominant failure type: color_error
+  Trying placement_repairer...
+  Trying color_repairer...
+  No improvement from repairs
+
+[Phase 5: Test Prediction]
+Best program: rotate_90 (score=0.389)
+  Test 0: predicted shape (3, 3)
+
+--- ATTEMPT 2: Wider Beam, No Repairs ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+
+=== Solving task 3c9b0459 (Enhanced) ===
+Train examples: 4, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 2 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 3 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.333
+  rotate_90: score=0.389
+  rotate_180: score=0.333
+
+[Phase 5: Test Prediction]
+Best program: rotate_90 (score=0.389)
+  Test 0: predicted shape (3, 3)
+
+--- RESULTS ---
+Attempt 1: IoU=0.333, Perfect=0/1
+Attempt 2: IoU=0.333, Perfect=0/1
+Best: Attempt 1
+Solved: ✗ NO
+
+======================================================================
+Task: 017c7c7b
+Train: 3, Test: 1
+======================================================================
+
+--- ATTEMPT 1: Standard Enhanced ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+  Repair loops: ENABLED
+
+=== Solving task 017c7c7b (Enhanced) ===
+Train examples: 3, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 4 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 5 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 5 programs
+
+[Phase 4: Execution & Evaluation]
+  mirror_vertical: score=0.000
+  mirror_horizontal: score=0.000
+  tile_pattern: score=0.000
+  rotate_90: score=0.000
+  rotate_180: score=0.000
+
+[Phase 5: Test Prediction]
+Best program: None (score=0.000)
+
+--- ATTEMPT 2: Wider Beam, No Repairs ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+
+=== Solving task 017c7c7b (Enhanced) ===
+Train examples: 3, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 4 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 5 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 5 programs
+
+[Phase 4: Execution & Evaluation]
+  mirror_vertical: score=0.000
+  mirror_horizontal: score=0.000
+  tile_pattern: score=0.000
+  rotate_90: score=0.000
+  rotate_180: score=0.000
+
+[Phase 5: Test Prediction]
+Best program: None (score=0.000)
+
+--- RESULTS ---
+Attempt 1: IoU=0.000, Perfect=0/1
+Attempt 2: IoU=0.000, Perfect=0/1
+Best: Attempt 1
+Solved: ✗ NO
+
+======================================================================
+Task: 1e0a9b12
+Train: 3, Test: 1
+======================================================================
+
+--- ATTEMPT 1: Standard Enhanced ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+  Repair loops: ENABLED
+
+=== Solving task 1e0a9b12 (Enhanced) ===
+Train examples: 3, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 2 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 3 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.705
+  rotate_90: score=0.536
+  rotate_180: score=0.705
+
+[Phase 4.5: Repair Loops]
+  Dominant failure type: color_error
+  Trying placement_repairer...
+  Trying color_repairer...
+  No improvement from repairs
+
+[Phase 5: Test Prediction]
+Best program: identity (score=0.705)
+  Test 0: predicted shape (5, 5)
+
+--- ATTEMPT 2: Wider Beam, No Repairs ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+
+=== Solving task 1e0a9b12 (Enhanced) ===
+Train examples: 3, Test examples: 1
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 2 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 3 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.705
+  rotate_90: score=0.536
+  rotate_180: score=0.705
+
+[Phase 5: Test Prediction]
+Best program: identity (score=0.705)
+  Test 0: predicted shape (5, 5)
+
+--- RESULTS ---
+Attempt 1: IoU=0.600, Perfect=0/1
+Attempt 2: IoU=0.600, Perfect=0/1
+Best: Attempt 1
+Solved: ✗ NO
+
+======================================================================
+Task: 25ff71a9
+Train: 4, Test: 2
+======================================================================
+
+--- ATTEMPT 1: Standard Enhanced ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+  Repair loops: ENABLED
+
+=== Solving task 25ff71a9 (Enhanced) ===
+Train examples: 4, Test examples: 2
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 5 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 6 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.444
+  mirror_vertical: score=0.389
+  mirror_horizontal: score=0.444
+  tile_pattern: score=0.389
+  rotate_90: score=0.444
+  rotate_180: score=0.389
+
+[Phase 4.5: Repair Loops]
+  Dominant failure type: color_error
+  Trying placement_repairer...
+    placement_repairer: score=1.000
+  Trying color_repairer...
+  ✓ Repair improved score: 0.444 → 1.000
+
+[Phase 5: Test Prediction]
+Best program: identity_translated (score=1.000)
+  Test 0: predicted shape (3, 3)
+  Test 1: predicted shape (3, 3)
+
+--- ATTEMPT 2: Wider Beam, No Repairs ---
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Enhanced Solver Initialized
+
+=== Solving task 25ff71a9 (Enhanced) ===
+Train examples: 4, Test examples: 2
+
+[Phase 1: Feature Extraction]
+  ✓ color_histogram: 3 artifacts
+  ✓ object_detector: 3 artifacts
+  ✓ symmetry_detector: 9 artifacts
+  ✓ periodicity_detector: 3 artifacts
+  ✓ shape_detector: 3 artifacts
+
+[Phase 2: Hypothesis Generation]
+  Generated 5 hypotheses
+
+[Phase 3: Program Synthesis]
+  Synthesized 6 programs
+
+[Phase 4: Execution & Evaluation]
+  identity: score=0.444
+  mirror_vertical: score=0.389
+  mirror_horizontal: score=0.444
+  tile_pattern: score=0.389
+  rotate_90: score=0.444
+  rotate_180: score=0.389
+
+[Phase 5: Test Prediction]
+Best program: identity (score=0.444)
+  Test 0: predicted shape (3, 3)
+  Test 1: predicted shape (3, 3)
+
+--- RESULTS ---
+Attempt 1: IoU=1.000, Perfect=2/2
+Attempt 2: IoU=0.778, Perfect=0/2
+Best: Attempt 1
+Solved: ✓ YES
+
+======================================================================
+COMPREHENSIVE ANALYSIS
+======================================================================
+
+OVERALL PERFORMANCE:
+  Total tasks evaluated: 10
+  Perfect solves (100% match): 1 (10.0%)
+  Any test perfect: 1
+  High quality (>0.80 IoU): 4 (40.0%)
+  Average IoU: 0.496
+
+ATTEMPT COMPARISON:
+  Attempt 1 better (repairs enabled): 10
+  Attempt 2 better (wider beam): 0
+
+CATEGORY BREAKDOWN:
+  few_shot:
+    Count: 2
+    Solved: 0/2 (0.0%)
+    Avg IoU: 0.601
+  high_quality:
+    Count: 3
+    Solved: 0/3 (0.0%)
+    Avg IoU: 0.933
+  low_quality:
+    Count: 5
+    Solved: 0/5 (0.0%)
+    Avg IoU: 0.111
+  many_shot:
+    Count: 2
+    Solved: 0/2 (0.0%)
+    Avg IoU: 0.459
+  medium_quality:
+    Count: 1
+    Solved: 0/1 (0.0%)
+    Avg IoU: 0.600
+  medium_shot:
+    Count: 6
+    Solved: 1/6 (16.7%)
+    Avg IoU: 0.473
+  multi_test:
+    Count: 1
+    Solved: 1/1 (100.0%)
+    Avg IoU: 1.000
+  repairs_helped:
+    Count: 2
+    Solved: 1/2 (50.0%)
+    Avg IoU: 0.990
+  single_test:
+    Count: 9
+    Solved: 0/9 (0.0%)
+    Avg IoU: 0.440
+  solved:
+    Count: 1
+    Solved: 1/1 (100.0%)
+    Avg IoU: 1.000
+
+BEST PERFORMING TASKS:
+  1. 25ff71a9: 1.000
+  2. 025d127b: 0.980
+  3. 00d62c1b: 0.917
+  4. 045e512c: 0.902
+  5. 1e0a9b12: 0.600
+
+WORST PERFORMING TASKS:
+  1. 3c9b0459: 0.333
+  2. 6150a2bd: 0.222
+  3. 007bbfb7: 0.000
+  4. 0d3d703e: 0.000
+  5. 017c7c7b: 0.000
+
+======================================================================
+
+Detailed results saved to comprehensive_evaluation_results.json
+
+======================================================================
+STRENGTHS & WEAKNESSES ANALYSIS
+======================================================================
+
+✓ STRENGTHS:
+  - Repair loops effective on 2 tasks
+  - Can achieve perfect solutions (1 tasks)
+  - Strong performance (>0.8 IoU) on 3 tasks
+  - Handles few-shot tasks (avg IoU: 0.601)
+
+✗ WEAKNESSES:
+  - Poor performance on 5 tasks (<0.5 IoU)
+  - 90.0% of tasks not perfectly solved
+  - No perfect solutions on many-shot tasks
+
+======================================================================
