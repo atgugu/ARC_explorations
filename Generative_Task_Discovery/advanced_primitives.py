@@ -2,19 +2,70 @@
 Advanced TRG Primitives for Complex ARC Tasks
 
 Extends the basic primitives with more sophisticated operations:
+- Improved rotation handling (non-square grids)
 - Pattern detection and completion
 - Object-based transformations
 - Spatial reasoning
 - Multi-object operations
+- Morphological operations (dilation, erosion, etc.)
 """
 
 import numpy as np
-from typing import List, Tuple, Dict, Set, Optional
+from typing import List, Tuple, Dict, Set, Optional, Any
 from arc_generative_solver import ARCObject, TRGPrimitives
+try:
+    from scipy.ndimage import binary_dilation, binary_erosion, binary_fill_holes
+    HAS_SCIPY = True
+except ImportError:
+    HAS_SCIPY = False
 
 
 class AdvancedPrimitives:
     """Advanced primitives for complex ARC reasoning"""
+
+    # ========================================================================
+    # 1. IMPROVED ROTATION HANDLING (FOR NON-SQUARE GRIDS)
+    # ========================================================================
+
+    @staticmethod
+    def rotate_90_ccw(grid: np.ndarray) -> np.ndarray:
+        """
+        Rotate 90° counter-clockwise (standard numpy direction)
+
+        Works correctly for non-square grids:
+        [[1, 2, 3, 4], [5, 6, 7, 8]] -> [[4, 8],
+                                          [3, 7],
+                                          [2, 6],
+                                          [1, 5]]
+        """
+        return np.rot90(grid, k=1)
+
+    @staticmethod
+    def rotate_90_cw(grid: np.ndarray) -> np.ndarray:
+        """
+        Rotate 90° clockwise
+
+        Works correctly for non-square grids:
+        [[1, 2, 3, 4], [5, 6, 7, 8]] -> [[5, 1],
+                                          [6, 2],
+                                          [7, 3],
+                                          [8, 4]]
+        """
+        return np.rot90(grid, k=-1)
+
+    @staticmethod
+    def rotate_180(grid: np.ndarray) -> np.ndarray:
+        """Rotate 180°"""
+        return np.rot90(grid, k=2)
+
+    @staticmethod
+    def rotate_270_ccw(grid: np.ndarray) -> np.ndarray:
+        """Rotate 270° counter-clockwise (same as 90° clockwise)"""
+        return np.rot90(grid, k=3)
+
+    # ========================================================================
+    # 2. SYMMETRY AND PATTERN DETECTION
+    # ========================================================================
 
     @staticmethod
     def detect_grid_symmetry(grid: np.ndarray) -> Dict[str, bool]:
@@ -184,18 +235,41 @@ class AdvancedPrimitives:
                   mask: np.ndarray,
                   iterations: int = 1) -> np.ndarray:
         """Grow/dilate a shape"""
-        from scipy.ndimage import binary_dilation
+        if HAS_SCIPY:
+            result = grid.copy()
+            grown_mask = mask.copy()
 
-        result = grid.copy()
-        grown_mask = mask.copy()
+            for _ in range(iterations):
+                grown_mask = binary_dilation(grown_mask)
 
-        for _ in range(iterations):
-            grown_mask = binary_dilation(grown_mask)
+            color = grid[mask].max() if mask.any() else 1
+            result[grown_mask] = color
 
-        color = grid[mask].max() if mask.any() else 1
-        result[grown_mask] = color
+            return result
+        else:
+            # Simple fallback: grow by adding neighbors
+            result = grid.copy()
+            current_mask = mask.copy()
 
-        return result
+            for _ in range(iterations):
+                new_mask = current_mask.copy()
+                h, w = mask.shape
+
+                for i in range(h):
+                    for j in range(w):
+                        if current_mask[i, j]:
+                            # Add neighbors
+                            for di, dj in [(0,1), (0,-1), (1,0), (-1,0)]:
+                                ni, nj = i + di, j + dj
+                                if 0 <= ni < h and 0 <= nj < w:
+                                    new_mask[ni, nj] = True
+
+                current_mask = new_mask
+
+            color = grid[mask].max() if mask.any() else 1
+            result[current_mask] = color
+
+            return result
 
     @staticmethod
     def shrink_shape(grid: np.ndarray,
@@ -414,3 +488,193 @@ class AdvancedPrimitives:
             return next(obj for obj in objects if obj.color == most_common)
 
         return objects[0]
+
+    # ========================================================================
+    # ENHANCED PATTERN TILING OPERATIONS
+    # ========================================================================
+
+    @staticmethod
+    def repeat_pattern_horizontal(pattern: np.ndarray, n_times: int) -> np.ndarray:
+        """Repeat pattern horizontally n times"""
+        return np.tile(pattern, (1, n_times))
+
+    @staticmethod
+    def repeat_pattern_vertical(pattern: np.ndarray, n_times: int) -> np.ndarray:
+        """Repeat pattern vertically n times"""
+        return np.tile(pattern, (n_times, 1))
+
+    @staticmethod
+    def repeat_pattern_grid(pattern: np.ndarray,
+                           n_rows: int, n_cols: int) -> np.ndarray:
+        """Repeat pattern in grid (both directions)"""
+        return np.tile(pattern, (n_rows, n_cols))
+
+    @staticmethod
+    def complete_symmetry_horizontal(grid: np.ndarray) -> np.ndarray:
+        """Complete horizontal symmetry by mirroring left-right"""
+        return np.concatenate([grid, np.fliplr(grid)], axis=1)
+
+    @staticmethod
+    def complete_symmetry_vertical(grid: np.ndarray) -> np.ndarray:
+        """Complete vertical symmetry by mirroring top-bottom"""
+        return np.concatenate([grid, np.flipud(grid)], axis=0)
+
+    @staticmethod
+    def detect_pattern_size(grid: np.ndarray) -> Tuple[int, int]:
+        """
+        Detect repeating pattern size in grid
+        Returns (pattern_height, pattern_width)
+        """
+        h, w = grid.shape
+
+        # Try different pattern sizes (smallest first)
+        for ph in range(1, h + 1):
+            for pw in range(1, w + 1):
+                if h % ph == 0 and w % pw == 0:  # Must divide evenly
+                    pattern = grid[:ph, :pw]
+                    tiled = AdvancedPrimitives.tile_pattern(pattern, (h, w))
+
+                    if np.array_equal(tiled, grid):
+                        return (ph, pw)
+
+        return (h, w)  # No pattern found
+
+    # ========================================================================
+    # ENHANCED MORPHOLOGICAL OPERATIONS
+    # ========================================================================
+
+    @staticmethod
+    def dilate_objects_enhanced(grid: np.ndarray,
+                               iterations: int = 1,
+                               background: int = 0) -> np.ndarray:
+        """
+        Dilate objects (grow) using scipy if available
+
+        More accurate than simple grow_shape
+        """
+        if HAS_SCIPY:
+            result = grid.copy()
+            colors = np.unique(grid)
+            colors = colors[colors != background]
+
+            for color in colors:
+                mask = (grid == color)
+                dilated = binary_dilation(mask, iterations=iterations)
+                # Only fill background pixels
+                result[dilated & (result == background)] = color
+
+            return result
+        else:
+            # Simple fallback
+            result = grid.copy()
+            h, w = grid.shape
+
+            for _ in range(iterations):
+                new_result = result.copy()
+
+                for i in range(h):
+                    for j in range(w):
+                        if result[i, j] != background:
+                            # Expand to neighbors
+                            for di, dj in [(0,1), (0,-1), (1,0), (-1,0)]:
+                                ni, nj = i + di, j + dj
+                                if 0 <= ni < h and 0 <= nj < w:
+                                    if new_result[ni, nj] == background:
+                                        new_result[ni, nj] = result[i, j]
+
+                result = new_result
+
+            return result
+
+    @staticmethod
+    def erode_objects_enhanced(grid: np.ndarray,
+                              iterations: int = 1,
+                              background: int = 0) -> np.ndarray:
+        """
+        Erode objects (shrink) using scipy if available
+
+        More accurate than simple shrink_shape
+        """
+        if not HAS_SCIPY:
+            return AdvancedPrimitives.shrink_shape(grid, grid != background, iterations)
+
+        result = np.full_like(grid, background)
+        colors = np.unique(grid)
+        colors = colors[colors != background]
+
+        for color in colors:
+            mask = (grid == color)
+            eroded = binary_erosion(mask, iterations=iterations)
+            result[eroded] = color
+
+        return result
+
+    @staticmethod
+    def fill_holes_in_objects(grid: np.ndarray, background: int = 0) -> np.ndarray:
+        """
+        Fill holes in objects
+
+        Example: [[1,1,1], [1,0,1], [1,1,1]] -> [[1,1,1], [1,1,1], [1,1,1]]
+        """
+        if not HAS_SCIPY:
+            return grid  # Can't do much without scipy
+
+        result = grid.copy()
+        colors = np.unique(grid)
+        colors = colors[colors != background]
+
+        for color in colors:
+            mask = (grid == color)
+            filled = binary_fill_holes(mask)
+            result[filled & (result == background)] = color
+
+        return result
+
+    @staticmethod
+    def find_object_boundaries(grid: np.ndarray, background: int = 0) -> np.ndarray:
+        """
+        Find boundaries of objects (edge pixels only)
+
+        Returns grid with only boundary pixels of each object
+        """
+        if not HAS_SCIPY:
+            return grid  # Fallback
+
+        result = np.full_like(grid, background)
+        colors = np.unique(grid)
+        colors = colors[colors != background]
+
+        for color in colors:
+            mask = (grid == color)
+            eroded = binary_erosion(mask, iterations=1)
+            boundary = mask & ~eroded
+            result[boundary] = color
+
+        return result
+
+    @staticmethod
+    def hollow_objects(grid: np.ndarray,
+                      thickness: int = 1,
+                      background: int = 0) -> np.ndarray:
+        """
+        Make objects hollow (keep only outer shell of specified thickness)
+        """
+        if not HAS_SCIPY:
+            return grid
+
+        result = np.full_like(grid, background)
+        colors = np.unique(grid)
+        colors = colors[colors != background]
+
+        for color in colors:
+            mask = (grid == color)
+
+            if thickness > 0:
+                inner = binary_erosion(mask, iterations=thickness)
+                shell = mask & ~inner
+            else:
+                shell = mask
+
+            result[shell] = color
+
+        return result
