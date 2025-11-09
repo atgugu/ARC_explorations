@@ -1,0 +1,255 @@
+{
+  "total_failures": 13,
+  "shape_changing": 13,
+  "same_shape": 0,
+  "color_changing": 10,
+  "details": [
+    {
+      "task_id": "10fcaaa3",
+      "iou": 0.0,
+      "num_train": 4,
+      "num_test": 1,
+      "input_shape": [
+        2,
+        4
+      ],
+      "output_shape": [
+        4,
+        8
+      ],
+      "shape_change": true,
+      "size_ratio": 4.0,
+      "input_colors": 2,
+      "output_colors": 3,
+      "color_change": true
+    },
+    {
+      "task_id": "0b148d64",
+      "iou": 0.0,
+      "num_train": 3,
+      "num_test": 1,
+      "input_shape": [
+        21,
+        21
+      ],
+      "output_shape": [
+        10,
+        10
+      ],
+      "shape_change": true,
+      "size_ratio": 0.22675736961451248,
+      "input_colors": 3,
+      "output_colors": 2,
+      "color_change": true
+    },
+    {
+      "task_id": "1fad071e",
+      "iou": 0.0,
+      "num_train": 3,
+      "num_test": 1,
+      "input_shape": [
+        9,
+        9
+      ],
+      "output_shape": [
+        1,
+        5
+      ],
+      "shape_change": true,
+      "size_ratio": 0.06172839506172839,
+      "input_colors": 3,
+      "output_colors": 2,
+      "color_change": true
+    },
+    {
+      "task_id": "1b2d62fb",
+      "iou": 0.0,
+      "num_train": 5,
+      "num_test": 1,
+      "input_shape": [
+        5,
+        7
+      ],
+      "output_shape": [
+        5,
+        3
+      ],
+      "shape_change": true,
+      "size_ratio": 0.42857142857142855,
+      "input_colors": 3,
+      "output_colors": 2,
+      "color_change": true
+    },
+    {
+      "task_id": "23b5c85d",
+      "iou": 0.0,
+      "num_train": 5,
+      "num_test": 1,
+      "input_shape": [
+        10,
+        10
+      ],
+      "output_shape": [
+        3,
+        3
+      ],
+      "shape_change": true,
+      "size_ratio": 0.09,
+      "input_colors": 3,
+      "output_colors": 1,
+      "color_change": true
+    },
+    {
+      "task_id": "137eaa0f",
+      "iou": 0.0,
+      "num_train": 3,
+      "num_test": 1,
+      "input_shape": [
+        11,
+        11
+      ],
+      "output_shape": [
+        3,
+        3
+      ],
+      "shape_change": true,
+      "size_ratio": 0.0743801652892562,
+      "input_colors": 5,
+      "output_colors": 5,
+      "color_change": false
+    },
+    {
+      "task_id": "234bbc79",
+      "iou": 0.0,
+      "num_train": 4,
+      "num_test": 1,
+      "input_shape": [
+        3,
+        9
+      ],
+      "output_shape": [
+        3,
+        7
+      ],
+      "shape_change": true,
+      "size_ratio": 0.7777777777777778,
+      "input_colors": 4,
+      "output_colors": 3,
+      "color_change": true
+    },
+    {
+      "task_id": "1cf80156",
+      "iou": 0.0,
+      "num_train": 3,
+      "num_test": 1,
+      "input_shape": [
+        10,
+        12
+      ],
+      "output_shape": [
+        4,
+        4
+      ],
+      "shape_change": true,
+      "size_ratio": 0.13333333333333333,
+      "input_colors": 2,
+      "output_colors": 2,
+      "color_change": false
+    },
+    {
+      "task_id": "1f85a75f",
+      "iou": 0.0,
+      "num_train": 2,
+      "num_test": 1,
+      "input_shape": [
+        30,
+        30
+      ],
+      "output_shape": [
+        5,
+        3
+      ],
+      "shape_change": true,
+      "size_ratio": 0.016666666666666666,
+      "input_colors": 4,
+      "output_colors": 2,
+      "color_change": true
+    },
+    {
+      "task_id": "1c786137",
+      "iou": 0.0,
+      "num_train": 3,
+      "num_test": 1,
+      "input_shape": [
+        23,
+        21
+      ],
+      "output_shape": [
+        6,
+        8
+      ],
+      "shape_change": true,
+      "size_ratio": 0.09937888198757763,
+      "input_colors": 6,
+      "output_colors": 5,
+      "color_change": true
+    },
+    {
+      "task_id": "1190e5a7",
+      "iou": 0.0,
+      "num_train": 3,
+      "num_test": 1,
+      "input_shape": [
+        15,
+        15
+      ],
+      "output_shape": [
+        2,
+        4
+      ],
+      "shape_change": true,
+      "size_ratio": 0.035555555555555556,
+      "input_colors": 2,
+      "output_colors": 1,
+      "color_change": true
+    },
+    {
+      "task_id": "239be575",
+      "iou": 0.0,
+      "num_train": 6,
+      "num_test": 2,
+      "input_shape": [
+        5,
+        5
+      ],
+      "output_shape": [
+        1,
+        1
+      ],
+      "shape_change": true,
+      "size_ratio": 0.04,
+      "input_colors": 3,
+      "output_colors": 1,
+      "color_change": true
+    },
+    {
+      "task_id": "2013d3e2",
+      "iou": 0.0,
+      "num_train": 2,
+      "num_test": 1,
+      "input_shape": [
+        10,
+        10
+      ],
+      "output_shape": [
+        3,
+        3
+      ],
+      "shape_change": true,
+      "size_ratio": 0.09,
+      "input_colors": 5,
+      "output_colors": 5,
+      "color_change": false
+    }
+  ]
+}
