@@ -56,6 +56,9 @@ class ARCGraphPendulumSolverV3Plus(ARCGraphPendulumSolverV3):
         Solve task using enhanced rule inference.
         Same pipeline as V3 but with enhanced nodes.
         """
+        # Clear cache before each task to prevent stale results
+        self.node_registry.clear_cache()
+
         if verbose:
             print(f"\n=== Solving task {task.task_id} (V3+ - Enhanced Rule Inference) ===")
             print(f"Train examples: {task.num_train}, Test examples: {task.num_test}")

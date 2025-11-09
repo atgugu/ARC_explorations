@@ -156,6 +156,9 @@ class ARCGraphPendulumSolver:
         Returns:
             List of predicted output grids for test inputs
         """
+        # Clear cache before each task to prevent stale results
+        self.node_registry.clear_cache()
+
         if verbose:
             print(f"\n=== Solving task {task.task_id} ===")
             print(f"Train examples: {task.num_train}, Test examples: {task.num_test}")
