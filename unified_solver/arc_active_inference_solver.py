@@ -587,9 +587,9 @@ class ActiveInferenceEngine:
         belief.normalize()
         belief.epistemic_uncertainty = belief.entropy()
 
-        # Initialize stability scores
+        # Initialize stability scores to None (not yet computed)
         for h in hypotheses:
-            belief.stability_scores[h] = 0.0
+            belief.stability_scores[h] = None
 
         return belief
 
@@ -712,8 +712,8 @@ class StabilityFilter:
 
         Stable hypotheses have low variance across small perturbations
         """
-        if hypothesis in belief.stability_scores:
-            # Already computed
+        # Check if already computed (not None)
+        if hypothesis in belief.stability_scores and belief.stability_scores[hypothesis] is not None:
             return belief.stability_scores[hypothesis]
 
         # Test hypothesis on all training examples
@@ -724,6 +724,7 @@ class StabilityFilter:
             accuracies.append(acc)
 
         if not accuracies:
+            belief.stability_scores[hypothesis] = 0.0
             return 0.0
 
         # Stability = consistency across examples
@@ -793,7 +794,9 @@ class WorkspaceController:
         scores = {}
         for h in hypotheses:
             prob = belief.probabilities.get(h, 0.0)
-            stability = belief.stability_scores.get(h, 0.0)
+            stability = belief.stability_scores.get(h, None)
+            if stability is None:
+                stability = 0.0
             curiosity = belief.information_gain.get(h, 0.0)
 
             # Combined score
@@ -921,14 +924,18 @@ class ARCActiveInferenceSolver:
                 top_5 = belief.top_k(5)
                 print(f"\nTop 5 hypotheses:")
                 for h, p in top_5:
-                    stability = belief.stability_scores.get(h, 0.0)
+                    stability = belief.stability_scores.get(h, None)
+                    if stability is None:
+                        stability = 0.0
                     print(f"  {h.name}: p={p:.4f}, stability={stability:.4f}")
 
         # Step 5: Rank hypotheses by posterior probability × stability
         final_scores = {}
         for h in hypotheses:
             posterior = belief.probabilities.get(h, 0.0)
-            stability = belief.stability_scores.get(h, 0.0)
+            stability = belief.stability_scores.get(h, None)
+            if stability is None:
+                stability = 0.0
 
             # Combined score
             final_scores[h] = posterior * stability
@@ -944,7 +951,10 @@ class ARCActiveInferenceSolver:
             for i, h in enumerate(top_2_hypotheses, 1):
                 print(f"{i}. {h.name}")
                 print(f"   Posterior: {belief.probabilities.get(h, 0.0):.4f}")
-                print(f"   Stability: {belief.stability_scores.get(h, 0.0):.4f}")
+                stability = belief.stability_scores.get(h, None)
+                if stability is None:
+                    stability = 0.0
+                print(f"   Stability: {stability:.4f}")
                 print(f"   Final Score: {final_scores.get(h, 0.0):.4f}")
 
         # Step 6: Apply top-2 hypotheses to test input
