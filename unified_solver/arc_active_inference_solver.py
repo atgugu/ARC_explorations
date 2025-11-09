@@ -940,9 +940,10 @@ class ARCActiveInferenceSolver:
             # Combined score
             final_scores[h] = posterior * stability
 
-        # Get top-2 hypotheses
-        ranked = sorted(hypotheses, key=lambda h: final_scores.get(h, 0.0), reverse=True)
-        top_2_hypotheses = ranked[:2]
+        # Get top-2 hypotheses with output diversity enforcement
+        top_2_hypotheses = self._select_diverse_top_2(
+            hypotheses, final_scores, task.test_input, verbose
+        )
 
         if verbose:
             print(f"\n{'='*60}")
@@ -968,6 +969,82 @@ class ARCActiveInferenceSolver:
             predictions.append(task.test_input.copy())
 
         return predictions[:2]
+
+    def _select_diverse_top_2(self,
+                             hypotheses: List[Hypothesis],
+                             scores: Dict[Hypothesis, float],
+                             test_input: Grid,
+                             verbose: bool = False) -> List[Hypothesis]:
+        """
+        Select top-2 hypotheses ensuring different outputs
+
+        Strategy:
+        1. Select best hypothesis by score
+        2. Find best hypothesis that produces different output
+        3. Fallback to second-best if all produce same output (edge case)
+
+        Args:
+            hypotheses: List of hypotheses to select from
+            scores: Final scores for each hypothesis
+            test_input: Test input to apply hypotheses to
+            verbose: Print debug information
+
+        Returns:
+            List of exactly 2 hypotheses (or duplicates if needed)
+        """
+        if len(hypotheses) == 0:
+            return []
+        if len(hypotheses) == 1:
+            return [hypotheses[0], hypotheses[0]]
+
+        # Get top-1 by score
+        ranked = sorted(hypotheses, key=lambda h: scores.get(h, 0.0), reverse=True)
+        top_1 = ranked[0]
+
+        try:
+            output_1 = top_1.apply(test_input)
+        except Exception as e:
+            if verbose:
+                print(f"\n  Warning: Top-1 hypothesis failed to apply: {e}")
+            # Fallback to simple top-2
+            return ranked[:2] if len(ranked) >= 2 else [ranked[0], ranked[0]]
+
+        # Find best hypothesis with different output
+        best_different = None
+        best_different_score = -1.0
+
+        for h in ranked[1:]:
+            try:
+                output_h = h.apply(test_input)
+
+                # Check if output is different
+                if not np.array_equal(output_h.data, output_1.data):
+                    score_h = scores.get(h, 0.0)
+                    if score_h > best_different_score:
+                        best_different = h
+                        best_different_score = score_h
+
+            except Exception as e:
+                # Skip hypotheses that fail to apply
+                if verbose:
+                    print(f"\n  Warning: Hypothesis {h.name} failed: {e}")
+                continue
+
+        # Select top-2
+        if best_different is not None:
+            top_2 = best_different
+            if verbose:
+                print(f"\n  ✓ Diversity enforced: Selected {top_2.name} (different output)")
+                print(f"    Top-1: {top_1.name} (score: {scores.get(top_1, 0.0):.9f})")
+                print(f"    Top-2: {top_2.name} (score: {scores.get(top_2, 0.0):.9f})")
+        else:
+            # All hypotheses produce same output (edge case)
+            top_2 = ranked[1] if len(ranked) > 1 else ranked[0]
+            if verbose:
+                print(f"\n  Note: All hypotheses produce same output (edge case)")
+                print(f"    Using second-best by score: {top_2.name}")
+
+        return [top_1, top_2]
 
 
 # =============================================================================
