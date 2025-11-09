@@ -198,7 +198,7 @@ class DiverseARCCuriositySolver(PatternBasedARCCuriositySolver):
             transform_obj = Transform(
                 name=f"color_var_{target_color}",
                 function=transform_fn,
-                parameters={'target_color': int(target_color)},
+                parameters={},  # No parameters needed - captured in closure
                 category='pattern_variation'
             )
 
@@ -252,7 +252,7 @@ class DiverseARCCuriositySolver(PatternBasedARCCuriositySolver):
             transform_obj = Transform(
                 name=f"move_{dy}_{dx}",
                 function=transform_fn,
-                parameters={'dy': dy, 'dx': dx},
+                parameters={},  # No parameters needed - captured in closure
                 category='pattern_variation'
             )
 
@@ -286,7 +286,7 @@ class DiverseARCCuriositySolver(PatternBasedARCCuriositySolver):
                 transform_obj = Transform(
                     name=f"map_{src_color}_to_{tgt_color}",
                     function=transform_fn,
-                    parameters={'source': int(src_color), 'target': int(tgt_color)},
+                    parameters={},  # No parameters needed - captured in closure
                     category='pattern_variation'
                 )
 
@@ -349,7 +349,7 @@ class DiverseARCCuriositySolver(PatternBasedARCCuriositySolver):
                 transform_obj = Transform(
                     name=f"combo_{p1.transform_type}_{p2.transform_type}",
                     function=transform_fn,
-                    parameters={'p1': p1.transform_type, 'p2': p2.transform_type},
+                    parameters={},  # No parameters needed - captured in closure
                     category='pattern_combination'
                 )
 
