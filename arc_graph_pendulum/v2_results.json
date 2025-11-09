@@ -1,0 +1,11 @@
+{
+  "version": "v2",
+  "approach": "advanced program synthesis (64 programs)",
+  "num_tasks": 10,
+  "solved_count": 0,
+  "high_quality_count": 1,
+  "medium_quality_count": 0,
+  "low_quality_count": 9,
+  "avg_iou": 0.415,
+  "note": "Data extracted from V2_RESULTS.md - V2 performed 20% worse than V1 despite 10x more programs"
+}

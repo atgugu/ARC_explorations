@@ -1,0 +1,93 @@
+{
+  "version": "v3",
+  "approach": "example-driven rule inference",
+  "num_tasks": 10,
+  "solved_count": 4,
+  "high_quality_count": 7,
+  "medium_quality_count": 1,
+  "low_quality_count": 2,
+  "avg_iou": 0.751999433106576,
+  "results": [
+    {
+      "task_id": "1e0a9b12",
+      "solved": false,
+      "avg_score": 0.72,
+      "scores": [
+        0.72
+      ]
+    },
+    {
+      "task_id": "007bbfb7",
+      "solved": false,
+      "avg_score": 0.0,
+      "scores": [
+        0.0
+      ]
+    },
+    {
+      "task_id": "0d3d703e",
+      "solved": true,
+      "avg_score": 1.0,
+      "scores": [
+        1.0
+      ]
+    },
+    {
+      "task_id": "045e512c",
+      "solved": false,
+      "avg_score": 0.9024943310657596,
+      "scores": [
+        0.9024943310657596
+      ]
+    },
+    {
+      "task_id": "25ff71a9",
+      "solved": true,
+      "avg_score": 1.0,
+      "scores": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "task_id": "3c9b0459",
+      "solved": true,
+      "avg_score": 1.0,
+      "scores": [
+        1.0
+      ]
+    },
+    {
+      "task_id": "6150a2bd",
+      "solved": true,
+      "avg_score": 1.0,
+      "scores": [
+        1.0
+      ]
+    },
+    {
+      "task_id": "025d127b",
+      "solved": false,
+      "avg_score": 0.98,
+      "scores": [
+        0.98
+      ]
+    },
+    {
+      "task_id": "017c7c7b",
+      "solved": false,
+      "avg_score": 0.0,
+      "scores": [
+        0.0
+      ]
+    },
+    {
+      "task_id": "00d62c1b",
+      "solved": false,
+      "avg_score": 0.9175,
+      "scores": [
+        0.9175
+      ]
+    }
+  ]
+}
