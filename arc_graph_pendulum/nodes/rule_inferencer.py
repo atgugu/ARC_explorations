@@ -220,8 +220,105 @@ class RuleInferencer:
                     'description': f'Tile with inconsistent parameters'
                 }
 
+        elif rule_type == 'pattern_based_tiling':
+            # Pattern-based tiling
+            scales = [(a['parameters']['scale_h'], a['parameters']['scale_w']) for a in relevant]
+            if len(set(scales)) == 1:
+                scale_h, scale_w = scales[0]
+                return {
+                    'rule_type': 'pattern_based_tiling',
+                    'parameters': {'scale_h': scale_h, 'scale_w': scale_w},
+                    'consistency': consistency,
+                    'confidence': consistency * 0.9,  # Slightly lower for complex ops
+                    'description': f'Pattern-based tiling {scale_h}x{scale_w}'
+                }
+            else:
+                return {
+                    'rule_type': 'pattern_based_tiling',
+                    'parameters': {'scale_h': Counter(scales).most_common(1)[0][0][0],
+                                   'scale_w': Counter(scales).most_common(1)[0][0][1]},
+                    'consistency': consistency * 0.6,
+                    'confidence': consistency * 0.6,
+                    'description': 'Pattern-based tiling with inconsistent scales'
+                }
+
+        elif rule_type == 'pattern_extraction':
+            # Pattern extraction - merge parameters
+            all_mappings = [a['parameters'].get('color_mapping', {}) for a in relevant]
+            merged_color_mapping = self._merge_color_mappings_from_dicts(all_mappings)
+
+            # Get axis (should be consistent)
+            axes = [a['parameters'].get('axis', 'rows') for a in relevant]
+            axis = Counter(axes).most_common(1)[0][0]
+
+            # Get row_mapping from first example (use as template)
+            row_mapping = relevant[0]['parameters'].get('row_mapping', [])
+
+            # Average extension factor
+            extension_factors = [a['parameters'].get('extension_factor', 1.0) for a in relevant]
+            avg_extension = sum(extension_factors) / len(extension_factors)
+
+            return {
+                'rule_type': 'pattern_extraction',
+                'parameters': {
+                    'axis': axis,
+                    'color_mapping': merged_color_mapping,
+                    'extension_factor': avg_extension,
+                    'row_mapping': row_mapping
+                },
+                'consistency': consistency,
+                'confidence': consistency * 0.85,
+                'description': f'Pattern extraction along {axis} with color remap'
+            }
+
+        elif rule_type == 'object_translate_all':
+            # Object translation
+            offsets = [tuple(a['parameters']['offset']) for a in relevant]
+            if len(set(offsets)) == 1:
+                offset = offsets[0]
+                return {
+                    'rule_type': 'object_translate_all',
+                    'parameters': {'offset': offset},
+                    'consistency': consistency,
+                    'confidence': consistency,
+                    'description': f'Translate all objects by {offset}'
+                }
+            else:
+                return {
+                    'rule_type': 'object_translate_all',
+                    'parameters': {'offset': Counter(offsets).most_common(1)[0][0]},
+                    'consistency': consistency * 0.7,
+                    'confidence': consistency * 0.7,
+                    'description': 'Object translation with inconsistent offsets'
+                }
+
         else:
             return self._unknown_rule()
+
+    def _merge_color_mappings_from_dicts(self, mappings: List[Dict]) -> Dict[int, int]:
+        """Merge color mappings from list of mapping dictionaries."""
+        if not mappings:
+            return {}
+
+        # Collect all mappings
+        vote_counts = {}
+
+        for mapping in mappings:
+            for from_color, to_color in mapping.items():
+                key = (int(from_color), int(to_color))
+                vote_counts[key] = vote_counts.get(key, 0) + 1
+
+        # For each from_color, find most common to_color
+        merged = {}
+        from_colors = set(fc for fc, _ in vote_counts.keys())
+
+        for from_color in from_colors:
+            votes = [(tc, count) for (fc, tc), count in vote_counts.items() if fc == from_color]
+            if votes:
+                best_to_color = max(votes, key=lambda x: x[1])[0]
+                merged[from_color] = best_to_color
+
+        return merged
 
     def _merge_color_mappings(self, analyses: List[Dict]) -> Dict[int, int]:
         """

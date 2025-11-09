@@ -1,0 +1,91 @@
+{
+  "version": "v3_plus",
+  "approach": "enhanced differential analysis + pattern detection",
+  "num_tasks": 10,
+  "solved_count": 4,
+  "high_quality_count": 7,
+  "avg_iou": 0.8223698034769462,
+  "results": [
+    {
+      "task_id": "6150a2bd",
+      "solved": true,
+      "avg_score": 1.0,
+      "scores": [
+        1.0
+      ]
+    },
+    {
+      "task_id": "0d3d703e",
+      "solved": true,
+      "avg_score": 1.0,
+      "scores": [
+        1.0
+      ]
+    },
+    {
+      "task_id": "25ff71a9",
+      "solved": true,
+      "avg_score": 1.0,
+      "scores": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "task_id": "007bbfb7",
+      "solved": false,
+      "avg_score": 0.0,
+      "scores": [
+        0.0
+      ]
+    },
+    {
+      "task_id": "00d62c1b",
+      "solved": false,
+      "avg_score": 0.9175,
+      "scores": [
+        0.9175
+      ]
+    },
+    {
+      "task_id": "1e0a9b12",
+      "solved": false,
+      "avg_score": 0.72,
+      "scores": [
+        0.72
+      ]
+    },
+    {
+      "task_id": "045e512c",
+      "solved": false,
+      "avg_score": 0.9024943310657596,
+      "scores": [
+        0.9024943310657596
+      ]
+    },
+    {
+      "task_id": "017c7c7b",
+      "solved": false,
+      "avg_score": 0.7037037037037037,
+      "scores": [
+        0.7037037037037037
+      ]
+    },
+    {
+      "task_id": "025d127b",
+      "solved": false,
+      "avg_score": 0.98,
+      "scores": [
+        0.98
+      ]
+    },
+    {
+      "task_id": "3c9b0459",
+      "solved": true,
+      "avg_score": 1.0,
+      "scores": [
+        1.0
+      ]
+    }
+  ]
+}
