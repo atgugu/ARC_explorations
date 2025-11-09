@@ -1,0 +1,196 @@
+# Cognitive Workspace Configuration
+# Default settings for ARC solver
+
+# Data
+data:
+  training_path: "data/ARC-AGI/data/training"
+  evaluation_path: "data/ARC-AGI/data/evaluation"
+  test_path: "data/ARC-AGI/data/test"
+
+# Workspace Settings
+workspace:
+  # Number of hypotheses to admit (limited capacity)
+  size: 5
+
+  # Maximum reasoning iterations
+  max_iterations: 50
+
+  # Early stopping patience (iterations without improvement)
+  patience: 10
+
+  # Diversity penalty for admitted hypotheses
+  diversity_weight: 1.0
+
+  # Temperature for selection (higher = more exploration)
+  temperature: 1.0
+
+# Perception Module
+perception:
+  # Object detection method: "connected_components", "rule_based", "neural"
+  method: "connected_components"
+
+  # Connectivity for object detection (4 or 8)
+  connectivity: 4
+
+  # Minimum object size (pixels)
+  min_object_size: 1
+
+  # Maximum number of objects to extract
+  max_objects: 50
+
+# Rule Library
+rules:
+  # DSL primitives to enable
+  primitives:
+    - "select_by_color"
+    - "select_by_size"
+    - "select_largest"
+    - "rotate"
+    - "reflect"
+    - "translate"
+    - "recolor"
+    - "copy"
+    - "tile"
+    - "scale"
+
+  # Maximum program depth (composition)
+  max_depth: 5
+
+# Hypothesis Proposer
+proposer:
+  # Proposer type: "heuristic", "neural", "hybrid"
+  type: "heuristic"
+
+  # Number of hypotheses to generate per iteration
+  num_proposals: 20
+
+  # Enable parameter search
+  parameter_search: true
+
+  # Beam width for program search
+  beam_width: 10
+
+# Evaluator
+evaluator:
+  # Scoring weights
+  weights:
+    correctness: 10.0      # Exact match on training pairs
+    partial_match: 1.0     # Partial pixel accuracy
+    simplicity: 0.1        # Prefer shorter programs
+    generalization: 2.0    # Penalize overfitting signals
+    consistency: 5.0       # Prefer rules that work on all pairs
+
+  # Threshold for "solved" (perfect score)
+  solved_threshold: 9.9
+
+  # Penalize absolute coordinates and magic numbers
+  penalize_overfitting: true
+
+# Critic (Meta-Learning)
+critic:
+  # Enable critic module
+  enabled: false
+
+  # Critic type: "heuristic", "learned"
+  type: "heuristic"
+
+  # Early stopping based on expected value
+  use_value_stopping: false
+
+# Executor
+executor:
+  # Timeout per execution (seconds)
+  timeout: 1.0
+
+  # Enable caching of execution results
+  cache_enabled: true
+
+  # Maximum output grid size
+  max_output_size: [30, 30]
+
+# Memory Module
+memory:
+  # Enable episodic memory
+  enabled: false
+
+  # Number of past tasks to remember
+  capacity: 100
+
+  # Use memory for priors
+  use_priors: false
+
+# Training (for neural components)
+training:
+  # Learning rate
+  learning_rate: 0.001
+
+  # Batch size
+  batch_size: 32
+
+  # Number of epochs
+  epochs: 100
+
+  # Optimizer: "adam", "sgd", "adamw"
+  optimizer: "adam"
+
+  # Learning rate scheduler
+  lr_scheduler: "cosine"
+
+# Logging
+logging:
+  # Log level: "DEBUG", "INFO", "WARNING", "ERROR"
+  level: "INFO"
+
+  # Log file path
+  log_file: "results/logs/solver.log"
+
+  # Log workspace states
+  log_workspace_states: true
+
+  # Save visualizations
+  save_visualizations: true
+
+  # Output directory
+  output_dir: "results"
+
+# Evaluation
+evaluation:
+  # Number of test attempts per task
+  num_attempts: 3
+
+  # Use ensemble of controllers
+  ensemble: false
+
+  # Random seed for reproducibility
+  random_seed: 42
+
+  # Save predictions
+  save_predictions: true
+
+# Optimization
+optimization:
+  # Enable parallel execution
+  parallel: false
+
+  # Number of workers
+  num_workers: 4
+
+  # Enable GPU acceleration
+  use_gpu: false
+
+  # Device: "cpu", "cuda", "mps"
+  device: "cpu"
+
+# Development
+development:
+  # Enable debug mode
+  debug: false
+
+  # Verbose output
+  verbose: true
+
+  # Profile performance
+  profile: false
+
+  # Visualize intermediate steps
+  visualize_steps: false
