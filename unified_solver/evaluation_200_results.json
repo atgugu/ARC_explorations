@@ -1,0 +1,4019 @@
+{
+  "summary": {
+    "total_tasks": 200,
+    "exact_match_attempt_1": 1,
+    "exact_match_attempt_2": 0,
+    "exact_match_either": 1,
+    "both_wrong": 199,
+    "identical_predictions": 0,
+    "success_rate": 0.5,
+    "diversity_rate": 100.0,
+    "average_time": 0.013629486560821533
+  },
+  "failure_modes": {
+    "wrong_transform": 147,
+    "size_mismatch": 52
+  },
+  "task_results": {
+    "00576224": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        6,
+        6
+      ],
+      "pred_1_shape": [
+        6,
+        6
+      ],
+      "pred_2_shape": [
+        2,
+        2
+      ],
+      "elapsed": 0.005497455596923828
+    },
+    "009d5c81": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        14,
+        14
+      ],
+      "pred_1_shape": [
+        14,
+        14
+      ],
+      "pred_2_shape": [
+        14,
+        14
+      ],
+      "elapsed": 0.015073776245117188
+    },
+    "00dbd492": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        20,
+        20
+      ],
+      "pred_1_shape": [
+        20,
+        20
+      ],
+      "pred_2_shape": [
+        20,
+        20
+      ],
+      "elapsed": 0.010242700576782227
+    },
+    "03560426": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.011077880859375
+    },
+    "05a7bcf2": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        30,
+        30
+      ],
+      "pred_1_shape": [
+        30,
+        30
+      ],
+      "pred_2_shape": [
+        30,
+        30
+      ],
+      "elapsed": 0.020509004592895508
+    },
+    "0607ce86": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        24,
+        22
+      ],
+      "pred_1_shape": [
+        24,
+        22
+      ],
+      "pred_2_shape": [
+        24,
+        22
+      ],
+      "elapsed": 0.020237445831298828
+    },
+    "0692e18c": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        9,
+        9
+      ],
+      "pred_1_shape": [
+        9,
+        9
+      ],
+      "pred_2_shape": [
+        3,
+        3
+      ],
+      "elapsed": 0.0038809776306152344
+    },
+    "070dd51e": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        20,
+        20
+      ],
+      "pred_1_shape": [
+        20,
+        20
+      ],
+      "pred_2_shape": [
+        20,
+        20
+      ],
+      "elapsed": 0.012369394302368164
+    },
+    "08573cc6": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        13,
+        13
+      ],
+      "pred_1_shape": [
+        13,
+        13
+      ],
+      "pred_2_shape": [
+        13,
+        13
+      ],
+      "elapsed": 0.009289264678955078
+    },
+    "0934a4d8": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        9,
+        3
+      ],
+      "pred_1_shape": [
+        30,
+        30
+      ],
+      "pred_2_shape": [
+        30,
+        30
+      ],
+      "elapsed": 0.07779288291931152
+    },
+    "09c534e7": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        30,
+        30
+      ],
+      "pred_1_shape": [
+        30,
+        30
+      ],
+      "pred_2_shape": [
+        30,
+        30
+      ],
+      "elapsed": 0.021734952926635742
+    },
+    "0a1d4ef5": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        4,
+        3
+      ],
+      "pred_1_shape": [
+        30,
+        30
+      ],
+      "pred_2_shape": [
+        30,
+        30
+      ],
+      "elapsed": 0.04066324234008789
+    },
+    "0a2355a6": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        15,
+        17
+      ],
+      "pred_1_shape": [
+        15,
+        17
+      ],
+      "pred_2_shape": [
+        15,
+        17
+      ],
+      "elapsed": 0.009536027908325195
+    },
+    "0b17323b": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        15,
+        15
+      ],
+      "pred_1_shape": [
+        15,
+        15
+      ],
+      "pred_2_shape": [
+        15,
+        15
+      ],
+      "elapsed": 0.005465507507324219
+    },
+    "0bb8deee": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        6,
+        6
+      ],
+      "pred_1_shape": [
+        14,
+        13
+      ],
+      "pred_2_shape": [
+        13,
+        14
+      ],
+      "elapsed": 0.011199235916137695
+    },
+    "0becf7df": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.010103464126586914
+    },
+    "0c786b71": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        6,
+        8
+      ],
+      "pred_1_shape": [
+        6,
+        8
+      ],
+      "pred_2_shape": [
+        3,
+        4
+      ],
+      "elapsed": 0.005636453628540039
+    },
+    "0c9aba6e": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        6,
+        4
+      ],
+      "pred_1_shape": [
+        13,
+        4
+      ],
+      "pred_2_shape": [
+        4,
+        13
+      ],
+      "elapsed": 0.009960651397705078
+    },
+    "0d87d2a6": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        23,
+        25
+      ],
+      "pred_1_shape": [
+        23,
+        25
+      ],
+      "pred_2_shape": [
+        23,
+        25
+      ],
+      "elapsed": 0.011479854583740234
+    },
+    "0e671a1a": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        13,
+        13
+      ],
+      "pred_1_shape": [
+        13,
+        13
+      ],
+      "pred_2_shape": [
+        13,
+        13
+      ],
+      "elapsed": 0.011375188827514648
+    },
+    "0f63c0b9": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        15,
+        15
+      ],
+      "pred_1_shape": [
+        15,
+        15
+      ],
+      "pred_2_shape": [
+        15,
+        15
+      ],
+      "elapsed": 0.013010501861572266
+    },
+    "103eff5b": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        16,
+        26
+      ],
+      "pred_1_shape": [
+        16,
+        26
+      ],
+      "pred_2_shape": [
+        16,
+        26
+      ],
+      "elapsed": 0.012650489807128906
+    },
+    "11e1fe23": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        12,
+        14
+      ],
+      "pred_1_shape": [
+        12,
+        14
+      ],
+      "pred_2_shape": [
+        12,
+        14
+      ],
+      "elapsed": 0.0064847469329833984
+    },
+    "12422b43": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        10,
+        7
+      ],
+      "pred_1_shape": [
+        10,
+        7
+      ],
+      "pred_2_shape": [
+        10,
+        7
+      ],
+      "elapsed": 0.011606931686401367
+    },
+    "12997ef3": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        3,
+        12
+      ],
+      "pred_1_shape": [
+        11,
+        11
+      ],
+      "pred_2_shape": [
+        11,
+        11
+      ],
+      "elapsed": 0.010143041610717773
+    },
+    "12eac192": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        8,
+        8
+      ],
+      "pred_1_shape": [
+        8,
+        8
+      ],
+      "pred_2_shape": [
+        8,
+        8
+      ],
+      "elapsed": 0.011208295822143555
+    },
+    "136b0064": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        19,
+        7
+      ],
+      "pred_1_shape": [
+        19,
+        15
+      ],
+      "pred_2_shape": [
+        15,
+        19
+      ],
+      "elapsed": 0.01190185546875
+    },
+    "13713586": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        19,
+        18
+      ],
+      "pred_1_shape": [
+        19,
+        18
+      ],
+      "pred_2_shape": [
+        19,
+        18
+      ],
+      "elapsed": 0.011712074279785156
+    },
+    "137f0df0": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.006681203842163086
+    },
+    "140c817e": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        14,
+        14
+      ],
+      "pred_1_shape": [
+        14,
+        14
+      ],
+      "pred_2_shape": [
+        14,
+        14
+      ],
+      "elapsed": 0.010463714599609375
+    },
+    "14754a24": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        19,
+        19
+      ],
+      "pred_1_shape": [
+        19,
+        19
+      ],
+      "pred_2_shape": [
+        19,
+        19
+      ],
+      "elapsed": 0.017834186553955078
+    },
+    "15113be4": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        23,
+        23
+      ],
+      "pred_1_shape": [
+        23,
+        23
+      ],
+      "pred_2_shape": [
+        23,
+        23
+      ],
+      "elapsed": 0.024629592895507812
+    },
+    "15663ba9": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        15,
+        16
+      ],
+      "pred_1_shape": [
+        15,
+        16
+      ],
+      "pred_2_shape": [
+        15,
+        16
+      ],
+      "elapsed": 0.009458303451538086
+    },
+    "15696249": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        9,
+        9
+      ],
+      "pred_1_shape": [
+        9,
+        9
+      ],
+      "pred_2_shape": [
+        3,
+        3
+      ],
+      "elapsed": 0.007162570953369141
+    },
+    "16b78196": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        30,
+        30
+      ],
+      "pred_1_shape": [
+        30,
+        30
+      ],
+      "pred_2_shape": [
+        30,
+        30
+      ],
+      "elapsed": 0.019346237182617188
+    },
+    "17b80ad2": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        17,
+        17
+      ],
+      "pred_1_shape": [
+        17,
+        17
+      ],
+      "pred_2_shape": [
+        17,
+        17
+      ],
+      "elapsed": 0.022066116333007812
+    },
+    "17cae0c1": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        3,
+        9
+      ],
+      "pred_1_shape": [
+        3,
+        9
+      ],
+      "pred_2_shape": [
+        3,
+        9
+      ],
+      "elapsed": 0.0056569576263427734
+    },
+    "18419cfa": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        28,
+        26
+      ],
+      "pred_1_shape": [
+        28,
+        26
+      ],
+      "pred_2_shape": [
+        28,
+        26
+      ],
+      "elapsed": 0.013141393661499023
+    },
+    "184a9768": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        25,
+        26
+      ],
+      "pred_1_shape": [
+        25,
+        26
+      ],
+      "pred_2_shape": [
+        25,
+        26
+      ],
+      "elapsed": 0.022705078125
+    },
+    "195ba7dc": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        5,
+        6
+      ],
+      "pred_1_shape": [
+        5,
+        13
+      ],
+      "pred_2_shape": [
+        13,
+        5
+      ],
+      "elapsed": 0.008331298828125
+    },
+    "1990f7a8": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        7,
+        7
+      ],
+      "pred_1_shape": [
+        17,
+        17
+      ],
+      "pred_2_shape": [
+        17,
+        17
+      ],
+      "elapsed": 0.009210824966430664
+    },
+    "19bb5feb": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        2,
+        2
+      ],
+      "pred_1_shape": [
+        14,
+        15
+      ],
+      "pred_2_shape": [
+        15,
+        14
+      ],
+      "elapsed": 0.010127544403076172
+    },
+    "1a2e2828": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        1,
+        1
+      ],
+      "pred_1_shape": [
+        11,
+        13
+      ],
+      "pred_2_shape": [
+        13,
+        11
+      ],
+      "elapsed": 0.012902498245239258
+    },
+    "1a6449f1": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        27,
+        25
+      ],
+      "pred_2_shape": [
+        25,
+        27
+      ],
+      "elapsed": 0.024127721786499023
+    },
+    "1acc24af": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        12,
+        12
+      ],
+      "pred_1_shape": [
+        12,
+        12
+      ],
+      "pred_2_shape": [
+        12,
+        12
+      ],
+      "elapsed": 0.011423110961914062
+    },
+    "1c02dbbe": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        15,
+        15
+      ],
+      "pred_1_shape": [
+        15,
+        15
+      ],
+      "pred_2_shape": [
+        15,
+        15
+      ],
+      "elapsed": 0.012003898620605469
+    },
+    "1c0d0a4b": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        13,
+        13
+      ],
+      "pred_1_shape": [
+        13,
+        13
+      ],
+      "pred_2_shape": [
+        13,
+        13
+      ],
+      "elapsed": 0.0065381526947021484
+    },
+    "1c56ad9f": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        15,
+        15
+      ],
+      "pred_1_shape": [
+        15,
+        15
+      ],
+      "pred_2_shape": [
+        15,
+        15
+      ],
+      "elapsed": 0.009502410888671875
+    },
+    "1d0a4b61": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        25,
+        25
+      ],
+      "pred_1_shape": [
+        25,
+        25
+      ],
+      "pred_2_shape": [
+        25,
+        25
+      ],
+      "elapsed": 0.03670787811279297
+    },
+    "1d398264": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        12,
+        12
+      ],
+      "pred_1_shape": [
+        12,
+        12
+      ],
+      "pred_2_shape": [
+        12,
+        12
+      ],
+      "elapsed": 0.013217926025390625
+    },
+    "1da012fc": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        19,
+        25
+      ],
+      "pred_1_shape": [
+        19,
+        25
+      ],
+      "pred_2_shape": [
+        19,
+        25
+      ],
+      "elapsed": 0.01265406608581543
+    },
+    "1e81d6f9": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        15,
+        15
+      ],
+      "pred_1_shape": [
+        15,
+        15
+      ],
+      "pred_2_shape": [
+        15,
+        15
+      ],
+      "elapsed": 0.019522666931152344
+    },
+    "1e97544e": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        23,
+        23
+      ],
+      "pred_1_shape": [
+        23,
+        23
+      ],
+      "pred_2_shape": [
+        23,
+        23
+      ],
+      "elapsed": 0.030384063720703125
+    },
+    "2037f2c7": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        2,
+        10
+      ],
+      "pred_1_shape": [
+        24,
+        25
+      ],
+      "pred_2_shape": [
+        25,
+        24
+      ],
+      "elapsed": 0.016793489456176758
+    },
+    "2072aba6": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        6,
+        6
+      ],
+      "pred_1_shape": [
+        6,
+        6
+      ],
+      "pred_2_shape": [
+        3,
+        3
+      ],
+      "elapsed": 0.004033803939819336
+    },
+    "20818e16": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        6,
+        10
+      ],
+      "pred_1_shape": [
+        16,
+        16
+      ],
+      "pred_2_shape": [
+        16,
+        16
+      ],
+      "elapsed": 0.013960123062133789
+    },
+    "20981f0e": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        17,
+        13
+      ],
+      "pred_1_shape": [
+        17,
+        13
+      ],
+      "pred_2_shape": [
+        17,
+        13
+      ],
+      "elapsed": 0.009186029434204102
+    },
+    "212895b5": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        21,
+        23
+      ],
+      "pred_1_shape": [
+        21,
+        23
+      ],
+      "pred_2_shape": [
+        21,
+        23
+      ],
+      "elapsed": 0.011564493179321289
+    },
+    "21f83797": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        13,
+        13
+      ],
+      "pred_1_shape": [
+        13,
+        13
+      ],
+      "pred_2_shape": [
+        13,
+        13
+      ],
+      "elapsed": 0.005110263824462891
+    },
+    "22a4bbc2": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        22,
+        4
+      ],
+      "pred_1_shape": [
+        22,
+        4
+      ],
+      "pred_2_shape": [
+        22,
+        4
+      ],
+      "elapsed": 0.011362552642822266
+    },
+    "25094a63": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        30,
+        30
+      ],
+      "pred_1_shape": [
+        30,
+        30
+      ],
+      "pred_2_shape": [
+        30,
+        30
+      ],
+      "elapsed": 0.041841983795166016
+    },
+    "2546ccf6": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        26,
+        23
+      ],
+      "pred_1_shape": [
+        26,
+        23
+      ],
+      "pred_2_shape": [
+        26,
+        23
+      ],
+      "elapsed": 0.009739160537719727
+    },
+    "256b0a75": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        25,
+        26
+      ],
+      "pred_1_shape": [
+        25,
+        26
+      ],
+      "pred_2_shape": [
+        25,
+        26
+      ],
+      "elapsed": 0.01972651481628418
+    },
+    "2685904e": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 6,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.021677017211914062
+    },
+    "2697da3f": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        17,
+        17
+      ],
+      "pred_1_shape": [
+        8,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        8
+      ],
+      "elapsed": 0.0062427520751953125
+    },
+    "2753e76c": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        3,
+        5
+      ],
+      "pred_1_shape": [
+        16,
+        16
+      ],
+      "pred_2_shape": [
+        16,
+        16
+      ],
+      "elapsed": 0.010748624801635742
+    },
+    "27a77e38": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        9,
+        9
+      ],
+      "pred_1_shape": [
+        9,
+        9
+      ],
+      "pred_2_shape": [
+        9,
+        9
+      ],
+      "elapsed": 0.007688760757446289
+    },
+    "27f8ce4f": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        9,
+        9
+      ],
+      "pred_1_shape": [
+        9,
+        9
+      ],
+      "pred_2_shape": [
+        3,
+        3
+      ],
+      "elapsed": 0.008569717407226562
+    },
+    "281123b4": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 6,
+      "test_shape": [
+        4,
+        4
+      ],
+      "pred_1_shape": [
+        4,
+        19
+      ],
+      "pred_2_shape": [
+        19,
+        4
+      ],
+      "elapsed": 0.0157315731048584
+    },
+    "292dd178": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        11,
+        15
+      ],
+      "pred_1_shape": [
+        11,
+        15
+      ],
+      "pred_2_shape": [
+        11,
+        15
+      ],
+      "elapsed": 0.00881195068359375
+    },
+    "29700607": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        11,
+        11
+      ],
+      "pred_1_shape": [
+        11,
+        11
+      ],
+      "pred_2_shape": [
+        11,
+        11
+      ],
+      "elapsed": 0.010136127471923828
+    },
+    "2a5f8217": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        13,
+        13
+      ],
+      "pred_1_shape": [
+        13,
+        13
+      ],
+      "pred_2_shape": [
+        13,
+        13
+      ],
+      "elapsed": 0.008008480072021484
+    },
+    "2b01abd0": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        14,
+        16
+      ],
+      "pred_1_shape": [
+        14,
+        16
+      ],
+      "pred_2_shape": [
+        14,
+        16
+      ],
+      "elapsed": 0.010547161102294922
+    },
+    "2c0b0aff": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        8,
+        10
+      ],
+      "pred_1_shape": [
+        22,
+        23
+      ],
+      "pred_2_shape": [
+        23,
+        22
+      ],
+      "elapsed": 0.023424863815307617
+    },
+    "2c737e39": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        11,
+        10
+      ],
+      "pred_1_shape": [
+        11,
+        10
+      ],
+      "pred_2_shape": [
+        11,
+        10
+      ],
+      "elapsed": 0.012289047241210938
+    },
+    "2f0c5170": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        7,
+        9
+      ],
+      "pred_1_shape": [
+        19,
+        19
+      ],
+      "pred_2_shape": [
+        19,
+        19
+      ],
+      "elapsed": 0.017736434936523438
+    },
+    "310f3251": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        12,
+        12
+      ],
+      "pred_1_shape": [
+        12,
+        12
+      ],
+      "pred_2_shape": [
+        4,
+        4
+      ],
+      "elapsed": 0.005835294723510742
+    },
+    "3194b014": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        3,
+        3
+      ],
+      "pred_1_shape": [
+        20,
+        20
+      ],
+      "pred_2_shape": [
+        20,
+        20
+      ],
+      "elapsed": 0.021524667739868164
+    },
+    "319f2597": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        20,
+        20
+      ],
+      "pred_1_shape": [
+        20,
+        20
+      ],
+      "pred_2_shape": [
+        20,
+        20
+      ],
+      "elapsed": 0.040993452072143555
+    },
+    "31adaf00": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.0076274871826171875
+    },
+    "31d5ba1a": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        3,
+        5
+      ],
+      "pred_1_shape": [
+        6,
+        5
+      ],
+      "pred_2_shape": [
+        5,
+        6
+      ],
+      "elapsed": 0.008334636688232422
+    },
+    "32e9702f": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.0048980712890625
+    },
+    "332efdb3": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        11,
+        11
+      ],
+      "pred_1_shape": [
+        11,
+        11
+      ],
+      "pred_2_shape": [
+        22,
+        22
+      ],
+      "elapsed": 0.0021479129791259766
+    },
+    "3391f8c0": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        11,
+        14
+      ],
+      "pred_1_shape": [
+        11,
+        14
+      ],
+      "pred_2_shape": [
+        11,
+        14
+      ],
+      "elapsed": 0.009473562240600586
+    },
+    "33b52de3": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        23,
+        23
+      ],
+      "pred_1_shape": [
+        23,
+        23
+      ],
+      "pred_2_shape": [
+        23,
+        23
+      ],
+      "elapsed": 0.013762950897216797
+    },
+    "3490cc26": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        22,
+        23
+      ],
+      "pred_1_shape": [
+        22,
+        23
+      ],
+      "pred_2_shape": [
+        22,
+        23
+      ],
+      "elapsed": 0.01555776596069336
+    },
+    "34b99a2b": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        5,
+        4
+      ],
+      "pred_1_shape": [
+        5,
+        9
+      ],
+      "pred_2_shape": [
+        9,
+        5
+      ],
+      "elapsed": 0.00801706314086914
+    },
+    "351d6448": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        3,
+        13
+      ],
+      "pred_1_shape": [
+        15,
+        13
+      ],
+      "pred_2_shape": [
+        13,
+        15
+      ],
+      "elapsed": 0.007487773895263672
+    },
+    "358ba94e": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        5,
+        5
+      ],
+      "pred_1_shape": [
+        17,
+        19
+      ],
+      "pred_2_shape": [
+        19,
+        17
+      ],
+      "elapsed": 0.011143684387207031
+    },
+    "37d3e8b2": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        17,
+        18
+      ],
+      "pred_1_shape": [
+        17,
+        18
+      ],
+      "pred_2_shape": [
+        17,
+        18
+      ],
+      "elapsed": 0.010334014892578125
+    },
+    "3979b1a8": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        5,
+        5
+      ],
+      "elapsed": 0.005282878875732422
+    },
+    "3a301edc": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        21,
+        21
+      ],
+      "pred_1_shape": [
+        21,
+        21
+      ],
+      "pred_2_shape": [
+        21,
+        21
+      ],
+      "elapsed": 0.0142059326171875
+    },
+    "3b4c2228": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        3,
+        3
+      ],
+      "pred_1_shape": [
+        8,
+        5
+      ],
+      "pred_2_shape": [
+        5,
+        8
+      ],
+      "elapsed": 0.008502960205078125
+    },
+    "3d31c5b3": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 6,
+      "test_shape": [
+        3,
+        6
+      ],
+      "pred_1_shape": [
+        12,
+        6
+      ],
+      "pred_2_shape": [
+        6,
+        12
+      ],
+      "elapsed": 0.016257762908935547
+    },
+    "3ed85e70": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        30,
+        30
+      ],
+      "pred_1_shape": [
+        30,
+        30
+      ],
+      "pred_2_shape": [
+        30,
+        30
+      ],
+      "elapsed": 0.028339147567749023
+    },
+    "3ee1011a": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        7,
+        7
+      ],
+      "pred_1_shape": [
+        21,
+        23
+      ],
+      "pred_2_shape": [
+        23,
+        21
+      ],
+      "elapsed": 0.013033151626586914
+    },
+    "3f23242b": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        17,
+        19
+      ],
+      "pred_1_shape": [
+        17,
+        19
+      ],
+      "pred_2_shape": [
+        17,
+        19
+      ],
+      "elapsed": 0.0064580440521240234
+    },
+    "40f6cd08": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        30,
+        30
+      ],
+      "pred_1_shape": [
+        30,
+        30
+      ],
+      "pred_2_shape": [
+        30,
+        30
+      ],
+      "elapsed": 0.02696704864501953
+    },
+    "414297c0": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        9,
+        15
+      ],
+      "pred_1_shape": [
+        26,
+        24
+      ],
+      "pred_2_shape": [
+        24,
+        26
+      ],
+      "elapsed": 0.015702009201049805
+    },
+    "423a55dc": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        11,
+        13
+      ],
+      "pred_1_shape": [
+        11,
+        13
+      ],
+      "pred_2_shape": [
+        11,
+        13
+      ],
+      "elapsed": 0.008969306945800781
+    },
+    "42918530": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        25,
+        25
+      ],
+      "pred_1_shape": [
+        25,
+        25
+      ],
+      "pred_2_shape": [
+        25,
+        25
+      ],
+      "elapsed": 0.031822919845581055
+    },
+    "42a15761": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        11,
+        19
+      ],
+      "pred_1_shape": [
+        11,
+        19
+      ],
+      "pred_2_shape": [
+        11,
+        19
+      ],
+      "elapsed": 0.007884502410888672
+    },
+    "4364c1c4": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        14,
+        13
+      ],
+      "pred_1_shape": [
+        14,
+        13
+      ],
+      "pred_2_shape": [
+        14,
+        13
+      ],
+      "elapsed": 0.014295816421508789
+    },
+    "456873bc": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        19,
+        19
+      ],
+      "pred_1_shape": [
+        19,
+        19
+      ],
+      "pred_2_shape": [
+        19,
+        19
+      ],
+      "elapsed": 0.013872385025024414
+    },
+    "45737921": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        8,
+        9
+      ],
+      "pred_1_shape": [
+        8,
+        9
+      ],
+      "pred_2_shape": [
+        8,
+        9
+      ],
+      "elapsed": 0.011673688888549805
+    },
+    "45bbe264": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        15,
+        15
+      ],
+      "pred_1_shape": [
+        15,
+        15
+      ],
+      "pred_2_shape": [
+        15,
+        15
+      ],
+      "elapsed": 0.008799552917480469
+    },
+    "477d2879": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        13,
+        13
+      ],
+      "pred_1_shape": [
+        13,
+        13
+      ],
+      "pred_2_shape": [
+        13,
+        13
+      ],
+      "elapsed": 0.011659622192382812
+    },
+    "47996f11": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        30,
+        30
+      ],
+      "pred_1_shape": [
+        30,
+        30
+      ],
+      "pred_2_shape": [
+        30,
+        30
+      ],
+      "elapsed": 0.07820773124694824
+    },
+    "48131b3c": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        8,
+        8
+      ],
+      "pred_1_shape": [
+        8,
+        8
+      ],
+      "pred_2_shape": [
+        4,
+        4
+      ],
+      "elapsed": 0.004110097885131836
+    },
+    "4852f2fa": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        3,
+        6
+      ],
+      "pred_1_shape": [
+        9,
+        9
+      ],
+      "pred_2_shape": [
+        9,
+        9
+      ],
+      "elapsed": 0.009185314178466797
+    },
+    "48f8583b": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 6,
+      "test_shape": [
+        9,
+        9
+      ],
+      "pred_1_shape": [
+        9,
+        9
+      ],
+      "pred_2_shape": [
+        3,
+        3
+      ],
+      "elapsed": 0.012422323226928711
+    },
+    "4aab4007": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        28,
+        28
+      ],
+      "pred_1_shape": [
+        28,
+        28
+      ],
+      "pred_2_shape": [
+        28,
+        28
+      ],
+      "elapsed": 0.05877804756164551
+    },
+    "4acc7107": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.010902166366577148
+    },
+    "4b6b68e5": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        26,
+        24
+      ],
+      "pred_1_shape": [
+        26,
+        24
+      ],
+      "pred_2_shape": [
+        26,
+        24
+      ],
+      "elapsed": 0.017204761505126953
+    },
+    "4c177718": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        9,
+        15
+      ],
+      "pred_1_shape": [
+        15,
+        15
+      ],
+      "pred_2_shape": [
+        15,
+        15
+      ],
+      "elapsed": 0.0133819580078125
+    },
+    "4cd1b7b2": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        4,
+        4
+      ],
+      "pred_1_shape": [
+        4,
+        4
+      ],
+      "pred_2_shape": [
+        4,
+        4
+      ],
+      "elapsed": 0.008843660354614258
+    },
+    "4e45f183": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        19,
+        19
+      ],
+      "pred_1_shape": [
+        19,
+        19
+      ],
+      "pred_2_shape": [
+        19,
+        19
+      ],
+      "elapsed": 0.015495061874389648
+    },
+    "4e469f39": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.006460905075073242
+    },
+    "4f537728": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        20,
+        20
+      ],
+      "pred_1_shape": [
+        20,
+        20
+      ],
+      "pred_2_shape": [
+        20,
+        20
+      ],
+      "elapsed": 0.012343883514404297
+    },
+    "4ff4c9da": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        27,
+        27
+      ],
+      "pred_1_shape": [
+        27,
+        27
+      ],
+      "pred_2_shape": [
+        27,
+        27
+      ],
+      "elapsed": 0.023500680923461914
+    },
+    "505fff84": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        5,
+        5
+      ],
+      "pred_1_shape": [
+        9,
+        14
+      ],
+      "pred_2_shape": [
+        14,
+        9
+      ],
+      "elapsed": 0.01290440559387207
+    },
+    "506d28a5": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        4,
+        5
+      ],
+      "pred_1_shape": [
+        9,
+        5
+      ],
+      "pred_2_shape": [
+        5,
+        9
+      ],
+      "elapsed": 0.008800268173217773
+    },
+    "50a16a69": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        6,
+        6
+      ],
+      "pred_1_shape": [
+        6,
+        6
+      ],
+      "pred_2_shape": [
+        6,
+        6
+      ],
+      "elapsed": 0.015312671661376953
+    },
+    "50aad11f": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        12,
+        4
+      ],
+      "pred_1_shape": [
+        18,
+        13
+      ],
+      "pred_2_shape": [
+        13,
+        18
+      ],
+      "elapsed": 0.008811235427856445
+    },
+    "50f325b5": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        16,
+        17
+      ],
+      "pred_1_shape": [
+        16,
+        17
+      ],
+      "pred_2_shape": [
+        16,
+        17
+      ],
+      "elapsed": 0.024847030639648438
+    },
+    "516b51b7": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        15,
+        17
+      ],
+      "pred_1_shape": [
+        15,
+        17
+      ],
+      "pred_2_shape": [
+        15,
+        17
+      ],
+      "elapsed": 0.008256673812866211
+    },
+    "5207a7b5": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        15,
+        9
+      ],
+      "pred_1_shape": [
+        15,
+        9
+      ],
+      "pred_2_shape": [
+        15,
+        9
+      ],
+      "elapsed": 0.006406068801879883
+    },
+    "5289ad53": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        2,
+        3
+      ],
+      "pred_1_shape": [
+        15,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        15
+      ],
+      "elapsed": 0.012859106063842773
+    },
+    "52fd389e": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        29,
+        29
+      ],
+      "pred_1_shape": [
+        29,
+        29
+      ],
+      "pred_2_shape": [
+        29,
+        29
+      ],
+      "elapsed": 0.015813589096069336
+    },
+    "54db823b": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        15,
+        15
+      ],
+      "pred_1_shape": [
+        15,
+        15
+      ],
+      "pred_2_shape": [
+        15,
+        15
+      ],
+      "elapsed": 0.014818191528320312
+    },
+    "55059096": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        17,
+        13
+      ],
+      "pred_1_shape": [
+        17,
+        13
+      ],
+      "pred_2_shape": [
+        17,
+        13
+      ],
+      "elapsed": 0.007559537887573242
+    },
+    "551d5bf1": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        26,
+        26
+      ],
+      "pred_1_shape": [
+        26,
+        26
+      ],
+      "pred_2_shape": [
+        26,
+        26
+      ],
+      "elapsed": 0.011638641357421875
+    },
+    "55783887": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        19,
+        16
+      ],
+      "pred_1_shape": [
+        19,
+        16
+      ],
+      "pred_2_shape": [
+        19,
+        16
+      ],
+      "elapsed": 0.015938758850097656
+    },
+    "575b1a71": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.007443666458129883
+    },
+    "5783df64": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        3,
+        3
+      ],
+      "pred_1_shape": [
+        9,
+        9
+      ],
+      "pred_2_shape": [
+        9,
+        9
+      ],
+      "elapsed": 0.012771368026733398
+    },
+    "5833af48": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        12,
+        24
+      ],
+      "pred_1_shape": [
+        19,
+        27
+      ],
+      "pred_2_shape": [
+        27,
+        19
+      ],
+      "elapsed": 0.013320207595825195
+    },
+    "58743b76": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        14,
+        14
+      ],
+      "pred_1_shape": [
+        14,
+        14
+      ],
+      "pred_2_shape": [
+        14,
+        14
+      ],
+      "elapsed": 0.009723901748657227
+    },
+    "58e15b12": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        24,
+        20
+      ],
+      "pred_1_shape": [
+        24,
+        20
+      ],
+      "pred_2_shape": [
+        24,
+        20
+      ],
+      "elapsed": 0.012124061584472656
+    },
+    "59341089": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        3,
+        12
+      ],
+      "pred_1_shape": [
+        3,
+        3
+      ],
+      "pred_2_shape": [
+        3,
+        3
+      ],
+      "elapsed": 0.00683903694152832
+    },
+    "5a5a2103": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        24,
+        24
+      ],
+      "pred_1_shape": [
+        24,
+        24
+      ],
+      "pred_2_shape": [
+        24,
+        24
+      ],
+      "elapsed": 0.012305974960327148
+    },
+    "5af49b42": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        17,
+        18
+      ],
+      "pred_1_shape": [
+        17,
+        18
+      ],
+      "pred_2_shape": [
+        17,
+        18
+      ],
+      "elapsed": 0.015047073364257812
+    },
+    "5b526a93": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        21,
+        30
+      ],
+      "pred_1_shape": [
+        21,
+        30
+      ],
+      "pred_2_shape": [
+        21,
+        30
+      ],
+      "elapsed": 0.007726192474365234
+    },
+    "5b692c0f": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        24,
+        28
+      ],
+      "pred_1_shape": [
+        24,
+        28
+      ],
+      "pred_2_shape": [
+        24,
+        28
+      ],
+      "elapsed": 0.011072635650634766
+    },
+    "5b6cbef5": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        16,
+        16
+      ],
+      "pred_1_shape": [
+        4,
+        4
+      ],
+      "pred_2_shape": [
+        4,
+        4
+      ],
+      "elapsed": 0.0070018768310546875
+    },
+    "5d2a5c43": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        6,
+        4
+      ],
+      "pred_1_shape": [
+        6,
+        9
+      ],
+      "pred_2_shape": [
+        9,
+        6
+      ],
+      "elapsed": 0.009170293807983398
+    },
+    "5ffb2104": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.01098322868347168
+    },
+    "604001fa": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        15,
+        12
+      ],
+      "pred_1_shape": [
+        15,
+        12
+      ],
+      "pred_2_shape": [
+        15,
+        12
+      ],
+      "elapsed": 0.01113128662109375
+    },
+    "60a26a3e": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        9,
+        15
+      ],
+      "pred_1_shape": [
+        9,
+        15
+      ],
+      "pred_2_shape": [
+        9,
+        15
+      ],
+      "elapsed": 0.00960540771484375
+    },
+    "60c09cac": {
+      "success": true,
+      "match_1": true,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        5,
+        5
+      ],
+      "elapsed": 0.003716707229614258
+    },
+    "626c0bcc": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        7,
+        7
+      ],
+      "pred_1_shape": [
+        7,
+        7
+      ],
+      "pred_2_shape": [
+        7,
+        7
+      ],
+      "elapsed": 0.005345582962036133
+    },
+    "62ab2642": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        5,
+        12
+      ],
+      "pred_1_shape": [
+        5,
+        12
+      ],
+      "pred_2_shape": [
+        5,
+        12
+      ],
+      "elapsed": 0.007669210433959961
+    },
+    "62b74c02": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        4,
+        14
+      ],
+      "pred_1_shape": [
+        4,
+        14
+      ],
+      "pred_2_shape": [
+        4,
+        14
+      ],
+      "elapsed": 0.009694099426269531
+    },
+    "639f5a19": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        23,
+        23
+      ],
+      "pred_1_shape": [
+        23,
+        23
+      ],
+      "pred_2_shape": [
+        23,
+        23
+      ],
+      "elapsed": 0.013452768325805664
+    },
+    "642248e4": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        16,
+        18
+      ],
+      "pred_1_shape": [
+        16,
+        18
+      ],
+      "pred_2_shape": [
+        16,
+        18
+      ],
+      "elapsed": 0.01151275634765625
+    },
+    "642d658d": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        1,
+        1
+      ],
+      "pred_1_shape": [
+        27,
+        22
+      ],
+      "pred_2_shape": [
+        22,
+        27
+      ],
+      "elapsed": 0.03119635581970215
+    },
+    "64a7c07e": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        12,
+        12
+      ],
+      "pred_1_shape": [
+        12,
+        12
+      ],
+      "pred_2_shape": [
+        12,
+        12
+      ],
+      "elapsed": 0.007388591766357422
+    },
+    "66e6c45b": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        4,
+        4
+      ],
+      "pred_1_shape": [
+        4,
+        4
+      ],
+      "pred_2_shape": [
+        4,
+        4
+      ],
+      "elapsed": 0.008487939834594727
+    },
+    "66f2d22f": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        4,
+        7
+      ],
+      "pred_1_shape": [
+        4,
+        14
+      ],
+      "pred_2_shape": [
+        14,
+        4
+      ],
+      "elapsed": 0.008044242858886719
+    },
+    "67636eac": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        3,
+        12
+      ],
+      "pred_1_shape": [
+        14,
+        18
+      ],
+      "pred_2_shape": [
+        18,
+        14
+      ],
+      "elapsed": 0.009203195571899414
+    },
+    "67b4a34d": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        4,
+        4
+      ],
+      "pred_1_shape": [
+        16,
+        16
+      ],
+      "pred_2_shape": [
+        16,
+        16
+      ],
+      "elapsed": 0.032782793045043945
+    },
+    "67c52801": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        7,
+        11
+      ],
+      "pred_1_shape": [
+        7,
+        11
+      ],
+      "pred_2_shape": [
+        7,
+        11
+      ],
+      "elapsed": 0.011871576309204102
+    },
+    "68b67ca3": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        3,
+        3
+      ],
+      "pred_1_shape": [
+        6,
+        6
+      ],
+      "pred_2_shape": [
+        6,
+        6
+      ],
+      "elapsed": 0.00793313980102539
+    },
+    "692cd3b6": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        15,
+        15
+      ],
+      "pred_1_shape": [
+        15,
+        15
+      ],
+      "pred_2_shape": [
+        15,
+        15
+      ],
+      "elapsed": 0.009353399276733398
+    },
+    "695367ec": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        15,
+        15
+      ],
+      "pred_1_shape": [
+        5,
+        5
+      ],
+      "pred_2_shape": [
+        5,
+        5
+      ],
+      "elapsed": 0.0041806697845458984
+    },
+    "696d4842": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        20,
+        20
+      ],
+      "pred_1_shape": [
+        20,
+        20
+      ],
+      "pred_2_shape": [
+        20,
+        20
+      ],
+      "elapsed": 0.016136884689331055
+    },
+    "69889d6e": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.009270191192626953
+    },
+    "6a11f6da": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        5,
+        5
+      ],
+      "pred_1_shape": [
+        15,
+        5
+      ],
+      "pred_2_shape": [
+        5,
+        15
+      ],
+      "elapsed": 0.01316213607788086
+    },
+    "6ad5bdfd": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.014119625091552734
+    },
+    "6df30ad6": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.018259525299072266
+    },
+    "6ea4a07e": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 6,
+      "test_shape": [
+        3,
+        3
+      ],
+      "pred_1_shape": [
+        3,
+        3
+      ],
+      "pred_2_shape": [
+        3,
+        3
+      ],
+      "elapsed": 0.00854182243347168
+    },
+    "6f473927": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        12,
+        12
+      ],
+      "pred_1_shape": [
+        12,
+        12
+      ],
+      "pred_2_shape": [
+        12,
+        6
+      ],
+      "elapsed": 0.00702667236328125
+    },
+    "7039b2d7": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        3,
+        5
+      ],
+      "pred_1_shape": [
+        16,
+        16
+      ],
+      "pred_2_shape": [
+        16,
+        16
+      ],
+      "elapsed": 0.02132892608642578
+    },
+    "705a3229": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        11,
+        16
+      ],
+      "pred_1_shape": [
+        11,
+        16
+      ],
+      "pred_2_shape": [
+        11,
+        16
+      ],
+      "elapsed": 0.010446786880493164
+    },
+    "712bf12e": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        13,
+        13
+      ],
+      "pred_1_shape": [
+        13,
+        13
+      ],
+      "pred_2_shape": [
+        13,
+        13
+      ],
+      "elapsed": 0.009922266006469727
+    },
+    "72207abc": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        3,
+        29
+      ],
+      "pred_1_shape": [
+        3,
+        29
+      ],
+      "pred_2_shape": [
+        3,
+        29
+      ],
+      "elapsed": 0.0063397884368896484
+    },
+    "72a961c9": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        9,
+        11
+      ],
+      "pred_1_shape": [
+        9,
+        11
+      ],
+      "pred_2_shape": [
+        9,
+        11
+      ],
+      "elapsed": 0.011674880981445312
+    },
+    "73182012": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        4,
+        4
+      ],
+      "pred_1_shape": [
+        12,
+        12
+      ],
+      "pred_2_shape": [
+        12,
+        12
+      ],
+      "elapsed": 0.010095596313476562
+    },
+    "73c3b0d8": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        12,
+        8
+      ],
+      "pred_1_shape": [
+        12,
+        8
+      ],
+      "pred_2_shape": [
+        12,
+        8
+      ],
+      "elapsed": 0.009428262710571289
+    },
+    "73ccf9c2": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        7,
+        5
+      ],
+      "pred_1_shape": [
+        22,
+        22
+      ],
+      "pred_2_shape": [
+        22,
+        22
+      ],
+      "elapsed": 0.010945796966552734
+    },
+    "759f3fd3": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        12,
+        12
+      ],
+      "pred_1_shape": [
+        12,
+        12
+      ],
+      "pred_2_shape": [
+        12,
+        12
+      ],
+      "elapsed": 0.006916999816894531
+    },
+    "762cd429": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        16,
+        30
+      ],
+      "pred_1_shape": [
+        16,
+        30
+      ],
+      "pred_2_shape": [
+        16,
+        30
+      ],
+      "elapsed": 0.010407447814941406
+    },
+    "770cc55f": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        11,
+        5
+      ],
+      "pred_1_shape": [
+        11,
+        5
+      ],
+      "pred_2_shape": [
+        11,
+        5
+      ],
+      "elapsed": 0.009296417236328125
+    },
+    "782b5218": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.00939321517944336
+    },
+    "79369cc6": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        16,
+        15
+      ],
+      "pred_1_shape": [
+        16,
+        15
+      ],
+      "pred_2_shape": [
+        16,
+        15
+      ],
+      "elapsed": 0.01893305778503418
+    },
+    "7953d61e": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        8,
+        8
+      ],
+      "pred_1_shape": [
+        8,
+        8
+      ],
+      "pred_2_shape": [
+        4,
+        4
+      ],
+      "elapsed": 0.010229110717773438
+    },
+    "79fb03f4": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 6,
+      "test_shape": [
+        26,
+        26
+      ],
+      "pred_1_shape": [
+        26,
+        26
+      ],
+      "pred_2_shape": [
+        26,
+        26
+      ],
+      "elapsed": 0.01702427864074707
+    },
+    "7bb29440": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        6,
+        4
+      ],
+      "pred_1_shape": [
+        22,
+        25
+      ],
+      "pred_2_shape": [
+        25,
+        22
+      ],
+      "elapsed": 0.022721290588378906
+    },
+    "7c8af763": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.010260343551635742
+    },
+    "7c9b52a0": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        5,
+        3
+      ],
+      "pred_1_shape": [
+        16,
+        16
+      ],
+      "pred_2_shape": [
+        16,
+        16
+      ],
+      "elapsed": 0.014972686767578125
+    },
+    "7d18a6fb": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        7,
+        7
+      ],
+      "pred_1_shape": [
+        16,
+        17
+      ],
+      "pred_2_shape": [
+        17,
+        16
+      ],
+      "elapsed": 0.013482809066772461
+    },
+    "7d1f7ee8": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        29,
+        28
+      ],
+      "pred_1_shape": [
+        29,
+        28
+      ],
+      "pred_2_shape": [
+        29,
+        28
+      ],
+      "elapsed": 0.023714780807495117
+    },
+    "7d419a02": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        25,
+        20
+      ],
+      "pred_1_shape": [
+        25,
+        20
+      ],
+      "pred_2_shape": [
+        25,
+        20
+      ],
+      "elapsed": 0.013496875762939453
+    },
+    "7e02026e": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        12,
+        12
+      ],
+      "pred_1_shape": [
+        12,
+        12
+      ],
+      "pred_2_shape": [
+        12,
+        12
+      ],
+      "elapsed": 0.010762691497802734
+    },
+    "7ee1c6ea": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.012025117874145508
+    },
+    "817e6c09": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 5,
+      "test_shape": [
+        7,
+        15
+      ],
+      "pred_1_shape": [
+        7,
+        15
+      ],
+      "pred_2_shape": [
+        7,
+        15
+      ],
+      "elapsed": 0.008110284805297852
+    },
+    "81c0276b": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        4,
+        4
+      ],
+      "pred_1_shape": [
+        19,
+        21
+      ],
+      "pred_2_shape": [
+        21,
+        19
+      ],
+      "elapsed": 0.015399456024169922
+    },
+    "833dafe3": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 2,
+      "test_shape": [
+        16,
+        16
+      ],
+      "pred_1_shape": [
+        16,
+        16
+      ],
+      "pred_2_shape": [
+        8,
+        8
+      ],
+      "elapsed": 0.004446744918823242
+    },
+    "845d6e51": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 3,
+      "test_shape": [
+        18,
+        17
+      ],
+      "pred_1_shape": [
+        18,
+        17
+      ],
+      "pred_2_shape": [
+        18,
+        17
+      ],
+      "elapsed": 0.013182401657104492
+    },
+    "84db8fc4": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        10,
+        10
+      ],
+      "pred_1_shape": [
+        10,
+        10
+      ],
+      "pred_2_shape": [
+        10,
+        10
+      ],
+      "elapsed": 0.012691974639892578
+    },
+    "84f2aca1": {
+      "success": false,
+      "match_1": false,
+      "match_2": false,
+      "identical": false,
+      "train_size": 4,
+      "test_shape": [
+        13,
+        12
+      ],
+      "pred_1_shape": [
+        13,
+        12
+      ],
+      "pred_2_shape": [
+        13,
+        12
+      ],
+      "elapsed": 0.015389442443847656
+    }
+  }
+}
