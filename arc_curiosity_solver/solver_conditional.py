@@ -10,6 +10,7 @@ Expected improvement: +8-15% solve rate (from 1% to 10-16%)
 import numpy as np
 from typing import List, Tuple, Dict, Optional
 from pathlib import Path
+from collections import Counter
 
 from .solver_diverse import DiverseARCCuriositySolver
 from .core.conditional_pattern_inference import (
@@ -17,6 +18,7 @@ from .core.conditional_pattern_inference import (
     ConditionalHypothesisGenerator,
     EnhancedPatternInference
 )
+from .core.improved_conditional_inference import ImprovedConditionalPatternAnalyzer
 from .transformations.conditional_transforms import (
     ConditionalTransform,
     ConditionLibrary,
@@ -48,8 +50,8 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
     def __init__(self):
         super().__init__()
 
-        # Conditional transformation components
-        self.conditional_analyzer = ConditionalPatternAnalyzer()
+        # Conditional transformation components (IMPROVED)
+        self.conditional_analyzer = ImprovedConditionalPatternAnalyzer()  # NEW: Improved version
         self.conditional_generator = ConditionalHypothesisGenerator()
         self.enhanced_inference = EnhancedPatternInference()
 
@@ -60,6 +62,7 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
         # Configuration
         self.use_conditionals = True
         self.use_spatial_predicates = True
+        self.use_validated_conditionals = True  # NEW: Use validation
         self.conditional_priority_boost = 1.5  # Boost confidence of conditional hypotheses
 
     def _generate_hypotheses(self, train_pairs: List[Tuple[np.ndarray, np.ndarray]],
@@ -80,13 +83,49 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
         if not train_pairs:
             return hypotheses
 
-        # === CONDITIONAL PATTERN DETECTION (NEW!) ===
-        if self.use_conditionals:
+        # === CONDITIONAL PATTERN DETECTION (IMPROVED!) ===
+        if self.use_conditionals and self.use_validated_conditionals:
+            try:
+                # Use improved analyzer with validation
+                detected_conditionals = self.conditional_analyzer.analyze_training_pairs(train_pairs)
+
+                for conditional in detected_conditionals:
+                    # Create transform from conditional
+                    def make_transform(ct=conditional):
+                        def transform_fn(grid: np.ndarray) -> np.ndarray:
+                            return ct.apply(grid, objects=None)
+                        return transform_fn
+
+                    transform_obj = Transform(
+                        name=f"validated_conditional_{len(hypotheses)}",
+                        function=make_transform(),
+                        parameters={'variant': 'conditional', 'description': conditional.description},
+                        category='conditional'
+                    )
+
+                    # Use validated confidence (already tested on training)
+                    boosted_confidence = min(1.0, conditional.confidence * self.conditional_priority_boost)
+
+                    hyp = Hypothesis(
+                        program=transform_obj,
+                        name=f"conditional_{len(hypotheses)}",
+                        parameters={'description': conditional.description, 'variant': 'conditional'},
+                        activation=boosted_confidence
+                    )
+                    hypotheses.append(hyp)
+
+                    if len(hypotheses) >= 15:  # Reserve space for other hypothesis types
+                        break
+
+            except Exception as e:
+                # Conditional detection failed, fall back to unconditional
+                pass
+        elif self.use_conditionals:
+            # Fallback to old generator
             try:
                 conditional_hyps = self.conditional_generator.generate_from_training(train_pairs)
 
                 for transform_obj, description, confidence in conditional_hyps:
-                    # Boost confidence for conditional hypotheses
                     boosted_confidence = min(1.0, confidence * self.conditional_priority_boost)
 
                     hyp = Hypothesis(
@@ -97,11 +136,10 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
                     )
                     hypotheses.append(hyp)
 
-                    if len(hypotheses) >= 25:  # Reserve space for other hypothesis types
+                    if len(hypotheses) >= 15:
                         break
 
             except Exception as e:
-                # Conditional detection failed, fall back to unconditional
                 pass
 
         # === UNCONDITIONAL PATTERNS (from parent class) ===
@@ -157,12 +195,13 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
     def _generate_spatial_variations(self, train_pairs: List[Tuple[np.ndarray, np.ndarray]],
                                     test_input: np.ndarray) -> List[Tuple[Transform, str, float]]:
         """
-        Generate variations using spatial predicates.
+        Generate TRAINING-SPECIFIC spatial variations with validation.
 
-        Examples:
-        - IF near_edge THEN recolor to X
-        - IF in_center THEN move to edge
-        - IF touching_other THEN merge
+        Key improvements:
+        1. Extract colors from training OUTPUTS only (not all colors 0-9)
+        2. Validate hypotheses on training data before adding
+        3. Learn which spatial predicates matter for this task
+        4. Generalize across tasks (not hardcoded)
         """
         variations = []
 
@@ -173,15 +212,44 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
         if not test_objects:
             return variations
 
-        # Analyze training pairs to extract color/position patterns
-        training_colors = set()
+        # IMPROVED: Extract colors from training OUTPUT grids only
+        training_output_colors = set()
         for inp, out in train_pairs:
-            training_colors.update(np.unique(out))
+            training_output_colors.update(np.unique(out))
 
-        training_colors = [c for c in training_colors if c != 0][:5]  # Top 5 colors
+        # Remove background (0) and limit to most common colors
+        training_output_colors.discard(0)
 
-        # Generate spatial conditional variations
-        # 1. Edge-based conditionals
+        # Sort by frequency in training outputs
+        color_counts = Counter()
+        for inp, out in train_pairs:
+            for color in training_output_colors:
+                color_counts[color] += np.sum(out == color)
+
+        # Use top 5 most frequent colors from training outputs
+        training_colors = [color for color, _ in color_counts.most_common(5)]
+
+        if not training_colors:
+            return variations
+
+        # Helper function: Validate conditional on training data
+        def validate_conditional(cond_transform, train_pairs):
+            """Test conditional on training, return accuracy."""
+            correct = 0
+            for inp, out in train_pairs:
+                try:
+                    pred = cond_transform.apply(inp)
+                    if np.array_equal(pred, out):
+                        correct += 1
+                    elif pred.shape == out.shape:
+                        # Partial credit
+                        correct += (pred == out).mean()
+                except:
+                    pass
+            return correct / len(train_pairs) if train_pairs else 0.0
+
+        # Generate and VALIDATE spatial conditional variations
+        # 1. Edge-based conditionals (VALIDATED)
         for color in training_colors:
             # IF near edge THEN recolor to color
             cond_transform = ConditionalTransform(
@@ -191,83 +259,68 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
                 confidence=0.6
             )
 
-            def make_transform(ct=cond_transform):
-                def transform_fn(grid: np.ndarray) -> np.ndarray:
-                    return ct.apply(grid, objects=None)
-                return transform_fn
+            # VALIDATE on training data
+            accuracy = validate_conditional(cond_transform, train_pairs)
 
-            transform_obj = Transform(
-                name=f"spatial_edge_recolor_{color}",
-                function=make_transform(),
-                parameters={'variant': 'spatial', 'condition': 'near_edge'},
-                category='spatial_conditional'
-            )
-
-            variations.append((transform_obj, f"IF near edge THEN recolor to {color}", 0.6))
-
-        # 2. Size-based conditionals
-        if len(test_objects) > 1:
-            sizes = [obj.size for obj in test_objects]
-            median_size = int(np.median(sizes))
-
-            for color in training_colors[:2]:  # Top 2 colors
-                # IF size > median THEN recolor to color1 ELSE color2
-                color2 = training_colors[1] if len(training_colors) > 1 else training_colors[0]
-
-                cond_transform = ConditionalTransform(
-                    condition=self.condition_lib.size_greater_than(median_size),
-                    then_action=self.action_lib.recolor_to(color),
-                    else_action=self.action_lib.recolor_to(color2),
-                    confidence=0.6
-                )
-
+            # Only add if achieves reasonable accuracy on training
+            if accuracy >= 0.3:  # At least 30% match on training
                 def make_transform(ct=cond_transform):
                     def transform_fn(grid: np.ndarray) -> np.ndarray:
                         return ct.apply(grid, objects=None)
                     return transform_fn
 
                 transform_obj = Transform(
-                    name=f"spatial_size_recolor_{color}_{color2}",
+                    name=f"spatial_edge_recolor_{color}",
                     function=make_transform(),
-                    parameters={'variant': 'spatial', 'condition': 'size_gt'},
+                    parameters={'variant': 'spatial', 'condition': 'near_edge'},
                     category='spatial_conditional'
                 )
 
-                variations.append((
-                    transform_obj,
-                    f"IF size > {median_size} THEN recolor to {color} ELSE recolor to {color2}",
-                    0.6
-                ))
+                # Use validated accuracy as confidence
+                variations.append((transform_obj, f"IF near edge THEN recolor to {color}", accuracy))
 
-        # 3. Position-based movement conditionals
-        # IF in_quadrant THEN move_to_center
-        for quadrant in ['top_left', 'top_right', 'bottom_left', 'bottom_right']:
-            cond_transform = ConditionalTransform(
-                condition=self.condition_lib.in_quadrant(quadrant),
-                then_action=self.action_lib.move_to_center(),
-                else_action=self.action_lib.keep(),
-                confidence=0.5
-            )
+        # 2. Size-based conditionals (VALIDATED)
+        if len(test_objects) > 1 and len(training_colors) >= 2:
+            sizes = [obj.size for obj in test_objects]
+            median_size = int(np.median(sizes))
 
-            def make_transform(ct=cond_transform):
-                def transform_fn(grid: np.ndarray) -> np.ndarray:
-                    return ct.apply(grid, objects=None)
-                return transform_fn
+            # Try size-based color conditionals with top 2 colors
+            for i, color1 in enumerate(training_colors[:2]):
+                for color2 in training_colors[i+1:i+2]:  # Avoid duplicate pairs
+                    # IF size > median THEN recolor to color1 ELSE color2
+                    cond_transform = ConditionalTransform(
+                        condition=self.condition_lib.size_greater_than(median_size),
+                        then_action=self.action_lib.recolor_to(color1),
+                        else_action=self.action_lib.recolor_to(color2),
+                        confidence=0.6
+                    )
 
-            transform_obj = Transform(
-                name=f"spatial_quadrant_{quadrant}_center",
-                function=make_transform(),
-                parameters={'variant': 'spatial', 'condition': f'in_{quadrant}'},
-                category='spatial_conditional'
-            )
+                    # VALIDATE on training data
+                    accuracy = validate_conditional(cond_transform, train_pairs)
 
-            variations.append((
-                transform_obj,
-                f"IF in {quadrant} THEN move to center",
-                0.5
-            ))
+                    # Only add if achieves reasonable accuracy
+                    if accuracy >= 0.3:
+                        def make_transform(ct=cond_transform):
+                            def transform_fn(grid: np.ndarray) -> np.ndarray:
+                                return ct.apply(grid, objects=None)
+                            return transform_fn
 
-        return variations[:10]  # Limit to 10 spatial variations
+                        transform_obj = Transform(
+                            name=f"spatial_size_recolor_{color1}_{color2}",
+                            function=make_transform(),
+                            parameters={'variant': 'spatial', 'condition': 'size_gt'},
+                            category='spatial_conditional'
+                        )
+
+                        variations.append((
+                            transform_obj,
+                            f"IF size > {median_size} THEN recolor to {color1} ELSE recolor to {color2}",
+                            accuracy
+                        ))
+
+        # Return only VALIDATED variations (sorted by accuracy)
+        variations.sort(key=lambda x: x[2], reverse=True)  # Sort by confidence
+        return variations[:15]  # Limit to top 15 validated spatial variations
 
 
 

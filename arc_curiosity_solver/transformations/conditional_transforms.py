@@ -241,6 +241,127 @@ class ConditionLibrary:
             description=f"in {quadrant}"
         )
 
+    @staticmethod
+    def is_rectangular() -> Condition:
+        """Object has rectangular/square shape."""
+        def is_rect(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            y1, x1, y2, x2 = obj.bbox
+            bbox_area = (y2 - y1) * (x2 - x1)
+            fill_ratio = obj.size / max(bbox_area, 1)
+            return fill_ratio > 0.9  # >90% filled = rectangular
+
+        return Condition(
+            name="is_rectangular",
+            predicate=is_rect,
+            description="is rectangular"
+        )
+
+    @staticmethod
+    def is_line_shaped() -> Condition:
+        """Object is line-shaped (long and thin)."""
+        def is_line(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            y1, x1, y2, x2 = obj.bbox
+            height = y2 - y1
+            width = x2 - x1
+            if min(height, width) == 0:
+                return False
+            aspect_ratio = max(height, width) / min(height, width)
+            return aspect_ratio > 3  # At least 3:1 ratio
+
+        return Condition(
+            name="is_line_shaped",
+            predicate=is_line,
+            description="is line-shaped"
+        )
+
+    @staticmethod
+    def object_count_equals(count: int) -> Condition:
+        """Number of objects equals count."""
+        def count_equals(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            return len(all_objs) == count
+
+        return Condition(
+            name=f"count_eq_{count}",
+            predicate=count_equals,
+            description=f"object count == {count}"
+        )
+
+    @staticmethod
+    def object_count_greater_than(count: int) -> Condition:
+        """Number of objects > count."""
+        def count_gt(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            return len(all_objs) > count
+
+        return Condition(
+            name=f"count_gt_{count}",
+            predicate=count_gt,
+            description=f"object count > {count}"
+        )
+
+    @staticmethod
+    def is_symmetric_horizontal() -> Condition:
+        """Object is horizontally symmetric."""
+        def is_h_sym(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            y1, x1, y2, x2 = obj.bbox
+            obj_grid = grid[y1:y2, x1:x2].copy()
+            # Mask to object only
+            obj_grid[~obj.mask[y1:y2, x1:x2]] = 0
+            # Check horizontal symmetry
+            return np.array_equal(obj_grid, np.fliplr(obj_grid))
+
+        return Condition(
+            name="is_symmetric_h",
+            predicate=is_h_sym,
+            description="is horizontally symmetric"
+        )
+
+    @staticmethod
+    def is_symmetric_vertical() -> Condition:
+        """Object is vertically symmetric."""
+        def is_v_sym(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            y1, x1, y2, x2 = obj.bbox
+            obj_grid = grid[y1:y2, x1:x2].copy()
+            # Mask to object only
+            obj_grid[~obj.mask[y1:y2, x1:x2]] = 0
+            # Check vertical symmetry
+            return np.array_equal(obj_grid, np.flipud(obj_grid))
+
+        return Condition(
+            name="is_symmetric_v",
+            predicate=is_v_sym,
+            description="is vertically symmetric"
+        )
+
+    @staticmethod
+    def aligned_with_grid() -> Condition:
+        """Object is aligned with grid (horizontal or vertical lines)."""
+        def is_aligned(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            y1, x1, y2, x2 = obj.bbox
+            # Check if object is aligned (single row or column)
+            return (y2 - y1 == 1) or (x2 - x1 == 1)
+
+        return Condition(
+            name="is_aligned",
+            predicate=is_aligned,
+            description="aligned with grid"
+        )
+
+    @staticmethod
+    def color_count_greater_than(color: int, threshold: int) -> Condition:
+        """Object has more than threshold pixels of specific color."""
+        def color_count_gt(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            y1, x1, y2, x2 = obj.bbox
+            obj_region = grid[y1:y2, x1:x2]
+            obj_mask = obj.mask[y1:y2, x1:x2]
+            color_pixels = np.sum((obj_region == color) & obj_mask)
+            return color_pixels > threshold
+
+        return Condition(
+            name=f"color_{color}_count_gt_{threshold}",
+            predicate=color_count_gt,
+            description=f"has >{threshold} pixels of color {color}"
+        )
+
 
 class ActionLibrary:
     """Library of reusable actions."""
