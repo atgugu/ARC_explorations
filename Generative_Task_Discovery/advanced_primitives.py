@@ -1055,3 +1055,205 @@ class AdvancedPrimitives:
                         write_x -= 1
 
         return result
+
+    # ========================================================================
+    # REGION OPERATIONS (FLOOD FILL)
+    # ========================================================================
+
+    @staticmethod
+    def flood_fill(grid: np.ndarray,
+                  start_y: int,
+                  start_x: int,
+                  fill_color: int,
+                  target_color: Optional[int] = None) -> np.ndarray:
+        """
+        Flood fill starting from (start_y, start_x)
+
+        Args:
+            start_y, start_x: Starting position
+            fill_color: Color to fill with
+            target_color: Color to replace (if None, uses color at start position)
+
+        Returns:
+            Grid with flood-filled region
+        """
+        result = grid.copy()
+        h, w = grid.shape
+
+        # Validate start position
+        if not (0 <= start_y < h and 0 <= start_x < w):
+            return result
+
+        # Determine target color
+        if target_color is None:
+            target_color = grid[start_y, start_x]
+
+        # Don't fill if already the target color
+        if fill_color == target_color:
+            return result
+
+        # BFS flood fill (more efficient than recursive)
+        from collections import deque
+
+        queue = deque([(start_y, start_x)])
+        visited = set()
+
+        while queue:
+            y, x = queue.popleft()
+
+            # Skip if out of bounds or already visited
+            if not (0 <= y < h and 0 <= x < w) or (y, x) in visited:
+                continue
+
+            # Skip if not target color
+            if result[y, x] != target_color:
+                continue
+
+            # Mark as visited and fill
+            visited.add((y, x))
+            result[y, x] = fill_color
+
+            # Add neighbors (4-connected)
+            queue.append((y + 1, x))
+            queue.append((y - 1, x))
+            queue.append((y, x + 1))
+            queue.append((y, x - 1))
+
+        return result
+
+    @staticmethod
+    def flood_fill_all_regions(grid: np.ndarray,
+                              fill_color: int,
+                              target_color: int = 0) -> np.ndarray:
+        """
+        Flood fill all disconnected regions of target_color
+
+        Useful for filling all background regions or all regions of a specific color
+        """
+        result = grid.copy()
+        h, w = grid.shape
+        visited = np.zeros((h, w), dtype=bool)
+
+        for y in range(h):
+            for x in range(w):
+                if result[y, x] == target_color and not visited[y, x]:
+                    # Flood fill this region
+                    from collections import deque
+
+                    queue = deque([(y, x)])
+
+                    while queue:
+                        cy, cx = queue.popleft()
+
+                        if not (0 <= cy < h and 0 <= cx < w) or visited[cy, cx]:
+                            continue
+
+                        if result[cy, cx] != target_color:
+                            continue
+
+                        visited[cy, cx] = True
+                        result[cy, cx] = fill_color
+
+                        # Add neighbors
+                        queue.append((cy + 1, cx))
+                        queue.append((cy - 1, cx))
+                        queue.append((cy, cx + 1))
+                        queue.append((cy, cx - 1))
+
+        return result
+
+    @staticmethod
+    def fill_enclosed_regions(grid: np.ndarray,
+                            fill_color: int,
+                            background: int = 0) -> np.ndarray:
+        """
+        Fill regions that are completely enclosed by non-background pixels
+
+        This is the "fill surrounded regions" operation common in ARC
+        """
+        result = grid.copy()
+        h, w = grid.shape
+
+        # Find regions connected to edges (not enclosed)
+        visited = np.zeros((h, w), dtype=bool)
+        from collections import deque
+
+        # Start from all edge pixels with background color
+        queue = deque()
+
+        # Add all edge background pixels
+        for x in range(w):
+            if result[0, x] == background:
+                queue.append((0, x))
+            if result[h-1, x] == background:
+                queue.append((h-1, x))
+
+        for y in range(h):
+            if result[y, 0] == background:
+                queue.append((y, 0))
+            if result[y, w-1] == background:
+                queue.append((y, w-1))
+
+        # BFS to mark all background regions connected to edges
+        while queue:
+            y, x = queue.popleft()
+
+            if not (0 <= y < h and 0 <= x < w) or visited[y, x]:
+                continue
+
+            if result[y, x] != background:
+                continue
+
+            visited[y, x] = True
+
+            # Add neighbors
+            queue.append((y + 1, x))
+            queue.append((y - 1, x))
+            queue.append((y, x + 1))
+            queue.append((y, x - 1))
+
+        # Fill unvisited background pixels (enclosed regions)
+        for y in range(h):
+            for x in range(w):
+                if result[y, x] == background and not visited[y, x]:
+                    result[y, x] = fill_color
+
+        return result
+
+    @staticmethod
+    def count_regions(grid: np.ndarray, target_color: int = 0) -> int:
+        """
+        Count number of disconnected regions of target_color
+
+        Useful for understanding grid structure
+        """
+        h, w = grid.shape
+        visited = np.zeros((h, w), dtype=bool)
+        count = 0
+
+        for y in range(h):
+            for x in range(w):
+                if grid[y, x] == target_color and not visited[y, x]:
+                    count += 1
+
+                    # Mark this region as visited
+                    from collections import deque
+                    queue = deque([(y, x)])
+
+                    while queue:
+                        cy, cx = queue.popleft()
+
+                        if not (0 <= cy < h and 0 <= cx < w) or visited[cy, cx]:
+                            continue
+
+                        if grid[cy, cx] != target_color:
+                            continue
+
+                        visited[cy, cx] = True
+
+                        queue.append((cy + 1, cx))
+                        queue.append((cy - 1, cx))
+                        queue.append((cy, cx + 1))
+                        queue.append((cy, cx - 1))
+
+        return count

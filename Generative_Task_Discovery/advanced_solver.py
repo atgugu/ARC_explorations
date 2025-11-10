@@ -164,6 +164,21 @@ class AdvancedExecutor(EnhancedExecutor):
                 direction = program.parameters.get("direction", "down")
                 grid = self.advanced.compress_objects(grid, direction)
 
+            # REGION OPERATIONS (FLOOD FILL)
+            elif program.schema == "flood_fill":
+                start_y = program.parameters.get("start_y", 0)
+                start_x = program.parameters.get("start_x", 0)
+                fill_color = program.parameters.get("fill_color", 1)
+                grid = self.advanced.flood_fill(grid, start_y, start_x, fill_color)
+
+            elif program.schema == "fill_enclosed":
+                fill_color = program.parameters.get("fill_color", 1)
+                grid = self.advanced.fill_enclosed_regions(grid, fill_color)
+
+            elif program.schema == "fill_all_background":
+                fill_color = program.parameters.get("fill_color", 1)
+                grid = self.advanced.flood_fill_all_regions(grid, fill_color, target_color=0)
+
             self.execution_trace.append(("final", grid.copy()))
 
         except Exception as e:
@@ -289,6 +304,22 @@ class AdvancedProgramGenerator(EnhancedProgramGenerator):
             {
                 "name": "compress",
                 "params": {"direction": ["down", "up", "left", "right"]},
+                "complexity": 2.0
+            },
+            # Region operations (flood fill)
+            {
+                "name": "flood_fill",
+                "params": {"start_y": [0, 1, 2], "start_x": [0, 1, 2], "fill_color": [1, 2, 3]},
+                "complexity": 2.5
+            },
+            {
+                "name": "fill_enclosed",
+                "params": {"fill_color": [1, 2, 3, 4]},
+                "complexity": 2.5
+            },
+            {
+                "name": "fill_all_background",
+                "params": {"fill_color": [1, 2, 3, 4]},
                 "complexity": 2.0
             }
         ]
@@ -466,7 +497,25 @@ class AdvancedProgramGenerator(EnhancedProgramGenerator):
                 complexity=2.0
             ))
 
-        return candidates[:max_candidates + 60]  # Allow more for all operations
+        # Add flood fill candidates
+        for fill_color in [1, 2, 3]:
+            candidates.append(Program(
+                schema="fill_enclosed",
+                primitives=["fill_enclosed"],
+                parameters={"fill_color": fill_color},
+                selectors={},
+                complexity=2.5
+            ))
+
+            candidates.append(Program(
+                schema="fill_all_background",
+                primitives=["fill_all_background"],
+                parameters={"fill_color": fill_color},
+                selectors={},
+                complexity=2.0
+            ))
+
+        return candidates[:max_candidates + 70]  # Allow more for all operations
 
 
 class AdvancedARCSolver(EnhancedARCSolver):
