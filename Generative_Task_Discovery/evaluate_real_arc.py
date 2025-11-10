@@ -11,6 +11,7 @@ from typing import Dict, List, Any, Tuple
 from pathlib import Path
 from collections import defaultdict
 from advanced_solver import AdvancedARCSolver
+from compositional_solver import CompositionalARCSolver
 from arc_generative_solver import evaluate_predictions
 
 
@@ -61,7 +62,8 @@ def load_real_arc_tasks(limit=None, shuffle=False) -> List[Dict[str, Any]]:
 
 
 def run_real_arc_evaluation(tasks: List[Dict[str, Any]],
-                             max_time_per_task: float = 30.0) -> Dict[str, Any]:
+                             max_time_per_task: float = 30.0,
+                             use_compositional: bool = True) -> Dict[str, Any]:
     """
     Run evaluation on real ARC tasks
 
@@ -80,11 +82,24 @@ def run_real_arc_evaluation(tasks: List[Dict[str, Any]],
     print(f"Max time per task: {max_time_per_task}s")
     print(f"Estimated total time: {len(tasks) * max_time_per_task / 60:.1f} minutes")
 
-    solver = AdvancedARCSolver(
-        max_candidates=150,
-        beam_width=20,
-        active_inference_steps=5
-    )
+    if use_compositional:
+        solver = CompositionalARCSolver(
+            max_candidates=150,
+            beam_width=20,
+            active_inference_steps=3,  # Reduced for compositional
+            max_depth=2,  # Allow 1-2 step compositions
+            composition_beam_width=10
+        )
+        print(f"Using CompositionalARCSolver (max_depth={solver.max_depth})")
+    else:
+        solver = AdvancedARCSolver(
+            max_candidates=150,
+            beam_width=20,
+            active_inference_steps=5
+        )
+        print("Using AdvancedARCSolver (single-step)")
+
+    print(f"Solver type: {type(solver).__name__}")
 
     results = []
     timing_stats = []
@@ -322,8 +337,12 @@ def main():
         print("\n✗ No tasks loaded. Please run download_real_arc.py first.")
         return
 
-    # Run evaluation
-    eval_data = run_real_arc_evaluation(tasks, max_time_per_task=30.0)
+    # Run evaluation with compositional reasoning
+    eval_data = run_real_arc_evaluation(
+        tasks,
+        max_time_per_task=30.0,
+        use_compositional=True  # Enable compositional reasoning
+    )
 
     # Analyze results
     analyze_real_arc_results(eval_data)
