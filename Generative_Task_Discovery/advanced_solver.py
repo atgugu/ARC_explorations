@@ -179,6 +179,54 @@ class AdvancedExecutor(EnhancedExecutor):
                 fill_color = program.parameters.get("fill_color", 1)
                 grid = self.advanced.flood_fill_all_regions(grid, fill_color, target_color=0)
 
+            # SIZE TRANSFORMATIONS
+            elif program.schema == "upscale":
+                factor = program.parameters.get("factor", 2)
+                grid = self.advanced.upscale(grid, factor)
+
+            elif program.schema == "downscale":
+                factor = program.parameters.get("factor", 2)
+                grid = self.advanced.downscale(grid, factor)
+
+            elif program.schema == "upscale_nearest":
+                target_height = program.parameters.get("target_height", grid.shape[0] * 2)
+                target_width = program.parameters.get("target_width", grid.shape[1] * 2)
+                grid = self.advanced.upscale_nearest(grid, target_height, target_width)
+
+            elif program.schema == "downscale_mode":
+                factor = program.parameters.get("factor", 2)
+                grid = self.advanced.downscale_mode(grid, factor)
+
+            # COLOR OPERATIONS
+            elif program.schema == "color_increment":
+                amount = program.parameters.get("amount", 1)
+                modulo = program.parameters.get("modulo", 10)
+                grid = self.advanced.color_increment(grid, amount, modulo)
+
+            elif program.schema == "color_decrement":
+                amount = program.parameters.get("amount", 1)
+                modulo = program.parameters.get("modulo", 10)
+                grid = self.advanced.color_decrement(grid, amount, modulo)
+
+            elif program.schema == "color_swap":
+                color1 = program.parameters.get("color1", 1)
+                color2 = program.parameters.get("color2", 2)
+                grid = self.advanced.color_swap(grid, color1, color2)
+
+            elif program.schema == "color_replace":
+                old_color = program.parameters.get("old_color", 1)
+                new_color = program.parameters.get("new_color", 2)
+                grid = self.advanced.color_replace(grid, old_color, new_color)
+
+            elif program.schema == "color_invert":
+                max_color = program.parameters.get("max_color", 9)
+                grid = self.advanced.color_invert(grid, max_color)
+
+            elif program.schema == "color_multiply":
+                factor = program.parameters.get("factor", 2)
+                modulo = program.parameters.get("modulo", 10)
+                grid = self.advanced.color_multiply(grid, factor, modulo)
+
             self.execution_trace.append(("final", grid.copy()))
 
         except Exception as e:
@@ -320,6 +368,53 @@ class AdvancedProgramGenerator(EnhancedProgramGenerator):
             {
                 "name": "fill_all_background",
                 "params": {"fill_color": [1, 2, 3, 4]},
+                "complexity": 2.0
+            },
+            # Size transformations
+            {
+                "name": "upscale",
+                "params": {"factor": [2, 3, 4]},
+                "complexity": 1.5
+            },
+            {
+                "name": "downscale",
+                "params": {"factor": [2, 3, 4]},
+                "complexity": 1.5
+            },
+            {
+                "name": "downscale_mode",
+                "params": {"factor": [2, 3]},
+                "complexity": 2.0
+            },
+            # Color operations
+            {
+                "name": "color_increment",
+                "params": {"amount": [1, 2, 3], "modulo": [10]},
+                "complexity": 1.5
+            },
+            {
+                "name": "color_decrement",
+                "params": {"amount": [1, 2], "modulo": [10]},
+                "complexity": 1.5
+            },
+            {
+                "name": "color_swap",
+                "params": {"color1": [1, 2, 3], "color2": [1, 2, 3, 4]},
+                "complexity": 1.5
+            },
+            {
+                "name": "color_replace",
+                "params": {"old_color": [1, 2, 3], "new_color": [1, 2, 3, 4]},
+                "complexity": 1.5
+            },
+            {
+                "name": "color_invert",
+                "params": {"max_color": [9]},
+                "complexity": 1.5
+            },
+            {
+                "name": "color_multiply",
+                "params": {"factor": [2, 3], "modulo": [10]},
                 "complexity": 2.0
             }
         ]
@@ -513,6 +608,67 @@ class AdvancedProgramGenerator(EnhancedProgramGenerator):
                 parameters={"fill_color": fill_color},
                 selectors={},
                 complexity=2.0
+            ))
+
+        # Add scaling candidates (check if output size changes)
+        # Infer scaling factor from training examples
+        if task.get("train"):
+            for train_ex in task["train"]:
+                input_shape = np.array(train_ex["input"]).shape
+                output_shape = np.array(train_ex["output"]).shape
+
+                # Check for upscaling
+                if output_shape[0] > input_shape[0] or output_shape[1] > input_shape[1]:
+                    h_factor = output_shape[0] // input_shape[0] if input_shape[0] > 0 else 1
+                    w_factor = output_shape[1] // input_shape[1] if input_shape[1] > 0 else 1
+
+                    if h_factor == w_factor and h_factor in [2, 3, 4]:
+                        candidates.append(Program(
+                            schema="upscale",
+                            primitives=["upscale"],
+                            parameters={"factor": h_factor},
+                            selectors={},
+                            complexity=1.5
+                        ))
+
+                # Check for downscaling
+                if output_shape[0] < input_shape[0] or output_shape[1] < input_shape[1]:
+                    h_factor = input_shape[0] // output_shape[0] if output_shape[0] > 0 else 1
+                    w_factor = input_shape[1] // output_shape[1] if output_shape[1] > 0 else 1
+
+                    if h_factor == w_factor and h_factor in [2, 3, 4]:
+                        candidates.append(Program(
+                            schema="downscale",
+                            primitives=["downscale"],
+                            parameters={"factor": h_factor},
+                            selectors={},
+                            complexity=1.5
+                        ))
+                        candidates.append(Program(
+                            schema="downscale_mode",
+                            primitives=["downscale_mode"],
+                            parameters={"factor": h_factor},
+                            selectors={},
+                            complexity=2.0
+                        ))
+
+        # Add color operation candidates
+        for amount in [1, 2, 3]:
+            candidates.append(Program(
+                schema="color_increment",
+                primitives=["color_increment"],
+                parameters={"amount": amount, "modulo": 10},
+                selectors={},
+                complexity=1.5
+            ))
+
+        for c1, c2 in [(1, 2), (2, 3), (1, 3)]:
+            candidates.append(Program(
+                schema="color_swap",
+                primitives=["color_swap"],
+                parameters={"color1": c1, "color2": c2},
+                selectors={},
+                complexity=1.5
             ))
 
         return candidates[:max_candidates + 70]  # Allow more for all operations

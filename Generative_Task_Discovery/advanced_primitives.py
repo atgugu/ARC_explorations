@@ -1261,3 +1261,297 @@ class AdvancedPrimitives:
                         queue.append((cy, cx - 1))
 
         return count
+
+    # ========================================================================
+    # SIZE TRANSFORMATION PRIMITIVES
+    # ========================================================================
+
+    @staticmethod
+    def upscale(grid: np.ndarray, factor: int = 2) -> np.ndarray:
+        """
+        Upscale grid by repeating each pixel factor x factor times
+
+        Args:
+            grid: Input grid
+            factor: Scaling factor (2 = double size, 3 = triple, etc.)
+
+        Returns:
+            Upscaled grid with shape (h*factor, w*factor)
+
+        Example:
+            [[1, 2],     upscale(2x)    [[1, 1, 2, 2],
+             [3, 4]]  →  →              [1, 1, 2, 2],
+                                         [3, 3, 4, 4],
+                                         [3, 3, 4, 4]]
+        """
+        if factor <= 0:
+            return grid.copy()
+
+        # Use numpy repeat to duplicate pixels
+        # First repeat along axis 0 (rows), then axis 1 (columns)
+        result = np.repeat(grid, factor, axis=0)
+        result = np.repeat(result, factor, axis=1)
+
+        return result
+
+    @staticmethod
+    def downscale(grid: np.ndarray, factor: int = 2) -> np.ndarray:
+        """
+        Downscale grid by sampling every factor-th pixel
+
+        Args:
+            grid: Input grid
+            factor: Scaling factor (2 = half size, 3 = third, etc.)
+
+        Returns:
+            Downscaled grid with shape (h//factor, w//factor)
+
+        Example:
+            [[1, 1, 2, 2],    downscale(2x)    [[1, 2],
+             [1, 1, 2, 2],  →  →               [3, 4]]
+             [3, 3, 4, 4],
+             [3, 3, 4, 4]]
+        """
+        if factor <= 0:
+            return grid.copy()
+
+        # Sample every factor-th pixel using slicing
+        result = grid[::factor, ::factor]
+
+        return result
+
+    @staticmethod
+    def upscale_nearest(grid: np.ndarray, target_height: int, target_width: int) -> np.ndarray:
+        """
+        Upscale to specific target dimensions using nearest-neighbor sampling
+
+        Args:
+            grid: Input grid
+            target_height: Desired output height
+            target_width: Desired output width
+
+        Returns:
+            Resized grid with shape (target_height, target_width)
+        """
+        h, w = grid.shape
+        result = np.zeros((target_height, target_width), dtype=grid.dtype)
+
+        # Nearest-neighbor interpolation
+        for y in range(target_height):
+            for x in range(target_width):
+                # Map to source coordinates
+                src_y = int(y * h / target_height)
+                src_x = int(x * w / target_width)
+
+                # Clamp to valid range
+                src_y = min(src_y, h - 1)
+                src_x = min(src_x, w - 1)
+
+                result[y, x] = grid[src_y, src_x]
+
+        return result
+
+    @staticmethod
+    def downscale_mode(grid: np.ndarray, factor: int = 2) -> np.ndarray:
+        """
+        Downscale by taking most common (mode) value in each block
+
+        More robust than simple sampling when there's noise
+
+        Args:
+            grid: Input grid
+            factor: Scaling factor
+
+        Returns:
+            Downscaled grid using mode aggregation
+        """
+        if factor <= 0:
+            return grid.copy()
+
+        h, w = grid.shape
+        new_h = h // factor
+        new_w = w // factor
+
+        result = np.zeros((new_h, new_w), dtype=grid.dtype)
+
+        for y in range(new_h):
+            for x in range(new_w):
+                # Extract block
+                block_y_start = y * factor
+                block_x_start = x * factor
+                block_y_end = min(block_y_start + factor, h)
+                block_x_end = min(block_x_start + factor, w)
+
+                block = grid[block_y_start:block_y_end, block_x_start:block_x_end]
+
+                # Find most common value
+                values, counts = np.unique(block, return_counts=True)
+                mode_idx = np.argmax(counts)
+                result[y, x] = values[mode_idx]
+
+        return result
+
+    # ========================================================================
+    # COLOR ARITHMETIC PRIMITIVES
+    # ========================================================================
+
+    @staticmethod
+    def color_increment(grid: np.ndarray, amount: int = 1, modulo: int = 10) -> np.ndarray:
+        """
+        Increment all non-zero colors by amount with wraparound
+
+        Args:
+            grid: Input grid
+            amount: Amount to increment (can be negative for decrement)
+            modulo: Wrap around at this value (default 10 for colors 0-9)
+
+        Returns:
+            Grid with incremented colors
+
+        Example:
+            [[1, 2, 0],    increment(1, mod=10)    [[2, 3, 0],
+             [8, 9, 3]]  →  →                      [9, 1, 4]]
+
+        Note: Background (0) is preserved
+        """
+        result = grid.copy()
+
+        # Increment non-zero values with wraparound
+        # Formula: (value - 1 + amount) % (modulo - 1) + 1
+        # This keeps values in range [1, modulo-1]
+        mask = grid > 0
+        result[mask] = ((grid[mask] - 1 + amount) % (modulo - 1)) + 1
+
+        return result
+
+    @staticmethod
+    def color_decrement(grid: np.ndarray, amount: int = 1, modulo: int = 10) -> np.ndarray:
+        """
+        Decrement all non-zero colors by amount with wraparound
+
+        Args:
+            grid: Input grid
+            amount: Amount to decrement
+            modulo: Wrap around at this value
+
+        Returns:
+            Grid with decremented colors
+        """
+        # Decrement is just increment with negative amount
+        return AdvancedPrimitives.color_increment(grid, -amount, modulo)
+
+    @staticmethod
+    def color_swap(grid: np.ndarray, color1: int, color2: int) -> np.ndarray:
+        """
+        Swap two colors in the grid
+
+        Args:
+            grid: Input grid
+            color1: First color
+            color2: Second color
+
+        Returns:
+            Grid with colors swapped
+
+        Example:
+            [[1, 2, 1],    swap(1, 2)    [[2, 1, 2],
+             [2, 1, 2]]  →  →             [1, 2, 1]]
+        """
+        result = grid.copy()
+
+        # Swap colors
+        mask1 = grid == color1
+        mask2 = grid == color2
+
+        result[mask1] = color2
+        result[mask2] = color1
+
+        return result
+
+    @staticmethod
+    def color_map(grid: np.ndarray, mapping: dict) -> np.ndarray:
+        """
+        Apply a color mapping to the grid
+
+        Args:
+            grid: Input grid
+            mapping: Dictionary mapping old colors to new colors
+                    e.g. {1: 2, 2: 3, 3: 1} rotates colors
+
+        Returns:
+            Grid with colors mapped according to mapping
+
+        Example:
+            [[1, 2, 3],    map({1: 3, 2: 1, 3: 2})    [[3, 1, 2],
+             [2, 3, 1]]  →  →                          [1, 2, 3]]
+        """
+        result = grid.copy()
+
+        # Apply each mapping
+        for old_color, new_color in mapping.items():
+            result[grid == old_color] = new_color
+
+        return result
+
+    @staticmethod
+    def color_invert(grid: np.ndarray, max_color: int = 9) -> np.ndarray:
+        """
+        Invert colors (max_color - color) while preserving background
+
+        Args:
+            grid: Input grid
+            max_color: Maximum color value for inversion
+
+        Returns:
+            Grid with inverted colors
+
+        Example (max_color=9):
+            [[1, 2, 0],    invert(9)    [[8, 7, 0],
+             [8, 9, 3]]  →  →            [1, 0, 6]]
+
+        Note: 0 (background) stays 0
+        """
+        result = grid.copy()
+
+        # Invert non-zero values
+        mask = grid > 0
+        result[mask] = max_color - grid[mask] + 1
+
+        return result
+
+    @staticmethod
+    def color_replace(grid: np.ndarray, old_color: int, new_color: int) -> np.ndarray:
+        """
+        Replace all instances of old_color with new_color
+
+        Args:
+            grid: Input grid
+            old_color: Color to replace
+            new_color: Replacement color
+
+        Returns:
+            Grid with color replaced
+        """
+        result = grid.copy()
+        result[grid == old_color] = new_color
+        return result
+
+    @staticmethod
+    def color_multiply(grid: np.ndarray, factor: int, modulo: int = 10) -> np.ndarray:
+        """
+        Multiply all non-zero colors by factor with wraparound
+
+        Args:
+            grid: Input grid
+            factor: Multiplication factor
+            modulo: Wrap around at this value
+
+        Returns:
+            Grid with multiplied colors
+        """
+        result = grid.copy()
+
+        mask = grid > 0
+        result[mask] = ((grid[mask] * factor - 1) % (modulo - 1)) + 1
+
+        return result
