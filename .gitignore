@@ -38,3 +38,6 @@ Thumbs.db
 
 # Jupyter
 .ipynb_checkpoints/
+
+# ARC Dataset (download with download_real_arc.py)
+Generative_Task_Discovery/arc_data/
