@@ -1,0 +1,175 @@
+================================================================================
+V6 SOLVER - EVALUATION ON ARC-AGI EVALUATION DATASET
+================================================================================
+Loaded 117 tasks from evaluation
+
+Testing on 117 evaluation tasks
+
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+[1/117] 00576224... IoU 0.000
+[2/117] 009d5c81... IoU 0.867
+[3/117] 00dbd492... IoU 0.780
+[4/117] 03560426... IoU 0.860
+[5/117] 05a7bcf2... IoU 0.607
+[6/117] 0607ce86... IoU 0.902
+[7/117] 0692e18c... IoU 0.630
+[8/117] 070dd51e... IoU 0.892
+[9/117] 08573cc6... IoU 0.467
+[10/117] 0934a4d8... IoU 0.000
+[11/117] 09c534e7... IoU 0.854
+[12/117] 0a1d4ef5... IoU 0.000
+[13/117] 0a2355a6... IoU 0.725
+[14/117] 0b17323b... ✓ SOLVED
+[15/117] 0bb8deee... IoU 0.000
+[16/117] 0becf7df... IoU 0.860
+[17/117] 0c786b71... IoU 0.000
+[18/117] 0c9aba6e... IoU 0.000
+[19/117] 0d87d2a6... IoU 0.904
+[20/117] 0e671a1a... IoU 0.876
+[21/117] 0f63c0b9... IoU 0.538
+[22/117] 103eff5b... IoU 0.846
+[23/117] 11e1fe23... IoU 0.976
+[24/117] 12422b43... IoU 0.857
+[25/117] 12997ef3... IoU 0.000
+[26/117] 12eac192... IoU 0.781
+[27/117] 136b0064... IoU 0.000
+[28/117] 13713586... IoU 0.518
+[29/117] 137f0df0... IoU 0.720
+[30/117] 140c817e... IoU 0.444
+[31/117] 14754a24... IoU 0.958
+[32/117] 15113be4... IoU 0.972
+[33/117] 15663ba9... IoU 0.867
+[34/117] 15696249... IoU 0.000
+[35/117] 16b78196... IoU 0.709
+[36/117] 17b80ad2... IoU 0.865
+[37/117] 17cae0c1... IoU 0.000
+[38/117] 18419cfa... IoU 0.977
+[39/117] 184a9768... IoU 0.734
+[40/117] 195ba7dc... IoU 0.000
+[41/117] 1990f7a8... IoU 0.000
+[42/117] 19bb5feb... IoU 0.000
+[43/117] 1a2e2828... IoU 0.000
+[44/117] 1a6449f1... IoU 0.000
+[45/117] 1acc24af... IoU 0.972
+[46/117] 1c02dbbe... IoU 0.493
+[47/117] 1c0d0a4b... IoU 0.822
+[48/117] 1c56ad9f... IoU 0.840
+[49/117] 1d0a4b61... IoU 0.946
+[50/117] 1d398264... IoU 0.808
+[51/117] 1da012fc... IoU 0.912
+[52/117] 1e81d6f9... IoU 0.982
+[53/117] 1e97544e... IoU 0.892
+[54/117] 2037f2c7... IoU 0.000
+[55/117] 2072aba6... IoU 0.306
+[56/117] 20818e16... IoU 0.000
+[57/117] 20981f0e... IoU 0.900
+[58/117] 212895b5... IoU 0.925
+[59/117] 21f83797... IoU 0.538
+[60/117] 22a4bbc2... IoU 0.739
+[61/117] 25094a63... IoU 0.853
+[62/117] 2546ccf6... IoU 0.977
+[63/117] 256b0a75... IoU 0.498
+[64/117] 2685904e... IoU 0.880
+[65/117] 2697da3f... IoU 0.000
+[66/117] 2753e76c... IoU 0.000
+[67/117] 27a77e38... IoU 0.988
+[68/117] 27f8ce4f... IoU 0.000
+[69/117] 281123b4... IoU 0.438
+[70/117] 292dd178... IoU 0.873
+[71/117] 29700607... IoU 0.736
+[72/117] 2a5f8217... IoU 0.876
+[73/117] 2b01abd0... IoU 0.902
+[74/117] 2c0b0aff... IoU 0.000
+[75/117] 2c737e39... IoU 0.909
+[76/117] 2f0c5170... IoU 0.000
+[77/117] 310f3251... IoU 0.000
+[78/117] 3194b014... IoU 0.000
+[79/117] 319f2597... IoU 0.840
+[80/117] 31adaf00... IoU 0.750
+[81/117] 31d5ba1a... IoU 0.000
+[82/117] 32e9702f... IoU 0.000
+[83/117] 332efdb3... IoU 0.207
+[84/117] 3391f8c0... IoU 0.825
+[85/117] 33b52de3... IoU 0.841
+[86/117] 3490cc26... IoU 0.901
+[87/117] 34b99a2b... IoU 0.000
+[88/117] 351d6448... IoU 0.744
+[89/117] 358ba94e... ✓ SOLVED
+[90/117] 37d3e8b2... IoU 0.647
+[91/117] 3979b1a8... IoU 0.000
+[92/117] 3a301edc... IoU 0.637
+[93/117] 3b4c2228... IoU 0.000
+[94/117] 3d31c5b3... IoU 0.389
+[95/117] 3ed85e70... IoU 0.971
+[96/117] 3ee1011a... IoU 0.000
+[97/117] 3f23242b... IoU 0.712
+[98/117] 40f6cd08... IoU 0.750
+[99/117] 414297c0... IoU 0.793
+[100/117] 423a55dc... IoU 0.811
+[101/117] 42918530... IoU 0.955
+[102/117] 42a15761... IoU 0.962
+[103/117] 4364c1c4... IoU 0.890
+[104/117] 456873bc... IoU 0.723
+[105/117] 45737921... IoU 0.792
+[106/117] 45bbe264... IoU 0.653
+[107/117] 477d2879... IoU 0.036
+[108/117] 47996f11... IoU 0.853
+[109/117] 48131b3c... IoU 0.000
+[110/117] 4852f2fa... IoU 0.000
+[111/117] 48f8583b... IoU 0.049
+[112/117] 4aab4007... IoU 0.893
+[113/117] 4acc7107... IoU 0.700
+[114/117] 4b6b68e5... IoU 0.760
+[115/117] 4c177718... IoU 0.952
+[116/117] 4cd1b7b2... IoU 0.750
+[117/117] 4e45f183... IoU 0.834
+
+================================================================================
+RESULTS SUMMARY
+================================================================================
+
+Total tasks: 117
+Perfect solves (IoU ≥ 0.99): 2/117 (1.7%)
+Average IoU: 0.561
+
+Quality distribution:
+  High (0.80-0.99):    49 (41.9%)
+  Medium (0.50-0.79):  26 (22.2%)
+  Low (0.20-0.49):      8 (6.8%)
+  Failure (< 0.20):    34 (29.1%)
+
+Time elapsed: 25.8s (0.2s per task)
+
+================================================================================
+SOLVED TASKS (2):
+================================================================================
+  0b17323b
+  358ba94e
+
+✓ Results saved to v6_evaluation_results.json
+================================================================================
