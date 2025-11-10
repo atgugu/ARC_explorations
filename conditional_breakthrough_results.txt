@@ -1,0 +1,119 @@
+
+======================================================================
+CONDITIONAL SOLVER BREAKTHROUGH TEST
+======================================================================
+
+Objective: Break through the 1% expressiveness barrier
+Hypothesis: Conditional logic + spatial predicates → 10-16% solve rate
+
+
+📍 PHASE 1: Testing on 'very close' tasks (95-99% accurate)
+Starting Phase 1...
+
+
+======================================================================
+TESTING CONDITIONAL SOLVER ON 'VERY CLOSE' TASKS (95-99% accurate)
+======================================================================
+
+These tasks were SO CLOSE with diverse solver - can conditionals
+break through to 100%?
+
+Testing 0b17323b (evaluation)...
+  Diverse:         0.0%
+  Conditional:     0.0%
+  → No change
+
+Testing 27a77e38 (evaluation)...
+  Diverse:         0.0%
+  Conditional:     0.0%
+  → No change
+
+Testing 025d127b (training)...
+  Diverse:         0.0%
+  Conditional:     0.0%
+  → No change
+
+Testing 18419cfa (evaluation)...
+  Diverse:         0.0%
+  Conditional:     0.0%
+  → No change
+
+Testing 3c9b0459 (training)...
+  Diverse:         0.0%
+  Conditional:     0.0%
+  → No change
+
+Testing 25ff71a9 (training)...
+  Diverse:         0.0%
+  Conditional:     0.0%
+  → No change
+
+======================================================================
+VERY CLOSE TASKS SUMMARY
+======================================================================
+
+Exact Solves:
+  Diverse:     0/6 (0.0%)
+  Conditional: 0/6 (0.0%)
+
+Average Accuracy:
+  Diverse:     0.0%
+  Conditional: 0.0%
+  Improvement: +0.0%
+
+Tasks Improved: 0/6
+
+⚠ No new tasks solved (yet)
+
+📍 PHASE 2: Large-scale test (200 tasks)
+Starting Phase 2...
+
+
+======================================================================
+LARGE-SCALE TEST: 200 TASKS (100 training + 100 evaluation)
+======================================================================
+
+Baseline: Diverse solver = 1.0% solve rate (2/200)
+Target:   Conditional solver > 10% solve rate
+
+Loaded 200 tasks
+
+Progress: 20/200 tasks tested...
+Progress: 40/200 tasks tested...
+Progress: 60/200 tasks tested...
+Progress: 80/200 tasks tested...
+Progress: 100/200 tasks tested...
+Progress: 120/200 tasks tested...
+Progress: 140/200 tasks tested...
+Progress: 160/200 tasks tested...
+Progress: 180/200 tasks tested...
+Progress: 200/200 tasks tested...
+
+======================================================================
+RESULTS: CONDITIONAL vs DIVERSE SOLVER
+======================================================================
+
+🎯 EXACT MATCHES:
+  Diverse Solver:     0/200 (0.0%)
+  Conditional Solver: 0/200 (0.0%)
+  Change: +0 tasks (+0.0%)
+
+📊 AVERAGE ACCURACY:
+  Diverse:     0.0%
+  Conditional: 0.0%
+  Change: +0.0%
+
+⚠️ VERY CLOSE (95-99%):
+  Diverse:     0/200
+  Conditional: 0/200
+
+🎉 NEWLY SOLVED: 0
+
+======================================================================
+⚠️ NO IMPROVEMENT
+   Conditional solver did not improve over diverse solver
+   Further investigation needed
+
+======================================================================
+TEST COMPLETE
+======================================================================

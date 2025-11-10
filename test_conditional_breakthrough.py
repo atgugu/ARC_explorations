@@ -337,13 +337,13 @@ def main():
 
     # Phase 1: Test on very close tasks
     print("\n📍 PHASE 1: Testing on 'very close' tasks (95-99% accurate)")
-    input("Press Enter to start Phase 1...")
+    print("Starting Phase 1...\n")
 
     results_close_div, results_close_cond = tester.test_very_close_tasks()
 
     # Phase 2: Large-scale test
     print("\n📍 PHASE 2: Large-scale test (200 tasks)")
-    input("Press Enter to start Phase 2...")
+    print("Starting Phase 2...\n")
 
     results_large_div, results_large_cond = tester.run_large_scale_test(limit_per_set=100)
 

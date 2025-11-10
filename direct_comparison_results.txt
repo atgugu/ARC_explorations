@@ -1,0 +1,56 @@
+
+======================================================================
+CONDITIONAL SOLVER: DIRECT COMPARISON TEST
+======================================================================
+
+Testing 50 tasks from training set
+Measuring actual solve rate improvement
+
+Loaded 50 tasks
+
+Testing tasks...
+  Progress: 10/50
+  Progress: 20/50
+  Progress: 30/50
+  Progress: 40/50
+  Progress: 50/50
+
+Testing complete!
+
+======================================================================
+RESULTS
+======================================================================
+
+🎯 EXACT SOLVE RATE:
+  Diverse Solver:     0/50 (0.0%)
+  Conditional Solver: 0/50 (0.0%)
+  Change: +0 tasks (+0.0%)
+
+📊 AVERAGE ACCURACY:
+  Diverse:     27.4%
+  Conditional: 30.5%
+  Change: +3.0%
+
+🔍 HYPOTHESIS GENERATION:
+  Diverse:     18.8 hypotheses/task
+  Conditional: 27.8 hypotheses/task
+
+📈 TASK-LEVEL CHANGES:
+  Improved:    3/50 (6.0%)
+  Regressed:   1/50 (2.0%)
+  Unchanged:   46/50
+
+⚠️  No new tasks solved by conditional solver
+
+📈 TOP IMPROVEMENTS (>5%):
+  1f876c06: 0.0% → 77.0% (+77.0%)
+  1f0c79e5: 0.0% → 71.6% (+71.6%)
+
+======================================================================
+ASSESSMENT
+======================================================================
+📊 ACCURACY IMPROVEMENT
+   No new exact solves, but average accuracy improved
+   Conditional logic helps partial solutions
+
+======================================================================
