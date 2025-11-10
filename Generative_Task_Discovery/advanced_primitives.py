@@ -808,16 +808,20 @@ class AdvancedPrimitives:
         h, w = grid.shape
 
         if axis == "horizontal":
-            # Distribute along x-axis
+            # Distribute along x-axis with equal stride starting from 0
             sorted_objs = sorted(objects, key=lambda o: o.bbox[1])
-            total_width = sum(o.bbox[3] - o.bbox[1] + 1 for o in sorted_objs)
-            spacing = (w - total_width) // (len(objects) + 1)
 
-            current_x = spacing
-            for obj in sorted_objs:
+            # Calculate positions for even distribution
+            if len(objects) == 1:
+                positions = [0]
+            else:
+                # Use stride-based placement: first at 0, last at (w-2), others evenly spaced
+                stride = (w - 2) // (len(objects) - 1)
+                positions = [i * stride for i in range(len(objects))]
+
+            for i, obj in enumerate(sorted_objs):
                 y1, x1, y2, x2 = obj.bbox
-                obj_h = y2 - y1 + 1
-                obj_w = x2 - x1 + 1
+                current_x = positions[i]
 
                 # Place object
                 for y in range(y1, y2 + 1):
@@ -828,19 +832,21 @@ class AdvancedPrimitives:
                             if 0 <= ny < h and 0 <= nx < w:
                                 result[ny, nx] = obj.color
 
-                current_x += obj_w + spacing
-
         elif axis == "vertical":
-            # Distribute along y-axis
+            # Distribute along y-axis with equal stride starting from 0
             sorted_objs = sorted(objects, key=lambda o: o.bbox[0])
-            total_height = sum(o.bbox[2] - o.bbox[0] + 1 for o in sorted_objs)
-            spacing = (h - total_height) // (len(objects) + 1)
 
-            current_y = spacing
-            for obj in sorted_objs:
+            # Calculate positions for even distribution
+            if len(objects) == 1:
+                positions = [0]
+            else:
+                # Use stride-based placement: first at 0, last at (h-2), others evenly spaced
+                stride = (h - 2) // (len(objects) - 1)
+                positions = [i * stride for i in range(len(objects))]
+
+            for i, obj in enumerate(sorted_objs):
                 y1, x1, y2, x2 = obj.bbox
-                obj_h = y2 - y1 + 1
-                obj_w = x2 - x1 + 1
+                current_y = positions[i]
 
                 # Place object
                 for y in range(y1, y2 + 1):
@@ -850,8 +856,6 @@ class AdvancedPrimitives:
                             nx = x
                             if 0 <= ny < h and 0 <= nx < w:
                                 result[ny, nx] = obj.color
-
-                current_y += obj_h + spacing
 
         return result
 
