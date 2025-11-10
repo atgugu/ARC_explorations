@@ -678,3 +678,380 @@ class AdvancedPrimitives:
             result[shell] = color
 
         return result
+
+    # ========================================================================
+    # OBJECT OPERATIONS
+    # ========================================================================
+
+    @staticmethod
+    def move_object_to_position(grid: np.ndarray,
+                               obj: ARCObject,
+                               target_y: int,
+                               target_x: int) -> np.ndarray:
+        """
+        Move an object to a specific position (top-left corner)
+        """
+        result = grid.copy()
+
+        # Clear original position
+        result[obj.mask] = 0
+
+        # Calculate offset
+        y1, x1, y2, x2 = obj.bbox
+        dy = target_y - y1
+        dx = target_x - x1
+
+        # Place at new position
+        for y in range(y1, y2 + 1):
+            for x in range(x1, x2 + 1):
+                if obj.mask[y, x]:
+                    ny, nx = y + dy, x + dx
+                    if 0 <= ny < grid.shape[0] and 0 <= nx < grid.shape[1]:
+                        result[ny, nx] = obj.color
+
+        return result
+
+    @staticmethod
+    def scale_object(grid: np.ndarray,
+                    obj: ARCObject,
+                    scale_factor: float) -> np.ndarray:
+        """
+        Scale an object by a factor (simple nearest-neighbor scaling)
+
+        scale_factor > 1: grow
+        scale_factor < 1: shrink
+        """
+        result = grid.copy()
+
+        # Clear original
+        result[obj.mask] = 0
+
+        y1, x1, y2, x2 = obj.bbox
+        obj_h = y2 - y1 + 1
+        obj_w = x2 - x1 + 1
+
+        new_h = int(obj_h * scale_factor)
+        new_w = int(obj_w * scale_factor)
+
+        # Simple nearest-neighbor scaling
+        for ny in range(new_h):
+            for nx in range(new_w):
+                # Map back to original
+                oy = int(ny / scale_factor)
+                ox = int(nx / scale_factor)
+
+                src_y = y1 + oy
+                src_x = x1 + ox
+
+                if obj.mask[src_y, src_x]:
+                    dst_y = y1 + ny
+                    dst_x = x1 + nx
+
+                    if 0 <= dst_y < grid.shape[0] and 0 <= dst_x < grid.shape[1]:
+                        result[dst_y, dst_x] = obj.color
+
+        return result
+
+    @staticmethod
+    def duplicate_object(grid: np.ndarray,
+                        obj: ARCObject,
+                        offset_y: int,
+                        offset_x: int) -> np.ndarray:
+        """
+        Duplicate an object at an offset position
+        """
+        result = grid.copy()
+
+        y1, x1, y2, x2 = obj.bbox
+
+        # Place duplicate
+        for y in range(y1, y2 + 1):
+            for x in range(x1, x2 + 1):
+                if obj.mask[y, x]:
+                    ny, nx = y + offset_y, x + offset_x
+                    if 0 <= ny < grid.shape[0] and 0 <= nx < grid.shape[1]:
+                        result[ny, nx] = obj.color
+
+        return result
+
+    @staticmethod
+    def sort_objects_spatial(objects: List[ARCObject],
+                            order: str = "left_to_right") -> List[ARCObject]:
+        """
+        Sort objects spatially
+
+        order: "left_to_right", "right_to_left", "top_to_bottom", "bottom_to_top"
+        """
+        if order == "left_to_right":
+            return sorted(objects, key=lambda o: o.bbox[1])  # Sort by x1
+        elif order == "right_to_left":
+            return sorted(objects, key=lambda o: -o.bbox[1])
+        elif order == "top_to_bottom":
+            return sorted(objects, key=lambda o: o.bbox[0])  # Sort by y1
+        elif order == "bottom_to_top":
+            return sorted(objects, key=lambda o: -o.bbox[0])
+        else:
+            return objects
+
+    @staticmethod
+    def distribute_objects_evenly(grid: np.ndarray,
+                                 objects: List[ARCObject],
+                                 axis: str = "horizontal") -> np.ndarray:
+        """
+        Distribute objects evenly along an axis
+        """
+        result = np.zeros_like(grid)
+
+        if not objects:
+            return result
+
+        h, w = grid.shape
+
+        if axis == "horizontal":
+            # Distribute along x-axis
+            sorted_objs = sorted(objects, key=lambda o: o.bbox[1])
+            total_width = sum(o.bbox[3] - o.bbox[1] + 1 for o in sorted_objs)
+            spacing = (w - total_width) // (len(objects) + 1)
+
+            current_x = spacing
+            for obj in sorted_objs:
+                y1, x1, y2, x2 = obj.bbox
+                obj_h = y2 - y1 + 1
+                obj_w = x2 - x1 + 1
+
+                # Place object
+                for y in range(y1, y2 + 1):
+                    for x in range(x1, x2 + 1):
+                        if obj.mask[y, x]:
+                            ny = y
+                            nx = current_x + (x - x1)
+                            if 0 <= ny < h and 0 <= nx < w:
+                                result[ny, nx] = obj.color
+
+                current_x += obj_w + spacing
+
+        elif axis == "vertical":
+            # Distribute along y-axis
+            sorted_objs = sorted(objects, key=lambda o: o.bbox[0])
+            total_height = sum(o.bbox[2] - o.bbox[0] + 1 for o in sorted_objs)
+            spacing = (h - total_height) // (len(objects) + 1)
+
+            current_y = spacing
+            for obj in sorted_objs:
+                y1, x1, y2, x2 = obj.bbox
+                obj_h = y2 - y1 + 1
+                obj_w = x2 - x1 + 1
+
+                # Place object
+                for y in range(y1, y2 + 1):
+                    for x in range(x1, x2 + 1):
+                        if obj.mask[y, x]:
+                            ny = current_y + (y - y1)
+                            nx = x
+                            if 0 <= ny < h and 0 <= nx < w:
+                                result[ny, nx] = obj.color
+
+                current_y += obj_h + spacing
+
+        return result
+
+    # ========================================================================
+    # ENHANCED PHYSICS-BASED TRANSFORMS
+    # ========================================================================
+
+    @staticmethod
+    def gravity_objects(grid: np.ndarray,
+                       objects: List[ARCObject],
+                       direction: str = "down",
+                       stop_at_obstacle: bool = True) -> np.ndarray:
+        """
+        Apply gravity to objects (more sophisticated than gravity_transform)
+
+        Objects fall until they hit the edge or another object
+        """
+        result = np.zeros_like(grid)
+        h, w = grid.shape
+
+        # Sort objects by position (fall order matters)
+        if direction == "down":
+            sorted_objs = sorted(objects, key=lambda o: -o.bbox[2])  # Bottom first
+        elif direction == "up":
+            sorted_objs = sorted(objects, key=lambda o: o.bbox[0])   # Top first
+        elif direction == "left":
+            sorted_objs = sorted(objects, key=lambda o: o.bbox[1])   # Left first
+        elif direction == "right":
+            sorted_objs = sorted(objects, key=lambda o: -o.bbox[3])  # Right first
+        else:
+            sorted_objs = objects
+
+        for obj in sorted_objs:
+            y1, x1, y2, x2 = obj.bbox
+
+            # Find how far object can fall
+            if direction == "down":
+                max_fall = h - 1 - y2
+                for dist in range(max_fall + 1):
+                    # Check if can move this far
+                    can_move = True
+                    for y in range(y1, y2 + 1):
+                        for x in range(x1, x2 + 1):
+                            if obj.mask[y, x]:
+                                ny = y + dist + 1
+                                if ny >= h or (stop_at_obstacle and result[ny, x] != 0):
+                                    can_move = False
+                                    break
+                        if not can_move:
+                            break
+
+                    if not can_move:
+                        # Place at dist
+                        for y in range(y1, y2 + 1):
+                            for x in range(x1, x2 + 1):
+                                if obj.mask[y, x]:
+                                    result[y + dist, x] = obj.color
+                        break
+                else:
+                    # Reached bottom
+                    for y in range(y1, y2 + 1):
+                        for x in range(x1, x2 + 1):
+                            if obj.mask[y, x]:
+                                result[y + max_fall, x] = obj.color
+
+            elif direction == "up":
+                max_rise = y1
+                for dist in range(max_rise + 1):
+                    can_move = True
+                    for y in range(y1, y2 + 1):
+                        for x in range(x1, x2 + 1):
+                            if obj.mask[y, x]:
+                                ny = y - dist - 1
+                                if ny < 0 or (stop_at_obstacle and result[ny, x] != 0):
+                                    can_move = False
+                                    break
+                        if not can_move:
+                            break
+
+                    if not can_move:
+                        for y in range(y1, y2 + 1):
+                            for x in range(x1, x2 + 1):
+                                if obj.mask[y, x]:
+                                    result[y - dist, x] = obj.color
+                        break
+                else:
+                    for y in range(y1, y2 + 1):
+                        for x in range(x1, x2 + 1):
+                            if obj.mask[y, x]:
+                                result[y - max_rise, x] = obj.color
+
+            # Similar for left/right
+            elif direction in ["left", "right"]:
+                # Place object as-is for now (simplified)
+                for y in range(y1, y2 + 1):
+                    for x in range(x1, x2 + 1):
+                        if obj.mask[y, x]:
+                            result[y, x] = obj.color
+
+        return result
+
+    @staticmethod
+    def stack_objects(grid: np.ndarray,
+                     objects: List[ARCObject],
+                     direction: str = "vertical") -> np.ndarray:
+        """
+        Stack objects on top of each other or side-by-side
+        """
+        result = np.zeros_like(grid)
+
+        if not objects:
+            return result
+
+        if direction == "vertical":
+            # Stack vertically (top to bottom)
+            current_y = 0
+
+            for obj in objects:
+                y1, x1, y2, x2 = obj.bbox
+                obj_h = y2 - y1 + 1
+                obj_w = x2 - x1 + 1
+
+                # Place object
+                for y in range(y1, y2 + 1):
+                    for x in range(x1, x2 + 1):
+                        if obj.mask[y, x]:
+                            ny = current_y + (y - y1)
+                            nx = x
+                            if 0 <= ny < grid.shape[0] and 0 <= nx < grid.shape[1]:
+                                result[ny, nx] = obj.color
+
+                current_y += obj_h
+
+        elif direction == "horizontal":
+            # Stack horizontally (left to right)
+            current_x = 0
+
+            for obj in objects:
+                y1, x1, y2, x2 = obj.bbox
+                obj_h = y2 - y1 + 1
+                obj_w = x2 - x1 + 1
+
+                # Place object
+                for y in range(y1, y2 + 1):
+                    for x in range(x1, x2 + 1):
+                        if obj.mask[y, x]:
+                            ny = y
+                            nx = current_x + (x - x1)
+                            if 0 <= ny < grid.shape[0] and 0 <= nx < grid.shape[1]:
+                                result[ny, nx] = obj.color
+
+                current_x += obj_w
+
+        return result
+
+    @staticmethod
+    def compress_objects(grid: np.ndarray,
+                        direction: str = "down") -> np.ndarray:
+        """
+        Compress all objects toward one direction (remove gaps)
+
+        Similar to gravity but for all non-zero pixels
+        """
+        result = np.zeros_like(grid)
+        h, w = grid.shape
+
+        if direction == "down":
+            # Compress downward
+            for x in range(w):
+                write_y = h - 1
+                for y in range(h - 1, -1, -1):
+                    if grid[y, x] != 0:
+                        result[write_y, x] = grid[y, x]
+                        write_y -= 1
+
+        elif direction == "up":
+            # Compress upward
+            for x in range(w):
+                write_y = 0
+                for y in range(h):
+                    if grid[y, x] != 0:
+                        result[write_y, x] = grid[y, x]
+                        write_y += 1
+
+        elif direction == "left":
+            # Compress leftward
+            for y in range(h):
+                write_x = 0
+                for x in range(w):
+                    if grid[y, x] != 0:
+                        result[y, write_x] = grid[y, x]
+                        write_x += 1
+
+        elif direction == "right":
+            # Compress rightward
+            for y in range(h):
+                write_x = w - 1
+                for x in range(w - 1, -1, -1):
+                    if grid[y, x] != 0:
+                        result[y, write_x] = grid[y, x]
+                        write_x -= 1
+
+        return result

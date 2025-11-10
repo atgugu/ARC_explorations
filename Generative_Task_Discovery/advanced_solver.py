@@ -123,6 +123,47 @@ class AdvancedExecutor(EnhancedExecutor):
                 direction = program.parameters.get("direction", "down")
                 grid = self.advanced.gravity_transform(grid, direction)
 
+            # OBJECT OPERATIONS
+            elif program.schema == "move_object":
+                objects = self.primitives.components(grid)
+                if objects:
+                    target_y = program.parameters.get("target_y", 0)
+                    target_x = program.parameters.get("target_x", 0)
+                    grid = self.advanced.move_object_to_position(grid, objects[0], target_y, target_x)
+
+            elif program.schema == "scale_object":
+                objects = self.primitives.components(grid)
+                if objects:
+                    scale = program.parameters.get("scale", 2.0)
+                    grid = self.advanced.scale_object(grid, objects[0], scale)
+
+            elif program.schema == "duplicate_object":
+                objects = self.primitives.components(grid)
+                if objects:
+                    offset_y = program.parameters.get("offset_y", 0)
+                    offset_x = program.parameters.get("offset_x", 2)
+                    grid = self.advanced.duplicate_object(grid, objects[0], offset_y, offset_x)
+
+            elif program.schema == "distribute_objects":
+                objects = self.primitives.components(grid)
+                axis = program.parameters.get("axis", "horizontal")
+                grid = self.advanced.distribute_objects_evenly(grid, objects, axis)
+
+            # PHYSICS-BASED
+            elif program.schema == "gravity_objects":
+                objects = self.primitives.components(grid)
+                direction = program.parameters.get("direction", "down")
+                grid = self.advanced.gravity_objects(grid, objects, direction)
+
+            elif program.schema == "stack_objects":
+                objects = self.primitives.components(grid)
+                direction = program.parameters.get("direction", "vertical")
+                grid = self.advanced.stack_objects(grid, objects, direction)
+
+            elif program.schema == "compress":
+                direction = program.parameters.get("direction", "down")
+                grid = self.advanced.compress_objects(grid, direction)
+
             self.execution_trace.append(("final", grid.copy()))
 
         except Exception as e:
@@ -212,6 +253,43 @@ class AdvancedProgramGenerator(EnhancedProgramGenerator):
                 "name": "gravity",
                 "params": {"direction": ["down", "up", "left", "right"]},
                 "complexity": 2.5
+            },
+            # Object operations
+            {
+                "name": "move_object",
+                "params": {"target_y": [0, 1, 2], "target_x": [0, 1, 2]},
+                "complexity": 3.0
+            },
+            {
+                "name": "scale_object",
+                "params": {"scale": [0.5, 2.0, 3.0]},
+                "complexity": 3.0
+            },
+            {
+                "name": "duplicate_object",
+                "params": {"offset_y": [0, 1, 2], "offset_x": [1, 2, 3]},
+                "complexity": 2.5
+            },
+            {
+                "name": "distribute_objects",
+                "params": {"axis": ["horizontal", "vertical"]},
+                "complexity": 2.5
+            },
+            # Physics-based
+            {
+                "name": "gravity_objects",
+                "params": {"direction": ["down", "up"]},
+                "complexity": 2.5
+            },
+            {
+                "name": "stack_objects",
+                "params": {"direction": ["vertical", "horizontal"]},
+                "complexity": 2.5
+            },
+            {
+                "name": "compress",
+                "params": {"direction": ["down", "up", "left", "right"]},
+                "complexity": 2.0
             }
         ]
 
@@ -336,7 +414,59 @@ class AdvancedProgramGenerator(EnhancedProgramGenerator):
                 complexity=2.5
             ))
 
-        return candidates[:max_candidates + 50]  # Allow more for advanced
+        # Add object operation candidates
+        candidates.append(Program(
+            schema="duplicate_object",
+            primitives=["duplicate_object"],
+            parameters={"offset_y": 0, "offset_x": 2},
+            selectors={},
+            complexity=2.5
+        ))
+
+        candidates.append(Program(
+            schema="distribute_objects",
+            primitives=["distribute_objects"],
+            parameters={"axis": "horizontal"},
+            selectors={},
+            complexity=2.5
+        ))
+
+        candidates.append(Program(
+            schema="distribute_objects",
+            primitives=["distribute_objects"],
+            parameters={"axis": "vertical"},
+            selectors={},
+            complexity=2.5
+        ))
+
+        # Add physics-based candidates
+        for direction in ["down", "up"]:
+            candidates.append(Program(
+                schema="gravity_objects",
+                primitives=["gravity_objects"],
+                parameters={"direction": direction},
+                selectors={},
+                complexity=2.5
+            ))
+
+        candidates.append(Program(
+            schema="stack_objects",
+            primitives=["stack_objects"],
+            parameters={"direction": "vertical"},
+            selectors={},
+            complexity=2.5
+        ))
+
+        for direction in ["down", "up", "left", "right"]:
+            candidates.append(Program(
+                schema="compress",
+                primitives=["compress"],
+                parameters={"direction": direction},
+                selectors={},
+                complexity=2.0
+            ))
+
+        return candidates[:max_candidates + 60]  # Allow more for all operations
 
 
 class AdvancedARCSolver(EnhancedARCSolver):
