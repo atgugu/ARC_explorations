@@ -15,6 +15,7 @@ import numpy as np
 from typing import Dict, List, Any, Tuple, Optional, Set
 from collections import Counter
 from dataclasses import dataclass
+from enhanced_color_inference import EnhancedColorInference
 
 
 @dataclass
@@ -84,9 +85,17 @@ class ParameterInference:
             input_grid = np.array(train_ex['input'])
             output_grid = np.array(train_ex['output'])
 
-            # Infer color mappings
+            # Infer color mappings (basic)
             color_maps = ParameterInference.infer_color_mapping(input_grid, output_grid)
             all_color_maps.extend(color_maps)
+
+            # Infer color mappings (enhanced - handles inconsistent mappings)
+            enhanced_maps = EnhancedColorInference.infer_color_mappings_enhanced(input_grid, output_grid)
+            all_color_maps.extend(enhanced_maps)
+
+            # Infer identity-based color mappings
+            id_maps = EnhancedColorInference.infer_color_mappings_with_identity(input_grid, output_grid)
+            all_color_maps.extend(id_maps)
 
             # Infer translations
             translations = ParameterInference.infer_translation(input_grid, output_grid)
