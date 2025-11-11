@@ -13,6 +13,7 @@ from collections import defaultdict
 from advanced_solver import AdvancedARCSolver
 from compositional_solver import CompositionalARCSolver
 from inferred_solver import InferredCompositionalSolver
+from ensemble_solver import EnsembleCompositionalSolver
 from arc_generative_solver import evaluate_predictions
 
 
