@@ -1,0 +1,105 @@
+================================================================================
+V7 SOLVER - TRAINING SET TEST (46 TASKS)
+================================================================================
+Loaded 46 tasks from training
+
+Testing on 46 training tasks
+
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+[1/46] 007bbfb7... ✓ SOLVED
+[2/46] 00d62c1b... IoU 0.917
+[3/46] 017c7c7b... IoU 0.630
+[4/46] 025d127b... IoU 0.980
+[5/46] 045e512c... IoU 0.902
+[6/46] 0520fde7... IoU 0.556
+[7/46] 05f2a901... IoU 0.864
+[8/46] 06df4c85... IoU 0.947
+[9/46] 08ed6ac7... IoU 0.815
+[10/46] 09629e4f... IoU 0.702
+[11/46] 0a938d79... IoU 0.822
+[12/46] 0b148d64... ✓ SOLVED
+[13/46] 0ca9ddb6... IoU 0.852
+[14/46] 0d3d703e... ✓ SOLVED
+[15/46] 0e206a2e... IoU 0.950
+[16/46] 10fcaaa3... IoU 0.000
+[17/46] 11852cab... IoU 0.970
+[18/46] 1190e5a7... IoU 0.000
+[19/46] 137eaa0f... IoU 0.222
+[20/46] 150deff5... IoU 0.864
+[21/46] 178fcbfb... IoU 0.591
+[22/46] 1b2d62fb... IoU 0.267
+[23/46] 1b60fb0c... IoU 0.910
+[24/46] 1bfc4729... IoU 0.500
+[25/46] 1c786137... IoU 0.000
+[26/46] 1caeab9d... IoU 0.900
+[27/46] 1cf80156... ✓ SOLVED
+[28/46] 1e0a9b12... IoU 0.720
+[29/46] 1e32b0e9... IoU 0.813
+[30/46] 1f0c79e5... IoU 0.716
+[31/46] 1f642eb9... IoU 0.930
+[32/46] 1f85a75f... IoU 0.000
+[33/46] 1f876c06... IoU 0.860
+[34/46] 1fad071e... IoU 0.400
+[35/46] 2013d3e2... ✓ SOLVED
+[36/46] 22233c11... IoU 0.920
+[37/46] 228f6490... IoU 0.790
+[38/46] 22eb0ac0... IoU 0.840
+[39/46] 234bbc79... IoU 0.000
+[40/46] 23581191... IoU 0.630
+[41/46] 239be575... IoU 0.000
+[42/46] 23b5c85d... ✓ SOLVED
+[43/46] 253bf280... IoU 0.910
+[44/46] 25ff71a9... ✓ SOLVED
+[45/46] 3c9b0459... ✓ SOLVED
+[46/46] 6150a2bd... ✓ SOLVED
+
+================================================================================
+V7 TRAINING RESULTS
+================================================================================
+
+Total tasks: 46
+Perfect solves (IoU ≥ 0.99): 9/46 (19.6%)
+Average IoU: 0.711
+
+Quality distribution:
+  High (0.80-0.99):    28 (60.9%)
+  Medium (0.50-0.79):   9 (19.6%)
+  Low (0.20-0.49):      3 (6.5%)
+  Failure (< 0.20):     6 (13.0%)
+
+Time elapsed: 5.3s (0.1s per task)
+
+✗ Could not compare with V6: list indices must be integers or slices, not str
+
+✓ Results saved to v7_training_results.json
+================================================================================

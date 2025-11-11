@@ -1,0 +1,788 @@
+{
+  "summary": {
+    "num_tasks": 12,
+    "shape_mismatches": 0,
+    "edge_errors": 4,
+    "color_substitution_errors": {
+      "9\u21920": 2,
+      "0\u21921": 4,
+      "2\u21920": 45,
+      "1\u21920": 13,
+      "4\u21920": 4,
+      "3\u21920": 12,
+      "8\u21920": 21,
+      "5\u21920": 1,
+      "5\u21922": 4,
+      "7\u21921": 15,
+      "6\u21921": 2,
+      "4\u21921": 2,
+      "1\u21924": 2,
+      "0\u21922": 4,
+      "2\u21925": 15,
+      "6\u21920": 3
+    }
+  },
+  "analyses": [
+    {
+      "task_id": "27a77e38",
+      "iou": 0.9876543209876543,
+      "analyses": [
+        {
+          "test_idx": 0,
+          "diff_analysis": {
+            "type": "pixel_errors",
+            "num_errors": 1,
+            "total_pixels": 81,
+            "error_rate": 0.012345679012345678,
+            "errors_by_color": {
+              "9\u21920": 1
+            },
+            "is_edge_error": true,
+            "error_positions": [
+              [
+                8,
+                4
+              ]
+            ]
+          },
+          "predicted_shape": [
+            9,
+            9
+          ],
+          "actual_shape": [
+            9,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "1e81d6f9",
+      "iou": 0.9822222222222222,
+      "analyses": [
+        {
+          "test_idx": 0,
+          "diff_analysis": {
+            "type": "pixel_errors",
+            "num_errors": 4,
+            "total_pixels": 225,
+            "error_rate": 0.017777777777777778,
+            "errors_by_color": {
+              "0\u21921": 4
+            },
+            "is_edge_error": false,
+            "error_positions": [
+              [
+                1,
+                8
+              ],
+              [
+                6,
+                3
+              ],
+              [
+                8,
+                6
+              ],
+              [
+                13,
+                3
+              ]
+            ]
+          },
+          "predicted_shape": [
+            15,
+            15
+          ],
+          "actual_shape": [
+            15,
+            15
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "18419cfa",
+      "iou": 0.9766483516483516,
+      "analyses": [
+        {
+          "test_idx": 0,
+          "diff_analysis": {
+            "type": "pixel_errors",
+            "num_errors": 17,
+            "total_pixels": 728,
+            "error_rate": 0.023351648351648352,
+            "errors_by_color": {
+              "2\u21920": 17
+            },
+            "is_edge_error": false,
+            "error_positions": [
+              [
+                4,
+                19
+              ],
+              [
+                4,
+                23
+              ],
+              [
+                5,
+                8
+              ],
+              [
+                5,
+                20
+              ],
+              [
+                5,
+                21
+              ],
+              [
+                5,
+                22
+              ],
+              [
+                6,
+                8
+              ],
+              [
+                6,
+                9
+              ],
+              [
+                6,
+                21
+              ],
+              [
+                7,
+                8
+              ]
+            ]
+          },
+          "predicted_shape": [
+            28,
+            26
+          ],
+          "actual_shape": [
+            28,
+            26
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "2546ccf6",
+      "iou": 0.9765886287625418,
+      "analyses": [
+        {
+          "test_idx": 0,
+          "diff_analysis": {
+            "type": "pixel_errors",
+            "num_errors": 14,
+            "total_pixels": 598,
+            "error_rate": 0.023411371237458192,
+            "errors_by_color": {
+              "2\u21920": 5,
+              "1\u21920": 5,
+              "4\u21920": 4
+            },
+            "is_edge_error": false,
+            "error_positions": [
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ],
+              [
+                7,
+                7
+              ],
+              [
+                7,
+                8
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                8,
+                19
+              ],
+              [
+                8,
+                20
+              ],
+              [
+                9,
+                18
+              ],
+              [
+                9,
+                20
+              ],
+              [
+                10,
+                19
+              ]
+            ]
+          },
+          "predicted_shape": [
+            26,
+            23
+          ],
+          "actual_shape": [
+            26,
+            23
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "11e1fe23",
+      "iou": 0.9761904761904762,
+      "analyses": [
+        {
+          "test_idx": 0,
+          "diff_analysis": {
+            "type": "pixel_errors",
+            "num_errors": 4,
+            "total_pixels": 168,
+            "error_rate": 0.023809523809523808,
+            "errors_by_color": {
+              "3\u21920": 1,
+              "8\u21920": 1,
+              "5\u21920": 1,
+              "9\u21920": 1
+            },
+            "is_edge_error": false,
+            "error_positions": [
+              [
+                5,
+                6
+              ],
+              [
+                5,
+                8
+              ],
+              [
+                6,
+                7
+              ],
+              [
+                7,
+                6
+              ]
+            ]
+          },
+          "predicted_shape": [
+            12,
+            14
+          ],
+          "actual_shape": [
+            12,
+            14
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "1acc24af",
+      "iou": 0.9722222222222222,
+      "analyses": [
+        {
+          "test_idx": 0,
+          "diff_analysis": {
+            "type": "pixel_errors",
+            "num_errors": 4,
+            "total_pixels": 144,
+            "error_rate": 0.027777777777777776,
+            "errors_by_color": {
+              "5\u21922": 4
+            },
+            "is_edge_error": false,
+            "error_positions": [
+              [
+                9,
+                7
+              ],
+              [
+                9,
+                8
+              ],
+              [
+                10,
+                7
+              ],
+              [
+                10,
+                8
+              ]
+            ]
+          },
+          "predicted_shape": [
+            12,
+            12
+          ],
+          "actual_shape": [
+            12,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "15113be4",
+      "iou": 0.9716446124763705,
+      "analyses": [
+        {
+          "test_idx": 0,
+          "diff_analysis": {
+            "type": "pixel_errors",
+            "num_errors": 15,
+            "total_pixels": 529,
+            "error_rate": 0.02835538752362949,
+            "errors_by_color": {
+              "7\u21921": 15
+            },
+            "is_edge_error": true,
+            "error_positions": [
+              [
+                8,
+                6
+              ],
+              [
+                9,
+                4
+              ],
+              [
+                9,
+                5
+              ],
+              [
+                9,
+                6
+              ],
+              [
+                10,
+                4
+              ],
+              [
+                20,
+                6
+              ],
+              [
+                20,
+                10
+              ],
+              [
+                21,
+                4
+              ],
+              [
+                21,
+                5
+              ],
+              [
+                21,
+                6
+              ]
+            ]
+          },
+          "predicted_shape": [
+            23,
+            23
+          ],
+          "actual_shape": [
+            23,
+            23
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "3ed85e70",
+      "iou": 0.9711111111111111,
+      "analyses": [
+        {
+          "test_idx": 0,
+          "diff_analysis": {
+            "type": "pixel_errors",
+            "num_errors": 26,
+            "total_pixels": 900,
+            "error_rate": 0.028888888888888888,
+            "errors_by_color": {
+              "2\u21920": 3,
+              "8\u21920": 9,
+              "6\u21921": 2,
+              "4\u21921": 2,
+              "1\u21924": 2,
+              "1\u21920": 8
+            },
+            "is_edge_error": false,
+            "error_positions": [
+              [
+                2,
+                4
+              ],
+              [
+                3,
+                3
+              ],
+              [
+                3,
+                4
+              ],
+              [
+                3,
+                5
+              ],
+              [
+                3,
+                15
+              ],
+              [
+                3,
+                23
+              ],
+              [
+                4,
+                4
+              ],
+              [
+                4,
+                5
+              ],
+              [
+                4,
+                22
+              ],
+              [
+                6,
+                26
+              ]
+            ]
+          },
+          "predicted_shape": [
+            30,
+            30
+          ],
+          "actual_shape": [
+            30,
+            30
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "42a15761",
+      "iou": 0.9617224880382775,
+      "analyses": [
+        {
+          "test_idx": 0,
+          "diff_analysis": {
+            "type": "pixel_errors",
+            "num_errors": 8,
+            "total_pixels": 209,
+            "error_rate": 0.03827751196172249,
+            "errors_by_color": {
+              "2\u21920": 4,
+              "0\u21922": 4
+            },
+            "is_edge_error": false,
+            "error_positions": [
+              [
+                3,
+                13
+              ],
+              [
+                3,
+                17
+              ],
+              [
+                5,
+                1
+              ],
+              [
+                5,
+                5
+              ],
+              [
+                7,
+                1
+              ],
+              [
+                7,
+                5
+              ],
+              [
+                9,
+                1
+              ],
+              [
+                9,
+                5
+              ]
+            ]
+          },
+          "predicted_shape": [
+            11,
+            19
+          ],
+          "actual_shape": [
+            11,
+            19
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "14754a24",
+      "iou": 0.9584487534626038,
+      "analyses": [
+        {
+          "test_idx": 0,
+          "diff_analysis": {
+            "type": "pixel_errors",
+            "num_errors": 15,
+            "total_pixels": 361,
+            "error_rate": 0.04155124653739612,
+            "errors_by_color": {
+              "2\u21925": 15
+            },
+            "is_edge_error": true,
+            "error_positions": [
+              [
+                0,
+                6
+              ],
+              [
+                0,
+                12
+              ],
+              [
+                0,
+                13
+              ],
+              [
+                1,
+                6
+              ],
+              [
+                1,
+                7
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                6,
+                12
+              ],
+              [
+                7,
+                11
+              ]
+            ]
+          },
+          "predicted_shape": [
+            19,
+            19
+          ],
+          "actual_shape": [
+            19,
+            19
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "42918530",
+      "iou": 0.9552,
+      "analyses": [
+        {
+          "test_idx": 0,
+          "diff_analysis": {
+            "type": "pixel_errors",
+            "num_errors": 28,
+            "total_pixels": 625,
+            "error_rate": 0.0448,
+            "errors_by_color": {
+              "2\u21920": 16,
+              "3\u21920": 3,
+              "8\u21920": 6,
+              "6\u21920": 3
+            },
+            "is_edge_error": false,
+            "error_positions": [
+              [
+                8,
+                21
+              ],
+              [
+                9,
+                20
+              ],
+              [
+                9,
+                21
+              ],
+              [
+                10,
+                21
+              ],
+              [
+                14,
+                16
+              ],
+              [
+                14,
+                21
+              ],
+              [
+                15,
+                2
+              ],
+              [
+                15,
+                3
+              ],
+              [
+                15,
+                15
+              ],
+              [
+                15,
+                20
+              ]
+            ]
+          },
+          "predicted_shape": [
+            25,
+            25
+          ],
+          "actual_shape": [
+            25,
+            25
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "4c177718",
+      "iou": 0.9518518518518518,
+      "analyses": [
+        {
+          "test_idx": 0,
+          "diff_analysis": {
+            "type": "pixel_errors",
+            "num_errors": 5,
+            "total_pixels": 135,
+            "error_rate": 0.037037037037037035,
+            "errors_by_color": {
+              "8\u21920": 5
+            },
+            "is_edge_error": false,
+            "error_positions": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                3,
+                2
+              ],
+              [
+                4,
+                2
+              ],
+              [
+                4,
+                3
+              ]
+            ]
+          },
+          "predicted_shape": [
+            9,
+            15
+          ],
+          "actual_shape": [
+            9,
+            15
+          ]
+        },
+        {
+          "test_idx": 1,
+          "diff_analysis": {
+            "type": "pixel_errors",
+            "num_errors": 8,
+            "total_pixels": 135,
+            "error_rate": 0.05925925925925926,
+            "errors_by_color": {
+              "3\u21920": 8
+            },
+            "is_edge_error": true,
+            "error_positions": [
+              [
+                6,
+                1
+              ],
+              [
+                6,
+                2
+              ],
+              [
+                6,
+                3
+              ],
+              [
+                7,
+                1
+              ],
+              [
+                7,
+                3
+              ],
+              [
+                8,
+                1
+              ],
+              [
+                8,
+                2
+              ],
+              [
+                8,
+                3
+              ]
+            ]
+          },
+          "predicted_shape": [
+            9,
+            15
+          ],
+          "actual_shape": [
+            9,
+            15
+          ]
+        }
+      ]
+    }
+  ]
+}
