@@ -77,8 +77,10 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
         self.use_validated_conditionals = True  # NEW: Use validation
         self.use_nested_conditionals = True  # PHASE 3: AND/OR/NOT logic
         self.use_multi_stage = True  # PHASE 3: Sequential pipelines
+        self.use_richer_predicates = True  # PHASE 4: Use expanded condition library
         self.conditional_priority_boost = 1.5  # Boost confidence of conditional hypotheses
         self.nested_priority_boost = 3.0  # Even higher boost for nested (more expressive)
+        self.validation_threshold = 0.30  # PHASE 4: Configurable validation threshold (0.15-0.30)
 
         # Phase 3 components
         self.pipeline_builder = PipelineBuilder()
@@ -315,7 +317,7 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
             accuracy = validate_conditional(cond_transform, train_pairs)
 
             # Only add if achieves reasonable accuracy on training
-            if accuracy >= 0.3:  # At least 30% match on training
+            if accuracy >= self.validation_threshold:  # Configurable threshold
                 def make_transform(ct=cond_transform):
                     def transform_fn(grid: np.ndarray) -> np.ndarray:
                         return ct.apply(grid, objects=None)
@@ -351,7 +353,7 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
                     accuracy = validate_conditional(cond_transform, train_pairs)
 
                     # Only add if achieves reasonable accuracy
-                    if accuracy >= 0.3:
+                    if accuracy >= self.validation_threshold:
                         def make_transform(ct=cond_transform):
                             def transform_fn(grid: np.ndarray) -> np.ndarray:
                                 return ct.apply(grid, objects=None)
@@ -430,7 +432,7 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
 
             # Validate
             accuracy = validate(cond_transform)
-            if accuracy >= 0.3:
+            if accuracy >= self.validation_threshold:
                 def make_transform(ct=cond_transform):
                     def transform_fn(grid: np.ndarray) -> np.ndarray:
                         return ct.apply(grid, objects=None)
@@ -466,7 +468,7 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
             )
 
             accuracy = validate(cond_transform)
-            if accuracy >= 0.3:
+            if accuracy >= self.validation_threshold:
                 def make_transform(ct=cond_transform):
                     def transform_fn(grid: np.ndarray) -> np.ndarray:
                         return ct.apply(grid, objects=None)
@@ -500,7 +502,7 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
             )
 
             accuracy = validate(cond_transform)
-            if accuracy >= 0.3:
+            if accuracy >= self.validation_threshold:
                 def make_transform(ct=cond_transform):
                     def transform_fn(grid: np.ndarray) -> np.ndarray:
                         return ct.apply(grid, objects=None)
@@ -519,9 +521,142 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
                     accuracy
                 ))
 
+        # === PHASE 4: RICHER PREDICATE COMBINATIONS ===
+        if self.use_richer_predicates:
+            # Topological + Size: IF (has_hole AND size > median) THEN recolor
+            for color in training_colors[:2]:
+                and_condition = create_and_condition(
+                    self.condition_lib.has_hole(),
+                    self.condition_lib.size_greater_than(median_size)
+                )
+
+                cond_transform = ConditionalTransform(
+                    condition=and_condition,
+                    then_action=self.action_lib.recolor_to(color),
+                    else_action=self.action_lib.keep(),
+                    confidence=0.7
+                )
+
+                accuracy = validate(cond_transform)
+                if accuracy >= self.validation_threshold:
+                    def make_transform(ct=cond_transform):
+                        def transform_fn(grid: np.ndarray) -> np.ndarray:
+                            return ct.apply(grid, objects=None)
+                        return transform_fn
+
+                    transform_obj = Transform(
+                        name=f"nested_hole_size_{color}",
+                        function=make_transform(),
+                        parameters={'variant': 'nested', 'logic': 'AND', 'predicates': 'topological+size'},
+                        category='nested_conditional'
+                    )
+
+                    nested_hyps.append((
+                        transform_obj,
+                        f"IF (has hole AND size > {median_size}) THEN recolor to {color}",
+                        accuracy
+                    ))
+
+            # Relational + Spatial: IF (aligned_horizontally AND near_edge) THEN recolor
+            for color in training_colors[:2]:
+                and_condition = create_and_condition(
+                    self.condition_lib.aligned_horizontally(),
+                    self.condition_lib.near_edge(2)
+                )
+
+                cond_transform = ConditionalTransform(
+                    condition=and_condition,
+                    then_action=self.action_lib.recolor_to(color),
+                    else_action=self.action_lib.keep(),
+                    confidence=0.7
+                )
+
+                accuracy = validate(cond_transform)
+                if accuracy >= self.validation_threshold:
+                    def make_transform(ct=cond_transform):
+                        def transform_fn(grid: np.ndarray) -> np.ndarray:
+                            return ct.apply(grid, objects=None)
+                        return transform_fn
+
+                    transform_obj = Transform(
+                        name=f"nested_h_aligned_edge_{color}",
+                        function=make_transform(),
+                        parameters={'variant': 'nested', 'logic': 'AND', 'predicates': 'relational+spatial'},
+                        category='nested_conditional'
+                    )
+
+                    nested_hyps.append((
+                        transform_obj,
+                        f"IF (horizontally aligned AND near edge) THEN recolor to {color}",
+                        accuracy
+                    ))
+
+            # Structural OR combinations: IF (compact OR square) THEN recolor
+            for color in training_colors[:2]:
+                or_condition = create_or_condition(
+                    self.condition_lib.is_compact(),
+                    self.condition_lib.is_square_shaped()
+                )
+
+                cond_transform = ConditionalTransform(
+                    condition=or_condition,
+                    then_action=self.action_lib.recolor_to(color),
+                    else_action=self.action_lib.keep(),
+                    confidence=0.6
+                )
+
+                accuracy = validate(cond_transform)
+                if accuracy >= self.validation_threshold:
+                    def make_transform(ct=cond_transform):
+                        def transform_fn(grid: np.ndarray) -> np.ndarray:
+                            return ct.apply(grid, objects=None)
+                        return transform_fn
+
+                    transform_obj = Transform(
+                        name=f"nested_compact_square_{color}",
+                        function=make_transform(),
+                        parameters={'variant': 'nested', 'logic': 'OR', 'predicates': 'structural'},
+                        category='nested_conditional'
+                    )
+
+                    nested_hyps.append((
+                        transform_obj,
+                        f"IF (compact OR square) THEN recolor to {color}",
+                        accuracy
+                    ))
+
+            # Unique color predicate: IF has_unique_color THEN special action
+            for color in training_colors[:2]:
+                cond_transform = ConditionalTransform(
+                    condition=self.condition_lib.has_unique_color(),
+                    then_action=self.action_lib.recolor_to(color),
+                    else_action=self.action_lib.keep(),
+                    confidence=0.7
+                )
+
+                accuracy = validate(cond_transform)
+                if accuracy >= self.validation_threshold:
+                    def make_transform(ct=cond_transform):
+                        def transform_fn(grid: np.ndarray) -> np.ndarray:
+                            return ct.apply(grid, objects=None)
+                        return transform_fn
+
+                    transform_obj = Transform(
+                        name=f"nested_unique_color_{color}",
+                        function=make_transform(),
+                        parameters={'variant': 'nested', 'predicates': 'unique_color'},
+                        category='nested_conditional'
+                    )
+
+                    nested_hyps.append((
+                        transform_obj,
+                        f"IF has unique color THEN recolor to {color}",
+                        accuracy
+                    ))
+
         # Sort by accuracy
         nested_hyps.sort(key=lambda x: x[2], reverse=True)
-        return nested_hyps[:10]  # Top 10 nested conditionals
+        return nested_hyps[:15]  # Top 15 nested conditionals (increased from 10 for Phase 4)
 
     def _generate_multi_stage_pipelines(self, train_pairs: List[Tuple[np.ndarray, np.ndarray]],
                                        test_input: np.ndarray) -> List[Tuple[Transform, str, float]]:
@@ -588,7 +723,7 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
 
             # Validate
             accuracy = validate_pipeline(pipeline)
-            if accuracy >= 0.3:
+            if accuracy >= self.validation_threshold:
                 def make_transform(p=pipeline):
                     def transform_fn(grid: np.ndarray) -> np.ndarray:
                         return p.apply(grid)
@@ -640,7 +775,7 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
 
             # Validate
             accuracy = validate_pipeline(pipeline)
-            if accuracy >= 0.3:
+            if accuracy >= self.validation_threshold:
                 def make_transform(p=pipeline):
                     def transform_fn(grid: np.ndarray) -> np.ndarray:
                         return p.apply(grid)

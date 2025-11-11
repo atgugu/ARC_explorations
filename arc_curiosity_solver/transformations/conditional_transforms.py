@@ -362,6 +362,401 @@ class ConditionLibrary:
             description=f"has >{threshold} pixels of color {color}"
         )
 
+    # ========== PHASE 4: RICHER PREDICATES ==========
+
+    # === TOPOLOGICAL CONDITIONS ===
+
+    @staticmethod
+    def has_hole() -> Condition:
+        """Object has interior hole(s)."""
+        def has_interior_hole(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            from scipy import ndimage
+            y1, x1, y2, x2 = obj.bbox
+            if y2 - y1 < 3 or x2 - x1 < 3:  # Too small for hole
+                return False
+
+            # Get object region
+            obj_mask = obj.mask[y1:y2, x1:x2]
+
+            # Invert mask (background becomes foreground)
+            inverted = ~obj_mask
+
+            # Label background regions
+            labeled, num_regions = ndimage.label(inverted)
+
+            # If > 1 region, there's a hole (excluding outer background)
+            # Check if any region is completely surrounded (no edge touching)
+            h, w = obj_mask.shape
+            for region_id in range(1, num_regions + 1):
+                region_mask = (labeled == region_id)
+                # Check if region touches edge
+                touches_edge = (
+                    np.any(region_mask[0, :]) or
+                    np.any(region_mask[-1, :]) or
+                    np.any(region_mask[:, 0]) or
+                    np.any(region_mask[:, -1])
+                )
+                if not touches_edge:
+                    return True  # Interior hole found
+
+            return False
+
+        return Condition(
+            name="has_hole",
+            predicate=has_interior_hole,
+            description="has interior hole"
+        )
+
+    @staticmethod
+    def is_hollow() -> Condition:
+        """Object is hollow (only perimeter, no interior)."""
+        def is_perimeter_only(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            from scipy import ndimage
+            y1, x1, y2, x2 = obj.bbox
+            if y2 - y1 < 3 or x2 - x1 < 3:  # Too small to be hollow
+                return False
+
+            obj_mask = obj.mask[y1:y2, x1:x2]
+
+            # Erode by 1 pixel
+            eroded = ndimage.binary_erosion(obj_mask)
+
+            # Count pixels before and after erosion
+            original_pixels = np.sum(obj_mask)
+            eroded_pixels = np.sum(eroded)
+
+            # If erosion removes >80% of pixels, it's hollow
+            if original_pixels > 0:
+                return (original_pixels - eroded_pixels) / original_pixels > 0.8
+            return False
+
+        return Condition(
+            name="is_hollow",
+            predicate=is_perimeter_only,
+            description="is hollow (perimeter only)"
+        )
+
+    @staticmethod
+    def is_connected() -> Condition:
+        """Object is fully connected (single component)."""
+        def is_single_component(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            from scipy import ndimage
+            y1, x1, y2, x2 = obj.bbox
+            obj_mask = obj.mask[y1:y2, x1:x2]
+
+            # Label connected components
+            labeled, num_components = ndimage.label(obj_mask)
+
+            return num_components == 1
+
+        return Condition(
+            name="is_connected",
+            predicate=is_single_component,
+            description="is fully connected"
+        )
+
+    @staticmethod
+    def is_fragmented() -> Condition:
+        """Object has multiple disconnected parts."""
+        def is_multi_component(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            from scipy import ndimage
+            y1, x1, y2, x2 = obj.bbox
+            obj_mask = obj.mask[y1:y2, x1:x2]
+
+            # Label connected components
+            labeled, num_components = ndimage.label(obj_mask)
+
+            return num_components > 1
+
+        return Condition(
+            name="is_fragmented",
+            predicate=is_multi_component,
+            description="has multiple disconnected parts"
+        )
+
+    # === RELATIONAL CONDITIONS ===
+
+    @staticmethod
+    def touching_color(color: int) -> Condition:
+        """Object is touching (adjacent to) specific color."""
+        def touches_specific_color(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            y1, x1, y2, x2 = obj.bbox
+            h, w = grid.shape
+
+            # Expand bbox by 1 pixel
+            y1_exp = max(0, y1 - 1)
+            x1_exp = max(0, x1 - 1)
+            y2_exp = min(h, y2 + 1)
+            x2_exp = min(w, x2 + 1)
+
+            # Get expanded region
+            expanded_region = grid[y1_exp:y2_exp, x1_exp:x2_exp]
+            expanded_mask = np.zeros_like(expanded_region, dtype=bool)
+
+            # Translate object mask to expanded coordinates
+            mask_y_offset = y1 - y1_exp
+            mask_x_offset = x1 - x1_exp
+            expanded_mask[
+                mask_y_offset:mask_y_offset + (y2 - y1),
+                mask_x_offset:mask_x_offset + (x2 - x1)
+            ] = obj.mask[y1:y2, x1:x2]
+
+            # Check neighbors (expanded region minus object itself)
+            neighbor_region = expanded_region[~expanded_mask]
+
+            return color in neighbor_region
+
+        return Condition(
+            name=f"touching_color_{color}",
+            predicate=touches_specific_color,
+            description=f"touching color {color}"
+        )
+
+    @staticmethod
+    def between_objects() -> Condition:
+        """Object is spatially between two other objects."""
+        def is_between(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            if len(all_objs) < 3:
+                return False
+
+            obj_y, obj_x = obj.position
+
+            # Check if object is between any pair of other objects
+            other_objs = [o for o in all_objs if o is not obj]
+
+            for i, obj1 in enumerate(other_objs):
+                for obj2 in other_objs[i+1:]:
+                    y1, x1 = obj1.position
+                    y2, x2 = obj2.position
+
+                    # Check if obj is between obj1 and obj2 on x-axis
+                    if (min(x1, x2) < obj_x < max(x1, x2) and
+                        min(y1, y2) <= obj_y <= max(y1, y2)):
+                        return True
+
+                    # Check if obj is between obj1 and obj2 on y-axis
+                    if (min(y1, y2) < obj_y < max(y1, y2) and
+                        min(x1, x2) <= obj_x <= max(x1, x2)):
+                        return True
+
+            return False
+
+        return Condition(
+            name="between_objects",
+            predicate=is_between,
+            description="between other objects"
+        )
+
+    @staticmethod
+    def aligned_horizontally() -> Condition:
+        """Object is horizontally aligned with another object."""
+        def is_h_aligned(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            obj_y, obj_x = obj.position
+
+            for other_obj in all_objs:
+                if other_obj is obj:
+                    continue
+
+                other_y, other_x = other_obj.position
+
+                # Check if y-coordinates are close (within 2 pixels)
+                if abs(obj_y - other_y) <= 2:
+                    return True
+
+            return False
+
+        return Condition(
+            name="aligned_horizontally",
+            predicate=is_h_aligned,
+            description="horizontally aligned with another object"
+        )
+
+    @staticmethod
+    def aligned_vertically() -> Condition:
+        """Object is vertically aligned with another object."""
+        def is_v_aligned(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            obj_y, obj_x = obj.position
+
+            for other_obj in all_objs:
+                if other_obj is obj:
+                    continue
+
+                other_y, other_x = other_obj.position
+
+                # Check if x-coordinates are close (within 2 pixels)
+                if abs(obj_x - other_x) <= 2:
+                    return True
+
+            return False
+
+        return Condition(
+            name="aligned_vertically",
+            predicate=is_v_aligned,
+            description="vertically aligned with another object"
+        )
+
+    @staticmethod
+    def on_diagonal() -> Condition:
+        """Object is on main diagonal or anti-diagonal."""
+        def is_on_diag(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            h, w = grid.shape
+            obj_y, obj_x = obj.position
+
+            # Main diagonal: y ≈ x
+            # Anti-diagonal: y ≈ (h - 1 - x)
+
+            threshold = min(h, w) * 0.1  # 10% tolerance
+
+            # Check main diagonal
+            if abs(obj_y - obj_x) < threshold:
+                return True
+
+            # Check anti-diagonal
+            if abs(obj_y - (h - 1 - obj_x)) < threshold:
+                return True
+
+            return False
+
+        return Condition(
+            name="on_diagonal",
+            predicate=is_on_diag,
+            description="on diagonal"
+        )
+
+    # === STRUCTURAL CONDITIONS ===
+
+    @staticmethod
+    def forms_pattern_with_others() -> Condition:
+        """Objects form a regular pattern (grid, line, etc.)."""
+        def forms_pattern(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            if len(all_objs) < 3:
+                return False
+
+            # Check if objects form a line or grid
+            positions = [o.position for o in all_objs]
+            ys = [p[0] for p in positions]
+            xs = [p[1] for p in positions]
+
+            # Check for line pattern (all x's same or all y's same)
+            y_variance = np.var(ys)
+            x_variance = np.var(xs)
+
+            # Low variance means aligned
+            if y_variance < 4 or x_variance < 4:
+                return True
+
+            # Check for grid pattern (regular spacing)
+            y_diffs = sorted([ys[i+1] - ys[i] for i in range(len(ys)-1)])
+            x_diffs = sorted([xs[i+1] - xs[i] for i in range(len(xs)-1)])
+
+            # If diffs are regular, it's a grid
+            if len(y_diffs) > 1 and len(x_diffs) > 1:
+                y_regular = (max(y_diffs) - min(y_diffs)) < 2
+                x_regular = (max(x_diffs) - min(x_diffs)) < 2
+                if y_regular and x_regular:
+                    return True
+
+            return False
+
+        return Condition(
+            name="forms_pattern",
+            predicate=forms_pattern,
+            description="forms pattern with others"
+        )
+
+    @staticmethod
+    def is_square_shaped() -> Condition:
+        """Object has square shape (equal height and width)."""
+        def is_square(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            y1, x1, y2, x2 = obj.bbox
+            height = y2 - y1
+            width = x2 - x1
+
+            # Check if height and width are equal (or very close)
+            if height == 0 or width == 0:
+                return False
+
+            ratio = max(height, width) / min(height, width)
+            return ratio < 1.2  # Within 20% of square
+
+        return Condition(
+            name="is_square",
+            predicate=is_square,
+            description="is square-shaped"
+        )
+
+    @staticmethod
+    def is_compact() -> Condition:
+        """Object is compact (high fill ratio in bounding box)."""
+        def is_dense(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            y1, x1, y2, x2 = obj.bbox
+            bbox_area = (y2 - y1) * (x2 - x1)
+            if bbox_area == 0:
+                return False
+
+            fill_ratio = obj.size / bbox_area
+            return fill_ratio > 0.7  # >70% filled
+
+        return Condition(
+            name="is_compact",
+            predicate=is_dense,
+            description="is compact (dense)"
+        )
+
+    @staticmethod
+    def is_sparse() -> Condition:
+        """Object is sparse (low fill ratio in bounding box)."""
+        def is_loose(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            y1, x1, y2, x2 = obj.bbox
+            bbox_area = (y2 - y1) * (x2 - x1)
+            if bbox_area == 0:
+                return False
+
+            fill_ratio = obj.size / bbox_area
+            return fill_ratio < 0.4  # <40% filled
+
+        return Condition(
+            name="is_sparse",
+            predicate=is_loose,
+            description="is sparse (loose)"
+        )
+
+    @staticmethod
+    def has_unique_color() -> Condition:
+        """Object is the only one with its color."""
+        def is_unique_color(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            obj_color = obj.dominant_color
+
+            for other_obj in all_objs:
+                if other_obj is obj:
+                    continue
+                if other_obj.dominant_color == obj_color:
+                    return False
+
+            return True
+
+        return Condition(
+            name="has_unique_color",
+            predicate=is_unique_color,
+            description="has unique color"
+        )
+
+    @staticmethod
+    def same_color_as_largest() -> Condition:
+        """Object has same color as the largest object."""
+        def same_as_largest(obj: ArcObject, all_objs: List[ArcObject], grid: np.ndarray) -> bool:
+            if not all_objs:
+                return False
+
+            largest = max(all_objs, key=lambda o: o.size)
+            return obj.dominant_color == largest.dominant_color
+
+        return Condition(
+            name="same_color_as_largest",
+            predicate=same_as_largest,
+            description="same color as largest object"
+        )
+
 
 class ActionLibrary:
     """Library of reusable actions."""
