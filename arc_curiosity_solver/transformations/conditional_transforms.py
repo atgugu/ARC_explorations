@@ -933,6 +933,291 @@ class ActionLibrary:
             parameters={}
         )
 
+    # ========== PHASE 5: COMPOSITE ACTIONS ==========
+
+    # === GEOMETRIC TRANSFORMATIONS ===
+
+    @staticmethod
+    def rotate_90() -> ConditionalAction:
+        """Rotate object 90 degrees clockwise."""
+        def apply(grid: np.ndarray, obj: ArcObject, all_objs: List[ArcObject]) -> np.ndarray:
+            result = grid.copy()
+
+            y1, x1, y2, x2 = obj.bbox
+            obj_grid = grid[y1:y2, x1:x2].copy()
+            obj_mask = obj.mask[y1:y2, x1:x2]
+
+            # Extract object pixels only
+            obj_grid[~obj_mask] = 0
+
+            # Rotate 90 degrees clockwise
+            rotated = np.rot90(obj_grid, k=-1)  # k=-1 for clockwise
+
+            # Clear old position
+            result[obj.mask] = 0
+
+            # Place rotated version (if it fits)
+            if (y1 + rotated.shape[0] <= result.shape[0] and
+                x1 + rotated.shape[1] <= result.shape[1]):
+                mask = rotated != 0
+                result[y1:y1+rotated.shape[0], x1:x1+rotated.shape[1]][mask] = rotated[mask]
+
+            return result
+
+        return ConditionalAction(
+            name="rotate_90",
+            apply_fn=apply,
+            description="rotate 90° clockwise",
+            parameters={}
+        )
+
+    @staticmethod
+    def rotate_180() -> ConditionalAction:
+        """Rotate object 180 degrees."""
+        def apply(grid: np.ndarray, obj: ArcObject, all_objs: List[ArcObject]) -> np.ndarray:
+            result = grid.copy()
+
+            y1, x1, y2, x2 = obj.bbox
+            obj_grid = grid[y1:y2, x1:x2].copy()
+            obj_mask = obj.mask[y1:y2, x1:x2]
+
+            obj_grid[~obj_mask] = 0
+
+            # Rotate 180 degrees
+            rotated = np.rot90(obj_grid, k=2)
+
+            # Clear old position
+            result[obj.mask] = 0
+
+            # Place rotated version
+            if (y1 + rotated.shape[0] <= result.shape[0] and
+                x1 + rotated.shape[1] <= result.shape[1]):
+                mask = rotated != 0
+                result[y1:y1+rotated.shape[0], x1:x1+rotated.shape[1]][mask] = rotated[mask]
+
+            return result
+
+        return ConditionalAction(
+            name="rotate_180",
+            apply_fn=apply,
+            description="rotate 180°",
+            parameters={}
+        )
+
+    @staticmethod
+    def rotate_270() -> ConditionalAction:
+        """Rotate object 270 degrees clockwise (90 counter-clockwise)."""
+        def apply(grid: np.ndarray, obj: ArcObject, all_objs: List[ArcObject]) -> np.ndarray:
+            result = grid.copy()
+
+            y1, x1, y2, x2 = obj.bbox
+            obj_grid = grid[y1:y2, x1:x2].copy()
+            obj_mask = obj.mask[y1:y2, x1:x2]
+
+            obj_grid[~obj_mask] = 0
+
+            # Rotate 270 degrees clockwise (= 90 counter-clockwise)
+            rotated = np.rot90(obj_grid, k=1)
+
+            # Clear old position
+            result[obj.mask] = 0
+
+            # Place rotated version
+            if (y1 + rotated.shape[0] <= result.shape[0] and
+                x1 + rotated.shape[1] <= result.shape[1]):
+                mask = rotated != 0
+                result[y1:y1+rotated.shape[0], x1:x1+rotated.shape[1]][mask] = rotated[mask]
+
+            return result
+
+        return ConditionalAction(
+            name="rotate_270",
+            apply_fn=apply,
+            description="rotate 270° clockwise",
+            parameters={}
+        )
+
+    @staticmethod
+    def reflect_horizontal() -> ConditionalAction:
+        """Reflect object horizontally (flip left-right)."""
+        def apply(grid: np.ndarray, obj: ArcObject, all_objs: List[ArcObject]) -> np.ndarray:
+            result = grid.copy()
+
+            y1, x1, y2, x2 = obj.bbox
+            obj_grid = grid[y1:y2, x1:x2].copy()
+            obj_mask = obj.mask[y1:y2, x1:x2]
+
+            obj_grid[~obj_mask] = 0
+
+            # Flip horizontally
+            reflected = np.fliplr(obj_grid)
+
+            # Clear old position
+            result[obj.mask] = 0
+
+            # Place reflected version
+            mask = reflected != 0
+            result[y1:y2, x1:x2][mask] = reflected[mask]
+
+            return result
+
+        return ConditionalAction(
+            name="reflect_h",
+            apply_fn=apply,
+            description="reflect horizontally",
+            parameters={}
+        )
+
+    @staticmethod
+    def reflect_vertical() -> ConditionalAction:
+        """Reflect object vertically (flip up-down)."""
+        def apply(grid: np.ndarray, obj: ArcObject, all_objs: List[ArcObject]) -> np.ndarray:
+            result = grid.copy()
+
+            y1, x1, y2, x2 = obj.bbox
+            obj_grid = grid[y1:y2, x1:x2].copy()
+            obj_mask = obj.mask[y1:y2, x1:x2]
+
+            obj_grid[~obj_mask] = 0
+
+            # Flip vertically
+            reflected = np.flipud(obj_grid)
+
+            # Clear old position
+            result[obj.mask] = 0
+
+            # Place reflected version
+            mask = reflected != 0
+            result[y1:y2, x1:x2][mask] = reflected[mask]
+
+            return result
+
+        return ConditionalAction(
+            name="reflect_v",
+            apply_fn=apply,
+            description="reflect vertically",
+            parameters={}
+        )
+
+    # === GRID OPERATIONS ===
+
+    @staticmethod
+    def swap_colors(color1: int, color2: int) -> ConditionalAction:
+        """Swap two colors in the object."""
+        def apply(grid: np.ndarray, obj: ArcObject, all_objs: List[ArcObject]) -> np.ndarray:
+            result = grid.copy()
+
+            # Get object region
+            y1, x1, y2, x2 = obj.bbox
+            obj_region = result[y1:y2, x1:x2].copy()
+            obj_mask = obj.mask[y1:y2, x1:x2]
+
+            # Swap colors within object
+            temp = obj_region.copy()
+            obj_region[(temp == color1) & obj_mask] = color2
+            obj_region[(temp == color2) & obj_mask] = color1
+
+            result[y1:y2, x1:x2] = obj_region
+
+            return result
+
+        return ConditionalAction(
+            name=f"swap_{color1}_{color2}",
+            apply_fn=apply,
+            description=f"swap colors {color1} ↔ {color2}",
+            parameters={"color1": color1, "color2": color2}
+        )
+
+    @staticmethod
+    def fill_to_edge(direction: str, color: int) -> ConditionalAction:
+        """Fill from object to edge in direction with color."""
+        def apply(grid: np.ndarray, obj: ArcObject, all_objs: List[ArcObject]) -> np.ndarray:
+            result = grid.copy()
+
+            h, w = grid.shape
+            y1, x1, y2, x2 = obj.bbox
+
+            if direction == "top":
+                result[0:y1, x1:x2] = color
+            elif direction == "bottom":
+                result[y2:h, x1:x2] = color
+            elif direction == "left":
+                result[y1:y2, 0:x1] = color
+            elif direction == "right":
+                result[y1:y2, x2:w] = color
+
+            return result
+
+        return ConditionalAction(
+            name=f"fill_to_{direction}_{color}",
+            apply_fn=apply,
+            description=f"fill to {direction} edge with {color}",
+            parameters={"direction": direction, "color": color}
+        )
+
+    @staticmethod
+    def replicate(dy: int, dx: int) -> ConditionalAction:
+        """Replicate object at offset (dy, dx)."""
+        def apply(grid: np.ndarray, obj: ArcObject, all_objs: List[ArcObject]) -> np.ndarray:
+            result = grid.copy()
+
+            y1, x1, y2, x2 = obj.bbox
+            new_y1 = y1 + dy
+            new_x1 = x1 + dx
+            new_y2 = y2 + dy
+            new_x2 = x2 + dx
+
+            # Check bounds
+            h, w = grid.shape
+            if (new_y1 >= 0 and new_x1 >= 0 and
+                new_y2 <= h and new_x2 <= w):
+
+                # Extract object pixels
+                obj_pixels = grid[y1:y2, x1:x2].copy()
+                obj_mask = obj.mask[y1:y2, x1:x2]
+                obj_pixels[~obj_mask] = 0
+
+                # Copy to new position (don't clear old position)
+                mask = obj_pixels != 0
+                result[new_y1:new_y2, new_x1:new_x2][mask] = obj_pixels[mask]
+
+            return result
+
+        return ConditionalAction(
+            name=f"replicate_{dy}_{dx}",
+            apply_fn=apply,
+            description=f"replicate at offset ({dy}, {dx})",
+            parameters={"dy": dy, "dx": dx}
+        )
+
+    @staticmethod
+    def extend_to_edge(direction: str) -> ConditionalAction:
+        """Extend object to edge in direction."""
+        def apply(grid: np.ndarray, obj: ArcObject, all_objs: List[ArcObject]) -> np.ndarray:
+            result = grid.copy()
+
+            h, w = grid.shape
+            y1, x1, y2, x2 = obj.bbox
+            color = obj.dominant_color
+
+            if direction == "top":
+                result[0:y2, x1:x2][result[0:y2, x1:x2] == 0] = color
+            elif direction == "bottom":
+                result[y1:h, x1:x2][result[y1:h, x1:x2] == 0] = color
+            elif direction == "left":
+                result[y1:y2, 0:x2][result[y1:y2, 0:x2] == 0] = color
+            elif direction == "right":
+                result[y1:y2, x1:w][result[y1:y2, x1:w] == 0] = color
+
+            return result
+
+        return ConditionalAction(
+            name=f"extend_to_{direction}",
+            apply_fn=apply,
+            description=f"extend to {direction} edge",
+            parameters={"direction": direction}
+        )
+
 
 class ConditionalTransformBuilder:
     """

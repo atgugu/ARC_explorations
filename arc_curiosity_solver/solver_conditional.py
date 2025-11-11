@@ -78,9 +78,10 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
         self.use_nested_conditionals = True  # PHASE 3: AND/OR/NOT logic
         self.use_multi_stage = True  # PHASE 3: Sequential pipelines
         self.use_richer_predicates = True  # PHASE 4: Use expanded condition library
+        self.use_composite_actions = True  # PHASE 5: Use geometric & grid transformations
         self.conditional_priority_boost = 1.5  # Boost confidence of conditional hypotheses
         self.nested_priority_boost = 3.0  # Even higher boost for nested (more expressive)
-        self.validation_threshold = 0.30  # PHASE 4: Configurable validation threshold (0.15-0.30)
+        self.validation_threshold = 0.15  # PHASE 4/5: Optimal threshold from Phase 4 testing
 
         # Phase 3 components
         self.pipeline_builder = PipelineBuilder()
@@ -190,6 +191,23 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
                         program=transform_obj,
                         name=f"pipeline_{len(hypotheses)}",
                         parameters={'description': description, 'variant': 'pipeline'},
+                        activation=boosted_confidence
+                    )
+                    hypotheses.append(hyp)
+            except Exception as e:
+                pass
+
+        # === PHASE 5: COMPOSITE ACTIONS (GEOMETRIC & GRID) - HIGH PRIORITY ===
+        if self.use_composite_actions:
+            try:
+                composite_hyps = self._generate_composite_action_conditionals(train_pairs, test_input)
+                for transform_obj, description, confidence in composite_hyps:
+                    # Use nested_priority_boost (these are highly expressive like nested)
+                    boosted_confidence = confidence * self.nested_priority_boost
+                    hyp = Hypothesis(
+                        program=transform_obj,
+                        name=f"composite_{len(hypotheses)}",
+                        parameters={'description': description, 'variant': 'composite'},
                         activation=boosted_confidence
                     )
                     hypotheses.append(hyp)
@@ -813,7 +831,293 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
 
         return [color for color, _ in color_counts.most_common(5)]
 
+    def _generate_composite_action_conditionals(self, train_pairs: List[Tuple[np.ndarray, np.ndarray]],
+                                                test_input: np.ndarray) -> List[Tuple[Transform, str, float]]:
+        """
+        Generate conditionals using COMPOSITE ACTIONS (Phase 5).
 
+        New actions: rotate, reflect, swap_colors, fill_to_edge, replicate, extend_to_edge.
+        Expected: +5-8% accuracy improvement.
+        """
+        composite_hyps = []
+
+        if not self.use_composite_actions:
+            return composite_hyps
+
+        # Extract training colors
+        training_colors = self._extract_training_colors(train_pairs)
+        if not training_colors:
+            return composite_hyps
+
+        # Detect test objects
+        detector = ObjectDetector()
+        test_objects = detector.detect_objects(test_input)
+        if not test_objects:
+            return composite_hyps
+
+        # Get median size for conditionals
+        sizes = [obj.size for obj in test_objects]
+        median_size = int(np.median(sizes)) if sizes else 1
+
+        # Helper: Validate on training
+        def validate(cond_transform):
+            correct = 0
+            for inp, out in train_pairs:
+                try:
+                    pred = cond_transform.apply(inp)
+                    if np.array_equal(pred, out):
+                        correct += 1
+                    elif pred.shape == out.shape:
+                        correct += (pred == out).mean()
+                except:
+                    pass
+            return correct / len(train_pairs) if train_pairs else 0.0
+
+        # === GEOMETRIC TRANSFORMATIONS ===
+
+        # IF size > median THEN rotate_90
+        cond_transform = ConditionalTransform(
+            condition=self.condition_lib.size_greater_than(median_size),
+            then_action=self.action_lib.rotate_90(),
+            else_action=self.action_lib.keep(),
+            confidence=0.7
+        )
+
+        accuracy = validate(cond_transform)
+        if accuracy >= self.validation_threshold:
+            def make_transform(ct=cond_transform):
+                def transform_fn(grid: np.ndarray) -> np.ndarray:
+                    return ct.apply(grid, objects=None)
+                return transform_fn
+
+            transform_obj = Transform(
+                name=f"composite_rotate_90_size",
+                function=make_transform(),
+                parameters={'variant': 'composite', 'action': 'rotate_90'},
+                category='composite_action'
+            )
+
+            composite_hyps.append((
+                transform_obj,
+                f"IF size > {median_size} THEN rotate 90°",
+                accuracy
+            ))
+
+        # IF near_edge THEN reflect_horizontal
+        cond_transform = ConditionalTransform(
+            condition=self.condition_lib.near_edge(2),
+            then_action=self.action_lib.reflect_horizontal(),
+            else_action=self.action_lib.keep(),
+            confidence=0.7
+        )
+
+        accuracy = validate(cond_transform)
+        if accuracy >= self.validation_threshold:
+            def make_transform(ct=cond_transform):
+                def transform_fn(grid: np.ndarray) -> np.ndarray:
+                    return ct.apply(grid, objects=None)
+                return transform_fn
+
+            transform_obj = Transform(
+                name=f"composite_reflect_h_edge",
+                function=make_transform(),
+                parameters={'variant': 'composite', 'action': 'reflect_h'},
+                category='composite_action'
+            )
+
+            composite_hyps.append((
+                transform_obj,
+                "IF near edge THEN reflect horizontally",
+                accuracy
+            ))
+
+        # IF is_symmetric_horizontal THEN rotate_180
+        cond_transform = ConditionalTransform(
+            condition=self.condition_lib.is_symmetric_horizontal(),
+            then_action=self.action_lib.rotate_180(),
+            else_action=self.action_lib.keep(),
+            confidence=0.7
+        )
+
+        accuracy = validate(cond_transform)
+        if accuracy >= self.validation_threshold:
+            def make_transform(ct=cond_transform):
+                def transform_fn(grid: np.ndarray) -> np.ndarray:
+                    return ct.apply(grid, objects=None)
+                return transform_fn
+
+            transform_obj = Transform(
+                name=f"composite_rotate_180_sym",
+                function=make_transform(),
+                parameters={'variant': 'composite', 'action': 'rotate_180'},
+                category='composite_action'
+            )
+
+            composite_hyps.append((
+                transform_obj,
+                "IF horizontally symmetric THEN rotate 180°",
+                accuracy
+            ))
+
+        # === COLOR SWAPS ===
+        if len(training_colors) >= 2:
+            # IF size > median THEN swap colors
+            cond_transform = ConditionalTransform(
+                condition=self.condition_lib.size_greater_than(median_size),
+                then_action=self.action_lib.swap_colors(training_colors[0], training_colors[1]),
+                else_action=self.action_lib.keep(),
+                confidence=0.6
+            )
+
+            accuracy = validate(cond_transform)
+            if accuracy >= self.validation_threshold:
+                def make_transform(ct=cond_transform):
+                    def transform_fn(grid: np.ndarray) -> np.ndarray:
+                        return ct.apply(grid, objects=None)
+                    return transform_fn
+
+                transform_obj = Transform(
+                    name=f"composite_swap_{training_colors[0]}_{training_colors[1]}",
+                    function=make_transform(),
+                    parameters={'variant': 'composite', 'action': 'swap_colors'},
+                    category='composite_action'
+                )
+
+                composite_hyps.append((
+                    transform_obj,
+                    f"IF size > {median_size} THEN swap {training_colors[0]} ↔ {training_colors[1]}",
+                    accuracy
+                ))
+
+        # === EXTENSION/REPLICATION ===
+        # IF aligned_horizontally THEN replicate right
+        cond_transform = ConditionalTransform(
+            condition=self.condition_lib.aligned_horizontally(),
+            then_action=self.action_lib.replicate(0, 1),
+            else_action=self.action_lib.keep(),
+            confidence=0.6
+        )
+
+        accuracy = validate(cond_transform)
+        if accuracy >= self.validation_threshold:
+            def make_transform(ct=cond_transform):
+                def transform_fn(grid: np.ndarray) -> np.ndarray:
+                    return ct.apply(grid, objects=None)
+                return transform_fn
+
+            transform_obj = Transform(
+                name=f"composite_replicate_h_aligned",
+                function=make_transform(),
+                parameters={'variant': 'composite', 'action': 'replicate'},
+                category='composite_action'
+            )
+
+            composite_hyps.append((
+                transform_obj,
+                "IF horizontally aligned THEN replicate right",
+                accuracy
+            ))
+
+        # IF near_edge THEN extend_to_edge in direction
+        for direction in ['top', 'bottom', 'left', 'right']:
+            cond_transform = ConditionalTransform(
+                condition=self.condition_lib.near_edge(2),
+                then_action=self.action_lib.extend_to_edge(direction),
+                else_action=self.action_lib.keep(),
+                confidence=0.6
+            )
+
+            accuracy = validate(cond_transform)
+            if accuracy >= self.validation_threshold:
+                def make_transform(ct=cond_transform):
+                    def transform_fn(grid: np.ndarray) -> np.ndarray:
+                        return ct.apply(grid, objects=None)
+                    return transform_fn
+
+                transform_obj = Transform(
+                    name=f"composite_extend_{direction}",
+                    function=make_transform(),
+                    parameters={'variant': 'composite', 'action': f'extend_{direction}'},
+                    category='composite_action'
+                )
+
+                composite_hyps.append((
+                    transform_obj,
+                    f"IF near edge THEN extend to {direction}",
+                    accuracy
+                ))
+
+        # === RICHER PREDICATE COMBINATIONS WITH COMPOSITE ACTIONS ===
+        if self.use_richer_predicates:
+            # IF (has_hole AND size > median) THEN rotate_90
+            and_condition = create_and_condition(
+                self.condition_lib.has_hole(),
+                self.condition_lib.size_greater_than(median_size)
+            )
+
+            cond_transform = ConditionalTransform(
+                condition=and_condition,
+                then_action=self.action_lib.rotate_90(),
+                else_action=self.action_lib.keep(),
+                confidence=0.7
+            )
+
+            accuracy = validate(cond_transform)
+            if accuracy >= self.validation_threshold:
+                def make_transform(ct=cond_transform):
+                    def transform_fn(grid: np.ndarray) -> np.ndarray:
+                        return ct.apply(grid, objects=None)
+                    return transform_fn
+
+                transform_obj = Transform(
+                    name=f"composite_hole_size_rotate",
+                    function=make_transform(),
+                    parameters={'variant': 'composite', 'action': 'rotate_90', 'predicate': 'hole+size'},
+                    category='composite_action'
+                )
+
+                composite_hyps.append((
+                    transform_obj,
+                    f"IF (has hole AND size > {median_size}) THEN rotate 90°",
+                    accuracy
+                ))
+
+            # IF (compact OR square) THEN reflect_vertical
+            or_condition = create_or_condition(
+                self.condition_lib.is_compact(),
+                self.condition_lib.is_square_shaped()
+            )
+
+            cond_transform = ConditionalTransform(
+                condition=or_condition,
+                then_action=self.action_lib.reflect_vertical(),
+                else_action=self.action_lib.keep(),
+                confidence=0.6
+            )
+
+            accuracy = validate(cond_transform)
+            if accuracy >= self.validation_threshold:
+                def make_transform(ct=cond_transform):
+                    def transform_fn(grid: np.ndarray) -> np.ndarray:
+                        return ct.apply(grid, objects=None)
+                    return transform_fn
+
+                transform_obj = Transform(
+                    name=f"composite_compact_square_reflect_v",
+                    function=make_transform(),
+                    parameters={'variant': 'composite', 'action': 'reflect_v', 'predicate': 'compact|square'},
+                    category='composite_action'
+                )
+
+                composite_hyps.append((
+                    transform_obj,
+                    "IF (compact OR square) THEN reflect vertically",
+                    accuracy
+                ))
+
+        # Sort by accuracy
+        composite_hyps.sort(key=lambda x: x[2], reverse=True)
+        return composite_hyps[:12]  # Top 12 composite action conditionals
 
 
 def test_conditional_solver():
