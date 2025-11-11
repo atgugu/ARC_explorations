@@ -87,20 +87,20 @@ def run_real_arc_evaluation(tasks: List[Dict[str, Any]],
 
     if use_compositional and use_inference:
         solver = InferredCompositionalSolver(
-            max_candidates=150,
+            max_candidates=150,  # Reverted from 200 after depth=3 analysis
             beam_width=20,
             active_inference_steps=3,  # Reduced for compositional
-            max_depth=2,  # Allow 1-2 step compositions
-            composition_beam_width=10
+            max_depth=2,  # Allow 1-2 step compositions (REVERTED from 3)
+            composition_beam_width=10  # Reverted from 15
         )
         print(f"Using InferredCompositionalSolver (max_depth={solver.max_depth}, with parameter inference)")
     elif use_compositional:
         solver = CompositionalARCSolver(
-            max_candidates=150,
+            max_candidates=150,  # Reverted from 200 after depth=3 analysis
             beam_width=20,
             active_inference_steps=3,  # Reduced for compositional
-            max_depth=2,  # Allow 1-2 step compositions
-            composition_beam_width=10
+            max_depth=2,  # Allow 1-2 step compositions (REVERTED from 3)
+            composition_beam_width=10  # Reverted from 15
         )
         print(f"Using CompositionalARCSolver (max_depth={solver.max_depth})")
     else:
