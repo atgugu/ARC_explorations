@@ -40,7 +40,8 @@ class ActionInference:
             'position_changes': ['move', 'center', 'edge'],
             'extensions': ['top', 'bottom', 'left', 'right'],
             'replications': True/False,
-            'removals': True/False
+            'removals': True/False,
+            'confidence': {'rotations': 0.0-1.0, ...}  # Confidence scores
         }
         """
         detected = {
@@ -55,25 +56,45 @@ class ActionInference:
             'confidence': {}
         }
 
-        for inp, out in train_pairs:
-            # Detect rotations
-            rotations = self._detect_rotation(inp, out)
-            if rotations:
-                detected['rotations'].update(rotations)
+        # Count detections per pair for confidence calculation
+        rotation_counts = {90: 0, 180: 0, 270: 0}
+        reflection_counts = {'horizontal': 0, 'vertical': 0}
+        total_pairs = len(train_pairs)
 
-            # Detect reflections
-            reflections = self._detect_reflection(inp, out)
-            if reflections:
-                detected['reflections'].update(reflections)
+        for inp, out in train_pairs:
+            # Grid-level detection (works for whole-grid transformations)
+            grid_rotations = self._detect_rotation(inp, out)
+            if grid_rotations:
+                detected['rotations'].update(grid_rotations)
+                for angle in grid_rotations:
+                    rotation_counts[angle] += 1
+
+            grid_reflections = self._detect_reflection(inp, out)
+            if grid_reflections:
+                detected['reflections'].update(grid_reflections)
+                for refl in grid_reflections:
+                    reflection_counts[refl] += 1
+
+            # Object-level detection (works for object transformations within grids)
+            inp_objs = self.detector.detect_objects(inp)
+            out_objs = self.detector.detect_objects(out)
+
+            obj_rotations = self._detect_object_rotation(inp_objs, out_objs)
+            if obj_rotations:
+                detected['rotations'].update(obj_rotations)
+                for angle in obj_rotations:
+                    rotation_counts[angle] += 1
+
+            obj_reflections = self._detect_object_reflection(inp_objs, out_objs)
+            if obj_reflections:
+                detected['reflections'].update(obj_reflections)
+                for refl in obj_reflections:
+                    reflection_counts[refl] += 1
 
             # Detect color transformations
             color_swaps = self._detect_color_mapping(inp, out)
             if color_swaps:
                 detected['color_swaps'].extend(color_swaps)
-
-            # Detect object-level transformations
-            inp_objs = self.detector.detect_objects(inp)
-            out_objs = self.detector.detect_objects(out)
 
             # Size changes
             if self._detect_size_change(inp_objs, out_objs):
@@ -95,11 +116,22 @@ class ActionInference:
             if len(out_objs) < len(inp_objs):
                 detected['removals'] = True
 
-        # Calculate confidence scores
-        num_pairs = len(train_pairs)
-        for key in ['rotations', 'reflections', 'extensions', 'position_changes']:
+        # Calculate confidence scores based on detection frequency
+        if detected['rotations']:
+            max_count = max(rotation_counts[angle] for angle in detected['rotations'])
+            detected['confidence']['rotations'] = max_count / total_pairs
+
+        if detected['reflections']:
+            max_count = max(reflection_counts[refl] for refl in detected['reflections'])
+            detected['confidence']['reflections'] = max_count / total_pairs
+
+        # Other actions get confidence 0.5 if detected (moderate confidence)
+        for key in ['extensions', 'position_changes', 'color_swaps']:
             if detected[key]:
-                detected['confidence'][key] = 1.0  # Found in at least one pair
+                detected['confidence'][key] = 0.5
+
+        if detected['replications']:
+            detected['confidence']['replications'] = 0.5
 
         return detected
 
@@ -136,6 +168,90 @@ class ActionInference:
             similarity = (reflected_v == out).mean()
             if similarity > 0.8:
                 detected_reflections.add('vertical')
+
+        return detected_reflections
+
+    def _detect_object_rotation(self, inp_objs: List[ArcObject], out_objs: List[ArcObject]) -> Set[int]:
+        """
+        Detect if objects were rotated.
+
+        Compares individual objects between input and output to find rotations.
+        This catches object-level transformations that grid-level detection misses.
+        """
+        detected_angles = set()
+
+        if not inp_objs or not out_objs:
+            return detected_angles
+
+        # Try to match input objects to output objects
+        for inp_obj in inp_objs:
+            inp_grid = inp_obj.grid
+
+            for out_obj in out_objs:
+                # Skip if different colors (unlikely same object)
+                if inp_obj.dominant_color != out_obj.dominant_color:
+                    continue
+
+                out_grid = out_obj.grid
+
+                # Try different rotations
+                for angle, k in [(90, -1), (180, 2), (270, 1)]:
+                    try:
+                        rotated = np.rot90(inp_grid, k=k)
+
+                        # Check if rotated matches output object
+                        if rotated.shape == out_grid.shape:
+                            # More lenient threshold for objects (may have noise)
+                            similarity = (rotated == out_grid).mean()
+                            if similarity > 0.6:  # 60% match for objects
+                                detected_angles.add(angle)
+                    except:
+                        pass
+
+        return detected_angles
+
+    def _detect_object_reflection(self, inp_objs: List[ArcObject], out_objs: List[ArcObject]) -> Set[str]:
+        """
+        Detect if objects were reflected.
+
+        Compares individual objects between input and output to find reflections.
+        This catches object-level transformations that grid-level detection misses.
+        """
+        detected_reflections = set()
+
+        if not inp_objs or not out_objs:
+            return detected_reflections
+
+        # Try to match input objects to output objects
+        for inp_obj in inp_objs:
+            inp_grid = inp_obj.grid
+
+            for out_obj in out_objs:
+                # Skip if different colors (unlikely same object)
+                if inp_obj.dominant_color != out_obj.dominant_color:
+                    continue
+
+                out_grid = out_obj.grid
+
+                # Try horizontal reflection
+                try:
+                    reflected_h = np.fliplr(inp_grid)
+                    if reflected_h.shape == out_grid.shape:
+                        similarity = (reflected_h == out_grid).mean()
+                        if similarity > 0.6:  # 60% match for objects
+                            detected_reflections.add('horizontal')
+                except:
+                    pass
+
+                # Try vertical reflection
+                try:
+                    reflected_v = np.flipud(inp_grid)
+                    if reflected_v.shape == out_grid.shape:
+                        similarity = (reflected_v == out_grid).mean()
+                        if similarity > 0.6:  # 60% match for objects
+                            detected_reflections.add('vertical')
+                except:
+                    pass
 
         return detected_reflections
 

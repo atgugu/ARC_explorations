@@ -890,13 +890,30 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
             return correct / len(train_pairs) if train_pairs else 0.0
 
         # === GEOMETRIC TRANSFORMATIONS ===
-        # PHASE 6: Only generate if detected in training, or if detection disabled
+        # PHASE 6.1: Calculate priority multipliers based on detection confidence
+        # Always try actions, but boost priority for detected ones
 
-        # Check if rotations detected
-        should_try_rotation = (detected_actions is None or
-                              (detected_actions and detected_actions.get('rotations')))
+        def get_priority_multiplier(action_type):
+            """Get priority multiplier based on detection confidence."""
+            if detected_actions is None:
+                return 1.0  # No detection, equal priority
 
-        if should_try_rotation:
+            confidence = detected_actions.get('confidence', {}).get(action_type, 0.0)
+            if detected_actions.get(action_type):
+                # Detected: boost priority based on confidence
+                return 1.5 + confidence  # Range: 1.5-2.5
+            else:
+                # Not detected: lower but non-zero priority
+                return 0.3  # Still try, but with lower priority
+
+        rotation_priority = get_priority_multiplier('rotations')
+        reflection_priority = get_priority_multiplier('reflections')
+        color_swap_priority = get_priority_multiplier('color_swaps')
+        extension_priority = get_priority_multiplier('extensions')
+        replication_priority = get_priority_multiplier('replications')
+
+        # === ROTATIONS (always try, but with appropriate priority) ===
+        if True:  # Always generate rotation hypotheses
             # IF size > median THEN rotate_90
             cond_transform = ConditionalTransform(
                 condition=self.condition_lib.size_greater_than(median_size),
@@ -919,10 +936,13 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
                     category='composite_action'
                 )
 
+                # Apply priority multiplier to accuracy for sorting
+                prioritized_accuracy = accuracy * rotation_priority
+
                 composite_hyps.append((
                     transform_obj,
                     f"IF size > {median_size} THEN rotate 90°",
-                    accuracy
+                    prioritized_accuracy
                 ))
 
             # IF is_symmetric_horizontal THEN rotate_180
@@ -943,22 +963,21 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
                 transform_obj = Transform(
                     name=f"composite_rotate_180_sym",
                     function=make_transform(),
-                parameters={'variant': 'composite', 'action': 'rotate_180'},
-                category='composite_action'
-            )
+                    parameters={'variant': 'composite', 'action': 'rotate_180'},
+                    category='composite_action'
+                )
 
-            composite_hyps.append((
-                transform_obj,
-                "IF horizontally symmetric THEN rotate 180°",
-                accuracy
-            ))
+                # Apply priority multiplier to accuracy for sorting
+                prioritized_accuracy = accuracy * rotation_priority
 
-        # === COLOR SWAPS ===
-        # PHASE 6: Only generate if color swaps detected in training
-        should_try_color_swap = (detected_actions is None or
-                                 (detected_actions and detected_actions.get('color_swaps')))
+                composite_hyps.append((
+                    transform_obj,
+                    "IF horizontally symmetric THEN rotate 180°",
+                    prioritized_accuracy
+                ))
 
-        if should_try_color_swap and len(training_colors) >= 2:
+        # === COLOR SWAPS (always try, but with appropriate priority) ===
+        if len(training_colors) >= 2:
             # IF size > median THEN swap colors
             cond_transform = ConditionalTransform(
                 condition=self.condition_lib.size_greater_than(median_size),
@@ -981,18 +1000,17 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
                     category='composite_action'
                 )
 
+                # Apply priority multiplier to accuracy for sorting
+                prioritized_accuracy = accuracy * color_swap_priority
+
                 composite_hyps.append((
                     transform_obj,
                     f"IF size > {median_size} THEN swap {training_colors[0]} ↔ {training_colors[1]}",
-                    accuracy
+                    prioritized_accuracy
                 ))
 
-        # === EXTENSION/REPLICATION ===
-        # PHASE 6: Only generate if replications detected in training
-        should_try_replication = (detected_actions is None or
-                                  (detected_actions and detected_actions.get('replications')))
-
-        if should_try_replication:
+        # === EXTENSION/REPLICATION (always try, but with appropriate priority) ===
+        if True:  # Always generate replication hypotheses
             # IF aligned_horizontally THEN replicate right
             cond_transform = ConditionalTransform(
                 condition=self.condition_lib.aligned_horizontally(),
@@ -1015,17 +1033,17 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
                     category='composite_action'
                 )
 
+                # Apply priority multiplier to accuracy for sorting
+                prioritized_accuracy = accuracy * replication_priority
+
                 composite_hyps.append((
                     transform_obj,
                     "IF horizontally aligned THEN replicate right",
-                    accuracy
+                    prioritized_accuracy
                 ))
 
-        # PHASE 6: Only generate extensions if detected in training
-        should_try_extension = (detected_actions is None or
-                                (detected_actions and detected_actions.get('extensions')))
-
-        if should_try_extension:
+        # === EXTENSIONS (always try, but with appropriate priority) ===
+        if True:  # Always generate extension hypotheses
             # IF near_edge THEN extend_to_edge in direction
             for direction in ['top', 'bottom', 'left', 'right']:
                 cond_transform = ConditionalTransform(
@@ -1049,54 +1067,57 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
                         category='composite_action'
                     )
 
+                    # Apply priority multiplier to accuracy for sorting
+                    prioritized_accuracy = accuracy * extension_priority
+
                     composite_hyps.append((
                         transform_obj,
                         f"IF near edge THEN extend to {direction}",
-                        accuracy
+                        prioritized_accuracy
                     ))
 
         # === RICHER PREDICATE COMBINATIONS WITH COMPOSITE ACTIONS ===
         if self.use_richer_predicates:
-            # PHASE 6: Check if rotation was detected before generating
-            if should_try_rotation:
-                # IF (has_hole AND size > median) THEN rotate_90
-                and_condition = create_and_condition(
-                    self.condition_lib.has_hole(),
-                    self.condition_lib.size_greater_than(median_size)
+            # PHASE 6.1: Always try richer predicates, but with appropriate priorities
+
+            # IF (has_hole AND size > median) THEN rotate_90
+            and_condition = create_and_condition(
+                self.condition_lib.has_hole(),
+                self.condition_lib.size_greater_than(median_size)
+            )
+
+            cond_transform = ConditionalTransform(
+                condition=and_condition,
+                then_action=self.action_lib.rotate_90(),
+                else_action=self.action_lib.keep(),
+                confidence=0.7
+            )
+
+            accuracy = validate(cond_transform)
+            if accuracy >= self.validation_threshold:
+                def make_transform(ct=cond_transform):
+                    def transform_fn(grid: np.ndarray) -> np.ndarray:
+                        return ct.apply(grid, objects=None)
+                    return transform_fn
+
+                transform_obj = Transform(
+                    name=f"composite_hole_size_rotate",
+                    function=make_transform(),
+                    parameters={'variant': 'composite', 'action': 'rotate_90', 'predicate': 'hole+size'},
+                    category='composite_action'
                 )
 
-                cond_transform = ConditionalTransform(
-                    condition=and_condition,
-                    then_action=self.action_lib.rotate_90(),
-                    else_action=self.action_lib.keep(),
-                    confidence=0.7
-                )
+                # Apply priority multiplier to accuracy for sorting
+                prioritized_accuracy = accuracy * rotation_priority
 
-                accuracy = validate(cond_transform)
-                if accuracy >= self.validation_threshold:
-                    def make_transform(ct=cond_transform):
-                        def transform_fn(grid: np.ndarray) -> np.ndarray:
-                            return ct.apply(grid, objects=None)
-                        return transform_fn
+                composite_hyps.append((
+                    transform_obj,
+                    f"IF (has hole AND size > {median_size}) THEN rotate 90°",
+                    prioritized_accuracy
+                ))
 
-                    transform_obj = Transform(
-                        name=f"composite_hole_size_rotate",
-                        function=make_transform(),
-                        parameters={'variant': 'composite', 'action': 'rotate_90', 'predicate': 'hole+size'},
-                        category='composite_action'
-                    )
-
-                    composite_hyps.append((
-                        transform_obj,
-                        f"IF (has hole AND size > {median_size}) THEN rotate 90°",
-                        accuracy
-                    ))
-
-            # PHASE 6: Check if reflection was detected before generating
-            should_try_reflection = (detected_actions is None or
-                                     (detected_actions and detected_actions.get('reflections')))
-
-            if should_try_reflection:
+            # IF (compact OR square) THEN reflect_vertical
+            if True:  # Always try reflection with richer predicates
                 # IF (compact OR square) THEN reflect_vertical
                 or_condition = create_or_condition(
                     self.condition_lib.is_compact(),
@@ -1124,10 +1145,13 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
                         category='composite_action'
                     )
 
+                    # Apply priority multiplier to accuracy for sorting
+                    prioritized_accuracy = accuracy * reflection_priority
+
                     composite_hyps.append((
                         transform_obj,
                         "IF (compact OR square) THEN reflect vertically",
-                        accuracy
+                        prioritized_accuracy
                     ))
 
         # Sort by accuracy
