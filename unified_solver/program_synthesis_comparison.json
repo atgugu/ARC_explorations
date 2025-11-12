@@ -1,0 +1,18 @@
+{
+  "baseline": {
+    "total": 200,
+    "success": 1,
+    "attempt_1": 1,
+    "attempt_2": 0,
+    "identical": 0,
+    "avg_time": 0.01365712285041809
+  },
+  "synthesis": {
+    "total": 200,
+    "success": 2,
+    "attempt_1": 2,
+    "attempt_2": 0,
+    "identical": 128,
+    "avg_time": 0.05867974281311035
+  }
+}
