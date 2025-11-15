@@ -182,6 +182,30 @@ class InferredProgramGenerator(AdvancedProgramGenerator):
                 complexity=2.0
             ))
 
+        # Pattern extrapolation candidates (extend_markers)
+        if inferred.extension_params:
+            # Full inferred parameters
+            candidates.append(Program(
+                schema="extend_markers",
+                primitives=["extend_markers"],
+                parameters=inferred.extension_params,
+                selectors={},
+                complexity=2.5
+            ))
+
+            # Variations with different distances if inferred distance > 1
+            if inferred.extension_params.get('distance', 1) > 1:
+                for dist in [1, 2]:
+                    params = inferred.extension_params.copy()
+                    params['distance'] = dist
+                    candidates.append(Program(
+                        schema="extend_markers",
+                        primitives=["extend_markers"],
+                        parameters=params,
+                        selectors={},
+                        complexity=2.5 + dist * 0.1
+                    ))
+
         return candidates
 
 

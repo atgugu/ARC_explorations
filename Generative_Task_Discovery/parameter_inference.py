@@ -16,6 +16,7 @@ from typing import Dict, List, Any, Tuple, Optional, Set
 from collections import Counter
 from dataclasses import dataclass
 from enhanced_color_inference import EnhancedColorInference
+from extend_markers_primitive import infer_extension_parameters
 
 
 @dataclass
@@ -27,6 +28,7 @@ class InferredParameters:
     scale_factors: List[int]  # List of scaling factors
     morphology_iterations: List[int]  # List of dilation/erosion iterations
     reflections: List[str]  # List of reflection axes ('h', 'v')
+    extension_params: Optional[Dict[str, Any]] = None  # Parameters for extend_markers
 
     def __repr__(self):
         parts = []
@@ -70,7 +72,8 @@ class ParameterInference:
                 rotations=[],
                 scale_factors=[],
                 morphology_iterations=[],
-                reflections=[]
+                reflections=[],
+                extension_params=None
             )
 
         # Collect parameters from all training examples
@@ -117,6 +120,9 @@ class ParameterInference:
             reflections = ParameterInference.infer_reflection(input_grid, output_grid)
             all_reflections.extend(reflections)
 
+        # Infer extension parameters for extend_markers primitive
+        extension_params = infer_extension_parameters(task)
+
         # Deduplicate and return most common
         return InferredParameters(
             color_mappings=ParameterInference._deduplicate_color_maps(all_color_maps),
@@ -124,7 +130,8 @@ class ParameterInference:
             rotations=list(set(all_rotations)),
             scale_factors=list(set(all_scales)),
             morphology_iterations=list(set(all_morphology)),
-            reflections=list(set(all_reflections))
+            reflections=list(set(all_reflections)),
+            extension_params=extension_params
         )
 
     @staticmethod

@@ -14,6 +14,7 @@ from enhanced_solver import EnhancedARCSolver, EnhancedExecutor, EnhancedProgram
 from arc_generative_solver import Program, ARCObject
 from near_miss_primitives import NearMissPrimitives
 from advanced_primitives import AdvancedPrimitives
+from extend_markers_primitive import extend_markers, infer_extension_parameters
 
 
 class AdvancedExecutor(EnhancedExecutor):
@@ -226,6 +227,14 @@ class AdvancedExecutor(EnhancedExecutor):
                 factor = program.parameters.get("factor", 2)
                 modulo = program.parameters.get("modulo", 10)
                 grid = self.advanced.color_multiply(grid, factor, modulo)
+
+            # PATTERN EXTRAPOLATION
+            elif program.schema == "extend_markers":
+                marker_colors = program.parameters.get("marker_colors", None)
+                base_color = program.parameters.get("base_color", None)
+                directions = program.parameters.get("directions", None)
+                distance = program.parameters.get("distance", 1)
+                grid = extend_markers(grid, marker_colors, base_color, directions, distance)
 
             self.execution_trace.append(("final", grid.copy()))
 
@@ -671,7 +680,37 @@ class AdvancedProgramGenerator(EnhancedProgramGenerator):
                 complexity=1.5
             ))
 
-        return candidates[:max_candidates + 70]  # Allow more for all operations
+        # Add pattern extrapolation candidates (extend_markers)
+        # Auto-detected parameters version
+        candidates.append(Program(
+            schema="extend_markers",
+            primitives=["extend_markers"],
+            parameters={},  # Will auto-detect all parameters
+            selectors={},
+            complexity=2.5
+        ))
+
+        # Different directions versions
+        for direction_set in [['all'], ['up', 'down'], ['left', 'right']]:
+            candidates.append(Program(
+                schema="extend_markers",
+                primitives=["extend_markers"],
+                parameters={"directions": direction_set},
+                selectors={},
+                complexity=2.5
+            ))
+
+        # Different distances
+        for dist in [1, 2, 3]:
+            candidates.append(Program(
+                schema="extend_markers",
+                primitives=["extend_markers"],
+                parameters={"distance": dist},
+                selectors={},
+                complexity=2.5 + dist * 0.1
+            ))
+
+        return candidates[:max_candidates + 80]  # Allow more for all operations including extend_markers
 
 
 class AdvancedARCSolver(EnhancedARCSolver):

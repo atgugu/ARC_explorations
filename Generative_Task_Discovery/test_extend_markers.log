@@ -1,0 +1,25 @@
+======================================================================
+TESTING EXTEND_MARKERS PRIMITIVE ON NEAR-MISS TASKS
+======================================================================
+
+======================================================================
+Testing task: fd096ab6
+======================================================================
+
+Results:
+  Prediction 1 accuracy: 97.00%
+  Prediction 2 accuracy: 97.00%
+  Best accuracy: 97.00%
+  Status: ✗ FAILED
+
+Top program:
+Traceback (most recent call last):
+  File "/home/user/ARC_explorations/Generative_Task_Discovery/test_extend_markers.py", line 123, in <module>
+    main()
+  File "/home/user/ARC_explorations/Generative_Task_Discovery/test_extend_markers.py", line 87, in main
+    solved, accuracy = test_task(task_id, task)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/ARC_explorations/Generative_Task_Discovery/test_extend_markers.py", line 64, in test_task
+    print(f"  Schema: {top_prog.schema}")
+                       ^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'schema'
