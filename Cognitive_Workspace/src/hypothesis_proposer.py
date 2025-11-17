@@ -86,6 +86,15 @@ class PatternAnalyzer:
         # Overlay patterns
         patterns.extend(self._detect_overlay_patterns(input_grid, output_grid))
 
+        # Line and connection patterns
+        patterns.extend(self._detect_line_patterns(input_grid, output_grid))
+
+        # Alignment and positioning patterns
+        patterns.extend(self._detect_alignment_patterns(input_grid, output_grid))
+
+        # Noise removal patterns
+        patterns.extend(self._detect_noise_removal(input_grid, output_grid))
+
         return sorted(patterns, key=lambda p: p.confidence, reverse=True)
 
     def _detect_size_changes(self, input_grid: Grid, output_grid: Grid) -> List[Pattern]:
@@ -558,6 +567,193 @@ class PatternAnalyzer:
 
         return patterns
 
+    def _detect_line_patterns(self, input_grid: Grid, output_grid: Grid) -> List[Pattern]:
+        """Detect line drawing and connection patterns"""
+        patterns = []
+
+        if input_grid.shape != output_grid.shape:
+            return patterns
+
+        # Check if output has lines that input doesn't
+        # Look for vertical or horizontal lines of same color
+        input_colors = set(input_grid.flatten()) - {0}
+        output_colors = set(output_grid.flatten()) - {0}
+
+        for color in output_colors:
+            # Check vertical lines in output
+            for c in range(output_grid.shape[1]):
+                col_in = input_grid[:, c]
+                col_out = output_grid[:, c]
+
+                # If output column is solid color but input isn't
+                if np.all(col_out == color) and not np.all(col_in == color):
+                    # Check if input has some pixels of this color in this column
+                    if np.any(col_in == color):
+                        patterns.append(Pattern(
+                            name="draw_vertical_lines",
+                            confidence=0.85,
+                            parameters={"color": color},
+                            description=f"Draw vertical lines with color {color}"
+                        ))
+                        return patterns
+
+            # Check horizontal lines in output
+            for r in range(output_grid.shape[0]):
+                row_in = input_grid[r, :]
+                row_out = output_grid[r, :]
+
+                if np.all(row_out == color) and not np.all(row_in == color):
+                    if np.any(row_in == color):
+                        patterns.append(Pattern(
+                            name="draw_horizontal_lines",
+                            confidence=0.85,
+                            parameters={"color": color},
+                            description=f"Draw horizontal lines with color {color}"
+                        ))
+                        return patterns
+
+        # Check if lines are extended from existing pixels
+        # Look for pixels that are extended to edges
+        for color in input_colors:
+            input_locs = np.argwhere(input_grid == color)
+            output_locs = np.argwhere(output_grid == color)
+
+            if len(output_locs) > len(input_locs):
+                # More pixels in output - check if they form lines
+                # Check if new pixels are in line with existing pixels
+                for in_r, in_c in input_locs:
+                    # Check if there's a vertical line through this pixel in output
+                    col_match = np.sum(output_grid[:, in_c] == color)
+                    if col_match > len(input_locs) * 0.5:  # Significant vertical line
+                        patterns.append(Pattern(
+                            name="extend_to_vertical_lines",
+                            confidence=0.8,
+                            parameters={"color": color},
+                            description=f"Extend pixels to vertical lines"
+                        ))
+                        return patterns
+
+                    # Check horizontal line
+                    row_match = np.sum(output_grid[in_r, :] == color)
+                    if row_match > len(input_locs) * 0.5:
+                        patterns.append(Pattern(
+                            name="extend_to_horizontal_lines",
+                            confidence=0.8,
+                            parameters={"color": color},
+                            description=f"Extend pixels to horizontal lines"
+                        ))
+                        return patterns
+
+        return patterns
+
+    def _detect_alignment_patterns(self, input_grid: Grid, output_grid: Grid) -> List[Pattern]:
+        """Detect object alignment and positioning patterns"""
+        patterns = []
+
+        if input_grid.shape != output_grid.shape:
+            return patterns
+
+        # Check if scattered pixels are aligned in output
+        input_colors = set(input_grid.flatten()) - {0}
+
+        for color in input_colors:
+            input_locs = set(map(tuple, np.argwhere(input_grid == color)))
+            output_locs = set(map(tuple, np.argwhere(output_grid == color)))
+
+            if len(input_locs) != len(output_locs):
+                continue
+
+            # Check if output locations are more aligned than input
+            # Measure alignment by checking if pixels share rows/columns
+            input_rows = [r for r, c in input_locs]
+            input_cols = [c for r, c in input_locs]
+            output_rows = [r for r, c in output_locs]
+            output_cols = [c for r, c in output_locs]
+
+            # Count unique rows/cols
+            input_unique_rows = len(set(input_rows))
+            input_unique_cols = len(set(input_cols))
+            output_unique_rows = len(set(output_rows))
+            output_unique_cols = len(set(output_cols))
+
+            # If output has fewer unique rows/cols, objects were aligned
+            if output_unique_rows < input_unique_rows:
+                patterns.append(Pattern(
+                    name="align_horizontal",
+                    confidence=0.8,
+                    parameters={"color": color},
+                    description=f"Align objects horizontally"
+                ))
+                return patterns
+
+            if output_unique_cols < input_unique_cols:
+                patterns.append(Pattern(
+                    name="align_vertical",
+                    confidence=0.8,
+                    parameters={"color": color},
+                    description=f"Align objects vertically"
+                ))
+                return patterns
+
+        return patterns
+
+    def _detect_noise_removal(self, input_grid: Grid, output_grid: Grid) -> List[Pattern]:
+        """Detect noise removal and cleanup patterns"""
+        patterns = []
+
+        if input_grid.shape != output_grid.shape:
+            return patterns
+
+        # Check if output has fewer non-zero pixels than input
+        input_nonzero = np.count_nonzero(input_grid)
+        output_nonzero = np.count_nonzero(output_grid)
+
+        if output_nonzero < input_nonzero:
+            # Some pixels were removed
+            # Check if removed pixels were isolated (noise)
+            removed_mask = (input_grid != 0) & (output_grid == 0)
+            removed_count = np.sum(removed_mask)
+
+            if removed_count > 0 and removed_count < input_nonzero * 0.3:
+                # Less than 30% removed - likely noise
+                # Check if removed pixels were isolated
+                from scipy.ndimage import label
+
+                # Check if removed pixels were small isolated groups
+                labeled, num_features = label(removed_mask)
+
+                if num_features > 0:
+                    # Get sizes of removed components
+                    sizes = []
+                    for i in range(1, num_features + 1):
+                        size = np.sum(labeled == i)
+                        sizes.append(size)
+
+                    avg_removed_size = np.mean(sizes) if sizes else 0
+
+                    # Check if remaining pixels have larger components
+                    output_mask = output_grid != 0
+                    if np.any(output_mask):
+                        labeled_out, num_out = label(output_mask)
+                        if num_out > 0:
+                            out_sizes = []
+                            for i in range(1, num_out + 1):
+                                size = np.sum(labeled_out == i)
+                                out_sizes.append(size)
+
+                            avg_kept_size = np.mean(out_sizes) if out_sizes else 0
+
+                            # If removed pieces are smaller than kept pieces
+                            if avg_removed_size < avg_kept_size * 0.5:
+                                patterns.append(Pattern(
+                                    name="remove_small_objects",
+                                    confidence=0.75,
+                                    parameters={"threshold": int(avg_removed_size * 1.5)},
+                                    description="Remove small isolated objects"
+                                ))
+
+        return patterns
+
 
 class HypothesisGenerator:
     """Generates candidate program hypotheses from detected patterns"""
@@ -896,6 +1092,180 @@ class HypothesisGenerator:
                 parameters=params,
                 score=pattern.confidence,
                 description="Fill background",
+                pattern=pattern
+            )
+
+        elif name == "draw_vertical_lines":
+            color = params.get("color", 1)
+            def program(grid):
+                result = grid.copy()
+                # Find all columns that have this color
+                for c in range(grid.shape[1]):
+                    if np.any(grid[:, c] == color):
+                        # Fill entire column with this color
+                        result[:, c] = color
+                return result
+
+            return Hypothesis(
+                program=program,
+                primitives=["detect_lines"],
+                parameters=params,
+                score=pattern.confidence,
+                description=f"Draw vertical lines through color {color}",
+                pattern=pattern
+            )
+
+        elif name == "draw_horizontal_lines":
+            color = params.get("color", 1)
+            def program(grid):
+                result = grid.copy()
+                # Find all rows that have this color
+                for r in range(grid.shape[0]):
+                    if np.any(grid[r, :] == color):
+                        # Fill entire row with this color
+                        result[r, :] = color
+                return result
+
+            return Hypothesis(
+                program=program,
+                primitives=["detect_lines"],
+                parameters=params,
+                score=pattern.confidence,
+                description=f"Draw horizontal lines through color {color}",
+                pattern=pattern
+            )
+
+        elif name == "extend_to_vertical_lines":
+            color = params.get("color", 1)
+            def program(grid):
+                result = grid.copy()
+                # Find columns with this color and extend to full column
+                cols_with_color = set()
+                for r in range(grid.shape[0]):
+                    for c in range(grid.shape[1]):
+                        if grid[r, c] == color:
+                            cols_with_color.add(c)
+
+                # Fill those columns
+                for c in cols_with_color:
+                    result[:, c] = color
+                return result
+
+            return Hypothesis(
+                program=program,
+                primitives=["extend_line"],
+                parameters=params,
+                score=pattern.confidence,
+                description=f"Extend to vertical lines",
+                pattern=pattern
+            )
+
+        elif name == "extend_to_horizontal_lines":
+            color = params.get("color", 1)
+            def program(grid):
+                result = grid.copy()
+                # Find rows with this color and extend to full row
+                rows_with_color = set()
+                for r in range(grid.shape[0]):
+                    for c in range(grid.shape[1]):
+                        if grid[r, c] == color:
+                            rows_with_color.add(r)
+
+                # Fill those rows
+                for r in rows_with_color:
+                    result[r, :] = color
+                return result
+
+            return Hypothesis(
+                program=program,
+                primitives=["extend_line"],
+                parameters=params,
+                score=pattern.confidence,
+                description=f"Extend to horizontal lines",
+                pattern=pattern
+            )
+
+        elif name == "align_horizontal":
+            color = params.get("color", 1)
+            def program(grid):
+                result = grid.copy()
+                # Get all pixels of this color
+                locs = np.argwhere(grid == color)
+                if len(locs) == 0:
+                    return result
+
+                # Find most common row
+                from collections import Counter
+                rows = [r for r, c in locs]
+                most_common_row = Counter(rows).most_common(1)[0][0]
+
+                # Move all pixels to this row
+                result[result == color] = 0  # Clear old positions
+                for r, c in locs:
+                    result[most_common_row, c] = color
+
+                return result
+
+            return Hypothesis(
+                program=program,
+                primitives=["align"],
+                parameters=params,
+                score=pattern.confidence,
+                description=f"Align objects horizontally",
+                pattern=pattern
+            )
+
+        elif name == "align_vertical":
+            color = params.get("color", 1)
+            def program(grid):
+                result = grid.copy()
+                # Get all pixels of this color
+                locs = np.argwhere(grid == color)
+                if len(locs) == 0:
+                    return result
+
+                # Find most common column
+                from collections import Counter
+                cols = [c for r, c in locs]
+                most_common_col = Counter(cols).most_common(1)[0][0]
+
+                # Move all pixels to this column
+                result[result == color] = 0  # Clear old positions
+                for r, c in locs:
+                    result[r, most_common_col] = color
+
+                return result
+
+            return Hypothesis(
+                program=program,
+                primitives=["align"],
+                parameters=params,
+                score=pattern.confidence,
+                description=f"Align objects vertically",
+                pattern=pattern
+            )
+
+        elif name == "remove_small_objects":
+            threshold = params.get("threshold", 3)
+            def program(grid):
+                result = grid.copy()
+                # Get all objects
+                for color in range(1, 10):
+                    objs = select_by_color(grid, color)
+                    for obj in objs:
+                        if len(obj) <= threshold:
+                            # Remove this object
+                            for r, c in obj:
+                                if 0 <= r < result.shape[0] and 0 <= c < result.shape[1]:
+                                    result[r, c] = 0
+                return result
+
+            return Hypothesis(
+                program=program,
+                primitives=["select_by_color"],
+                parameters=params,
+                score=pattern.confidence,
+                description=f"Remove small objects (size <= {threshold})",
                 pattern=pattern
             )
 
