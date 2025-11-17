@@ -1,0 +1,20 @@
+{
+  "phase1": {
+    "depth": 2,
+    "total": 200,
+    "success": 2,
+    "attempt_1": 2,
+    "attempt_2": 0,
+    "identical": 128,
+    "avg_time": 0.06028486609458923
+  },
+  "phase2": {
+    "depth": 3,
+    "total": 200,
+    "success": 2,
+    "attempt_1": 2,
+    "attempt_2": 0,
+    "identical": 128,
+    "avg_time": 0.1485701620578766
+  }
+}

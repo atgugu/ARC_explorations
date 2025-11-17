@@ -59,6 +59,93 @@ class ObjectSet:
 
 
 # =============================================================================
+# Predicates (for Conditionals)
+# =============================================================================
+
+class Predicate:
+    """A boolean predicate over grids"""
+
+    def __init__(self, name: str, func: Callable[[Grid], bool], params: Dict[str, Any] = None):
+        self.name = name
+        self.func = func
+        self.params = params or {}
+
+    def evaluate(self, grid: Grid) -> bool:
+        """Evaluate predicate on grid"""
+        try:
+            return self.func(grid, **self.params)
+        except Exception:
+            return False
+
+    def __str__(self):
+        if self.params:
+            params_str = ", ".join(f"{k}={v}" for k, v in self.params.items())
+            return f"{self.name}({params_str})"
+        return self.name
+
+    def __repr__(self):
+        return self.__str__()
+
+
+def has_border_pred(grid: Grid, color: int) -> bool:
+    """Check if grid has a border of given color"""
+    h, w = grid.shape
+    if h < 2 or w < 2:
+        return False
+
+    # Check if edges are all the same color
+    top_border = grid.data[0, :]
+    bottom_border = grid.data[h-1, :]
+    left_border = grid.data[:, 0]
+    right_border = grid.data[:, w-1]
+
+    # Check if all border pixels match the color
+    border_colors = np.concatenate([top_border, bottom_border, left_border, right_border])
+    return np.all(border_colors == color)
+
+
+def is_symmetric_pred(grid: Grid, axis: str = 'vertical') -> bool:
+    """Check if grid is symmetric along axis"""
+    if axis == 'vertical':
+        return np.array_equal(grid.data, np.fliplr(grid.data))
+    elif axis == 'horizontal':
+        return np.array_equal(grid.data, np.flipud(grid.data))
+    return False
+
+
+def object_count_gt_pred(grid: Grid, count: int, bg_color: int = 0) -> bool:
+    """Check if number of objects > count"""
+    objects = detect_objects(grid, bg_color)
+    return len(objects) > count
+
+
+def object_count_eq_pred(grid: Grid, count: int, bg_color: int = 0) -> bool:
+    """Check if number of objects == count"""
+    objects = detect_objects(grid, bg_color)
+    return len(objects) == count
+
+
+def has_color_pred(grid: Grid, color: int) -> bool:
+    """Check if grid contains color"""
+    return color in grid.data
+
+
+def size_matches_pred(grid: Grid, height: int, width: int) -> bool:
+    """Check if grid size matches dimensions"""
+    return grid.shape == (height, width)
+
+
+def is_single_color_pred(grid: Grid) -> bool:
+    """Check if grid is all one color"""
+    return len(np.unique(grid.data)) == 1
+
+
+def has_multiple_colors_pred(grid: Grid, min_colors: int = 2) -> bool:
+    """Check if grid has at least min_colors different colors"""
+    return len(np.unique(grid.data)) >= min_colors
+
+
+# =============================================================================
 # Program Representation
 # =============================================================================
 
@@ -444,6 +531,106 @@ def recolor_all_objects_op(input_grid: Grid, children: List[Program], params: Di
 
 
 # =============================================================================
+# Phase 2: Conditional and Loop Operations
+# =============================================================================
+
+def conditional_op(input_grid: Grid, children: List[Program], params: Dict) -> Grid:
+    """
+    Conditional operation: if predicate then then_op else else_op
+
+    params['predicate']: Predicate to evaluate
+    children[0]: then program (if predicate is true)
+    children[1]: else program (if predicate is false)
+    """
+    predicate = params.get('predicate')
+    if predicate is None or len(children) < 2:
+        return input_grid.copy()
+
+    then_prog = children[0]
+    else_prog = children[1]
+
+    # Evaluate predicate
+    if predicate.evaluate(input_grid):
+        return then_prog.execute(input_grid)
+    else:
+        return else_prog.execute(input_grid)
+
+
+def for_each_object_v2_op(input_grid: Grid, children: List[Program], params: Dict) -> Grid:
+    """
+    For-each loop: apply transform to each object independently
+
+    children[0]: transform program to apply to each object
+    params['bg_color']: background color (default 0)
+    """
+    bg_color = params.get('bg_color', 0)
+
+    if len(children) == 0:
+        return input_grid.copy()
+
+    transform = children[0]
+
+    # Detect objects
+    objects = detect_objects(input_grid, bg_color=bg_color)
+
+    if len(objects) == 0:
+        return input_grid.copy()
+
+    # Start with background
+    result = Grid(np.full_like(input_grid.data, bg_color))
+
+    # Transform each object
+    for obj in objects:
+        # Extract object to its own grid
+        obj_grid = keep_only_object(obj, input_grid, bg_color)
+
+        # Apply transformation
+        try:
+            transformed = transform.execute(obj_grid)
+
+            # Compose back (non-background pixels)
+            mask = transformed.data != bg_color
+            result.data[mask] = transformed.data[mask]
+        except Exception:
+            # If transform fails, keep original object
+            mask = obj_grid.data != bg_color
+            result.data[mask] = obj_grid.data[mask]
+
+    return result
+
+
+def fill_interior_op(input_grid: Grid, children: List[Program], params: Dict) -> Grid:
+    """
+    Fill interior of bordered region
+
+    Finds rectangular border and fills interior with color
+    """
+    fill_color = params.get('color', 1)
+    border_color = params.get('border_color', None)
+
+    result = input_grid.copy()
+    h, w = result.shape
+
+    if h < 3 or w < 3:
+        return result
+
+    # Find border (edges of grid)
+    # Simple version: fill everything except edges
+    result.data[1:h-1, 1:w-1] = fill_color
+
+    return result
+
+
+def tile_nxm_op(input_grid: Grid, children: List[Program], params: Dict) -> Grid:
+    """Tile grid n×m times"""
+    n = params.get('n', 2)
+    m = params.get('m', 2)
+
+    tiled = np.tile(input_grid.data, (n, m))
+    return Grid(tiled)
+
+
+# =============================================================================
 # Primitive Wrappers
 # =============================================================================
 
@@ -572,6 +759,35 @@ class ProgramSynthesizer:
 
             all_programs.extend(level_2_pruned)
 
+        # Level 3: Conditionals, Loops, and Patterns (Phase 2)
+        if self.max_depth >= 3:
+            level_3 = []
+
+            # Conditionals (if-then-else)
+            conditionals = self._generate_conditionals(level_0_pruned + level_1_pruned)
+            level_3.extend(conditionals)
+            if verbose:
+                print(f"Level 3: Generated {len(conditionals)} conditional programs")
+
+            # Loops (for-each object)
+            loops = self._generate_loops(level_0_pruned)
+            level_3.extend(loops)
+            if verbose:
+                print(f"Level 3: Generated {len(loops)} loop programs")
+
+            # Patterns (tile, fill)
+            patterns = self._generate_patterns()
+            level_3.extend(patterns)
+            if verbose:
+                print(f"Level 3: Generated {len(patterns)} pattern programs")
+
+            # Prune level 3
+            level_3_pruned = self._prune_by_training(level_3, task.train_pairs, keep_top=40)
+            if verbose:
+                print(f"Level 3: Pruned to {len(level_3_pruned)} programs")
+
+            all_programs.extend(level_3_pruned)
+
         # Final ranking
         ranked = self._rank_programs(all_programs, task.train_pairs)
 
@@ -657,6 +873,83 @@ class ProgramSynthesizer:
                 ))
 
         return sequences
+
+    def _generate_conditionals(self,
+                              base_programs: List[Program]) -> List[Program]:
+        """Generate conditional programs (Phase 2)"""
+        conditionals = []
+
+        # Get identity program
+        identity = Program("identity", lambda g: g.copy(), {})
+
+        # Create predicates
+        predicates = [
+            Predicate("has_border_2", has_border_pred, {"color": 2}),
+            Predicate("has_border_1", has_border_pred, {"color": 1}),
+            Predicate("is_symmetric_v", is_symmetric_pred, {"axis": "vertical"}),
+            Predicate("is_symmetric_h", is_symmetric_pred, {"axis": "horizontal"}),
+            Predicate("obj_count_gt_0", object_count_gt_pred, {"count": 0}),
+            Predicate("obj_count_gt_1", object_count_gt_pred, {"count": 1}),
+            Predicate("obj_count_eq_1", object_count_eq_pred, {"count": 1}),
+            Predicate("has_color_1", has_color_pred, {"color": 1}),
+            Predicate("has_color_2", has_color_pred, {"color": 2}),
+        ]
+
+        # Generate conditionals: if predicate then operation else identity
+        top_ops = base_programs[:5]
+
+        for pred in predicates:
+            for then_op in top_ops:
+                conditionals.append(Program(
+                    f"if({pred},{then_op.op_name})",
+                    conditional_op,
+                    {"predicate": pred},
+                    [then_op, identity]
+                ))
+
+        return conditionals
+
+    def _generate_loops(self,
+                       base_programs: List[Program]) -> List[Program]:
+        """Generate loop programs (Phase 2)"""
+        loops = []
+
+        # Select suitable programs for object transforms
+        # (geometric transforms, color changes)
+        top_transforms = base_programs[:8]
+
+        for transform in top_transforms:
+            loops.append(Program(
+                f"for_each({transform.op_name})",
+                for_each_object_v2_op,
+                {"bg_color": 0},
+                [transform]
+            ))
+
+        return loops
+
+    def _generate_patterns(self) -> List[Program]:
+        """Generate pattern programs (Phase 2)"""
+        patterns = []
+
+        # Tiling operations
+        for n in [2, 3]:
+            for m in [2, 3]:
+                patterns.append(Program(
+                    f"tile_{n}x{m}",
+                    tile_nxm_op,
+                    {"n": n, "m": m}
+                ))
+
+        # Fill interior operations
+        for color in [1, 2, 3, 8]:
+            patterns.append(Program(
+                f"fill_interior_{color}",
+                fill_interior_op,
+                {"color": color}
+            ))
+
+        return patterns
 
     def _prune_by_training(self,
                           programs: List[Program],
