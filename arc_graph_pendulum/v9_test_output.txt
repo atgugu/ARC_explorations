@@ -1,0 +1,1040 @@
+======================================================================
+V9 SOLVER TEST - EXTENDED PRIMITIVES
+======================================================================
+
+Testing on 15 high-quality tasks
+(V7 scores: 0.80-0.95 IoU, starting with lowest)
+
+======================================================================
+Task: 1d398264 (V7 score: 0.8084)
+======================================================================
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+✓ Solver V9 Initialized (20 Extended Primitives)
+  Category 1: Spatial operations (5 primitives)
+    - Extract leftmost/rightmost/topmost/bottommost object
+    - Align objects to grid
+  Category 2: Object operations (5 primitives)
+    - Copy object horizontally/vertically
+    - Connect objects, intersection, union
+  Category 3: Color operations (5 primitives)
+    - Recolor by row/column, checkerboard
+    - Swap by size, color propagation
+  Category 4: Pattern operations (5 primitives)
+    - Symmetry (horizontal/vertical/rotational)
+    - Pattern completion, periodic tiling
+  Expected: +2-3% solve rate (target: 37 high-quality tasks)
+
+=== Solving task 1d398264 (V9 - Extended Primitives) ===
+Train examples: 3, Test examples: 2
+
+[Extended Primitives]
+  Detecting applicable primitives...
+  Detected 1 potential primitives:
+    - Connect objects with lines (confidence=0.80)
+  Best program: Connect objects with lines (score=0.785)
+
+[Program Selection]
+  Extended primitives score: 0.785
+  V7 approach score: 0.815
+  → Using V7 approach (better score)
+
+======================================================================
+V7 Result: IoU 0.8084
+V9 Result: IoU 0.8084
+Change: +0.0000
+======================================================================
+
+======================================================================
+Task: 423a55dc (V7 score: 0.8112)
+======================================================================
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+✓ Solver V9 Initialized (20 Extended Primitives)
+  Category 1: Spatial operations (5 primitives)
+    - Extract leftmost/rightmost/topmost/bottommost object
+    - Align objects to grid
+  Category 2: Object operations (5 primitives)
+    - Copy object horizontally/vertically
+    - Connect objects, intersection, union
+  Category 3: Color operations (5 primitives)
+    - Recolor by row/column, checkerboard
+    - Swap by size, color propagation
+  Category 4: Pattern operations (5 primitives)
+    - Symmetry (horizontal/vertical/rotational)
+    - Pattern completion, periodic tiling
+  Expected: +2-3% solve rate (target: 37 high-quality tasks)
+
+=== Solving task 423a55dc (V9 - Extended Primitives) ===
+Train examples: 5, Test examples: 1
+
+[Extended Primitives]
+  Detecting applicable primitives...
+  No extended primitives detected
+
+[Program Selection]
+  Extended primitives score: 0.000
+  V7 approach score: 0.898
+  → Using V7 approach (better score)
+
+======================================================================
+V7 Result: IoU 0.8112
+V9 Result: IoU 0.8112
+Change: +0.0000
+======================================================================
+
+======================================================================
+Task: 1c0d0a4b (V7 score: 0.8225)
+======================================================================
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+✓ Solver V9 Initialized (20 Extended Primitives)
+  Category 1: Spatial operations (5 primitives)
+    - Extract leftmost/rightmost/topmost/bottommost object
+    - Align objects to grid
+  Category 2: Object operations (5 primitives)
+    - Copy object horizontally/vertically
+    - Connect objects, intersection, union
+  Category 3: Color operations (5 primitives)
+    - Recolor by row/column, checkerboard
+    - Swap by size, color propagation
+  Category 4: Pattern operations (5 primitives)
+    - Symmetry (horizontal/vertical/rotational)
+    - Pattern completion, periodic tiling
+  Expected: +2-3% solve rate (target: 37 high-quality tasks)
+
+=== Solving task 1c0d0a4b (V9 - Extended Primitives) ===
+Train examples: 3, Test examples: 1
+
+[Extended Primitives]
+  Detecting applicable primitives...
+  Detected 1 potential primitives:
+    - Recolor in checkerboard pattern (confidence=0.90)
+  Best program: Recolor in checkerboard pattern (score=0.560)
+
+[Program Selection]
+  Extended primitives score: 0.560
+  V7 approach score: 0.826
+  → Using V7 approach (better score)
+
+======================================================================
+V7 Result: IoU 0.8225
+V9 Result: IoU 0.8225
+Change: +0.0000
+======================================================================
+
+======================================================================
+Task: 3391f8c0 (V7 score: 0.8247)
+======================================================================
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+✓ Solver V9 Initialized (20 Extended Primitives)
+  Category 1: Spatial operations (5 primitives)
+    - Extract leftmost/rightmost/topmost/bottommost object
+    - Align objects to grid
+  Category 2: Object operations (5 primitives)
+    - Copy object horizontally/vertically
+    - Connect objects, intersection, union
+  Category 3: Color operations (5 primitives)
+    - Recolor by row/column, checkerboard
+    - Swap by size, color propagation
+  Category 4: Pattern operations (5 primitives)
+    - Symmetry (horizontal/vertical/rotational)
+    - Pattern completion, periodic tiling
+  Expected: +2-3% solve rate (target: 37 high-quality tasks)
+
+=== Solving task 3391f8c0 (V9 - Extended Primitives) ===
+Train examples: 4, Test examples: 1
+
+[Extended Primitives]
+  Detecting applicable primitives...
+  Detected 2 potential primitives:
+    - Recolor in checkerboard pattern (confidence=0.90)
+    - Connect objects with lines (confidence=0.80)
+  Best program: Recolor in checkerboard pattern (score=0.799)
+
+[Program Selection]
+  Extended primitives score: 0.799
+  V7 approach score: 0.864
+  → Using V7 approach (better score)
+
+======================================================================
+V7 Result: IoU 0.8247
+V9 Result: IoU 0.8247
+Change: +0.0000
+======================================================================
+
+======================================================================
+Task: 4e45f183 (V7 score: 0.8338)
+======================================================================
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+✓ Solver V9 Initialized (20 Extended Primitives)
+  Category 1: Spatial operations (5 primitives)
+    - Extract leftmost/rightmost/topmost/bottommost object
+    - Align objects to grid
+  Category 2: Object operations (5 primitives)
+    - Copy object horizontally/vertically
+    - Connect objects, intersection, union
+  Category 3: Color operations (5 primitives)
+    - Recolor by row/column, checkerboard
+    - Swap by size, color propagation
+  Category 4: Pattern operations (5 primitives)
+    - Symmetry (horizontal/vertical/rotational)
+    - Pattern completion, periodic tiling
+  Expected: +2-3% solve rate (target: 37 high-quality tasks)
+
+=== Solving task 4e45f183 (V9 - Extended Primitives) ===
+Train examples: 3, Test examples: 1
+
+[Extended Primitives]
+  Detecting applicable primitives...
+  Detected 1 potential primitives:
+    - Recolor in checkerboard pattern (confidence=0.90)
+  Best program: Recolor in checkerboard pattern (score=0.474)
+
+[Program Selection]
+  Extended primitives score: 0.474
+  V7 approach score: 0.884
+  → Using V7 approach (better score)
+
+======================================================================
+V7 Result: IoU 0.8338
+V9 Result: IoU 0.8338
+Change: +0.0000
+======================================================================
+
+======================================================================
+Task: 1c56ad9f (V7 score: 0.8400)
+======================================================================
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+✓ Solver V9 Initialized (20 Extended Primitives)
+  Category 1: Spatial operations (5 primitives)
+    - Extract leftmost/rightmost/topmost/bottommost object
+    - Align objects to grid
+  Category 2: Object operations (5 primitives)
+    - Copy object horizontally/vertically
+    - Connect objects, intersection, union
+  Category 3: Color operations (5 primitives)
+    - Recolor by row/column, checkerboard
+    - Swap by size, color propagation
+  Category 4: Pattern operations (5 primitives)
+    - Symmetry (horizontal/vertical/rotational)
+    - Pattern completion, periodic tiling
+  Expected: +2-3% solve rate (target: 37 high-quality tasks)
+
+=== Solving task 1c56ad9f (V9 - Extended Primitives) ===
+Train examples: 4, Test examples: 1
+
+[Extended Primitives]
+  Detecting applicable primitives...
+  Detected 1 potential primitives:
+    - Recolor in checkerboard pattern (confidence=0.90)
+  Best program: Recolor in checkerboard pattern (score=0.764)
+
+[Program Selection]
+  Extended primitives score: 0.764
+  V7 approach score: 0.897
+  → Using V7 approach (better score)
+
+======================================================================
+V7 Result: IoU 0.8400
+V9 Result: IoU 0.8400
+Change: +0.0000
+======================================================================
+
+======================================================================
+Task: 319f2597 (V7 score: 0.8400)
+======================================================================
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+✓ Solver V9 Initialized (20 Extended Primitives)
+  Category 1: Spatial operations (5 primitives)
+    - Extract leftmost/rightmost/topmost/bottommost object
+    - Align objects to grid
+  Category 2: Object operations (5 primitives)
+    - Copy object horizontally/vertically
+    - Connect objects, intersection, union
+  Category 3: Color operations (5 primitives)
+    - Recolor by row/column, checkerboard
+    - Swap by size, color propagation
+  Category 4: Pattern operations (5 primitives)
+    - Symmetry (horizontal/vertical/rotational)
+    - Pattern completion, periodic tiling
+  Expected: +2-3% solve rate (target: 37 high-quality tasks)
+
+=== Solving task 319f2597 (V9 - Extended Primitives) ===
+Train examples: 3, Test examples: 1
+
+[Extended Primitives]
+  Detecting applicable primitives...
+  No extended primitives detected
+
+[Program Selection]
+  Extended primitives score: 0.000
+  V7 approach score: 0.844
+  → Using V7 approach (better score)
+
+======================================================================
+V7 Result: IoU 0.8400
+V9 Result: IoU 0.8400
+Change: +0.0000
+======================================================================
+
+======================================================================
+Task: 33b52de3 (V7 score: 0.8412)
+======================================================================
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+✓ Solver V9 Initialized (20 Extended Primitives)
+  Category 1: Spatial operations (5 primitives)
+    - Extract leftmost/rightmost/topmost/bottommost object
+    - Align objects to grid
+  Category 2: Object operations (5 primitives)
+    - Copy object horizontally/vertically
+    - Connect objects, intersection, union
+  Category 3: Color operations (5 primitives)
+    - Recolor by row/column, checkerboard
+    - Swap by size, color propagation
+  Category 4: Pattern operations (5 primitives)
+    - Symmetry (horizontal/vertical/rotational)
+    - Pattern completion, periodic tiling
+  Expected: +2-3% solve rate (target: 37 high-quality tasks)
+
+=== Solving task 33b52de3 (V9 - Extended Primitives) ===
+Train examples: 2, Test examples: 1
+
+[Extended Primitives]
+  Detecting applicable primitives...
+  No extended primitives detected
+
+[Program Selection]
+  Extended primitives score: 0.000
+  V7 approach score: 0.893
+  → Using V7 approach (better score)
+
+======================================================================
+V7 Result: IoU 0.8412
+V9 Result: IoU 0.8412
+Change: +0.0000
+======================================================================
+
+======================================================================
+Task: 103eff5b (V7 score: 0.8462)
+======================================================================
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+✓ Solver V9 Initialized (20 Extended Primitives)
+  Category 1: Spatial operations (5 primitives)
+    - Extract leftmost/rightmost/topmost/bottommost object
+    - Align objects to grid
+  Category 2: Object operations (5 primitives)
+    - Copy object horizontally/vertically
+    - Connect objects, intersection, union
+  Category 3: Color operations (5 primitives)
+    - Recolor by row/column, checkerboard
+    - Swap by size, color propagation
+  Category 4: Pattern operations (5 primitives)
+    - Symmetry (horizontal/vertical/rotational)
+    - Pattern completion, periodic tiling
+  Expected: +2-3% solve rate (target: 37 high-quality tasks)
+
+=== Solving task 103eff5b (V9 - Extended Primitives) ===
+Train examples: 2, Test examples: 1
+
+[Extended Primitives]
+  Detecting applicable primitives...
+  Detected 1 potential primitives:
+    - Recolor in checkerboard pattern (confidence=0.90)
+  Best program: Recolor in checkerboard pattern (score=0.852)
+
+[Program Selection]
+  Extended primitives score: 0.852
+  V7 approach score: 0.887
+  → Using V7 approach (better score)
+
+======================================================================
+V7 Result: IoU 0.8462
+V9 Result: IoU 0.8462
+Change: +0.0000
+======================================================================
+
+======================================================================
+Task: 25094a63 (V7 score: 0.8533)
+======================================================================
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+✓ Solver V9 Initialized (20 Extended Primitives)
+  Category 1: Spatial operations (5 primitives)
+    - Extract leftmost/rightmost/topmost/bottommost object
+    - Align objects to grid
+  Category 2: Object operations (5 primitives)
+    - Copy object horizontally/vertically
+    - Connect objects, intersection, union
+  Category 3: Color operations (5 primitives)
+    - Recolor by row/column, checkerboard
+    - Swap by size, color propagation
+  Category 4: Pattern operations (5 primitives)
+    - Symmetry (horizontal/vertical/rotational)
+    - Pattern completion, periodic tiling
+  Expected: +2-3% solve rate (target: 37 high-quality tasks)
+
+=== Solving task 25094a63 (V9 - Extended Primitives) ===
+Train examples: 2, Test examples: 1
+
+[Extended Primitives]
+  Detecting applicable primitives...
+  No extended primitives detected
+
+[Program Selection]
+  Extended primitives score: 0.000
+  V7 approach score: 0.871
+  → Using V7 approach (better score)
+
+======================================================================
+V7 Result: IoU 0.8533
+V9 Result: IoU 0.8533
+Change: +0.0000
+======================================================================
+
+======================================================================
+Task: 47996f11 (V7 score: 0.8533)
+======================================================================
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+✓ Solver V9 Initialized (20 Extended Primitives)
+  Category 1: Spatial operations (5 primitives)
+    - Extract leftmost/rightmost/topmost/bottommost object
+    - Align objects to grid
+  Category 2: Object operations (5 primitives)
+    - Copy object horizontally/vertically
+    - Connect objects, intersection, union
+  Category 3: Color operations (5 primitives)
+    - Recolor by row/column, checkerboard
+    - Swap by size, color propagation
+  Category 4: Pattern operations (5 primitives)
+    - Symmetry (horizontal/vertical/rotational)
+    - Pattern completion, periodic tiling
+  Expected: +2-3% solve rate (target: 37 high-quality tasks)
+
+=== Solving task 47996f11 (V9 - Extended Primitives) ===
+Train examples: 4, Test examples: 1
+
+[Extended Primitives]
+  Detecting applicable primitives...
+  No extended primitives detected
+
+[Program Selection]
+  Extended primitives score: 0.000
+  V7 approach score: 0.933
+  → Using V7 approach (better score)
+
+======================================================================
+V7 Result: IoU 0.8533
+V9 Result: IoU 0.8533
+Change: +0.0000
+======================================================================
+
+======================================================================
+Task: 09c534e7 (V7 score: 0.8544)
+======================================================================
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+✓ Solver V9 Initialized (20 Extended Primitives)
+  Category 1: Spatial operations (5 primitives)
+    - Extract leftmost/rightmost/topmost/bottommost object
+    - Align objects to grid
+  Category 2: Object operations (5 primitives)
+    - Copy object horizontally/vertically
+    - Connect objects, intersection, union
+  Category 3: Color operations (5 primitives)
+    - Recolor by row/column, checkerboard
+    - Swap by size, color propagation
+  Category 4: Pattern operations (5 primitives)
+    - Symmetry (horizontal/vertical/rotational)
+    - Pattern completion, periodic tiling
+  Expected: +2-3% solve rate (target: 37 high-quality tasks)
+
+=== Solving task 09c534e7 (V9 - Extended Primitives) ===
+Train examples: 3, Test examples: 1
+
+[Extended Primitives]
+  Detecting applicable primitives...
+  Detected 1 potential primitives:
+    - Recolor in checkerboard pattern (confidence=0.90)
+  Best program: Recolor in checkerboard pattern (score=0.792)
+
+[Program Selection]
+  Extended primitives score: 0.792
+  V7 approach score: 0.931
+  → Using V7 approach (better score)
+
+======================================================================
+V7 Result: IoU 0.8544
+V9 Result: IoU 0.8544
+Change: +0.0000
+======================================================================
+
+======================================================================
+Task: 12422b43 (V7 score: 0.8571)
+======================================================================
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+✓ Solver V9 Initialized (20 Extended Primitives)
+  Category 1: Spatial operations (5 primitives)
+    - Extract leftmost/rightmost/topmost/bottommost object
+    - Align objects to grid
+  Category 2: Object operations (5 primitives)
+    - Copy object horizontally/vertically
+    - Connect objects, intersection, union
+  Category 3: Color operations (5 primitives)
+    - Recolor by row/column, checkerboard
+    - Swap by size, color propagation
+  Category 4: Pattern operations (5 primitives)
+    - Symmetry (horizontal/vertical/rotational)
+    - Pattern completion, periodic tiling
+  Expected: +2-3% solve rate (target: 37 high-quality tasks)
+
+=== Solving task 12422b43 (V9 - Extended Primitives) ===
+Train examples: 5, Test examples: 1
+
+[Extended Primitives]
+  Detecting applicable primitives...
+  Detected 1 potential primitives:
+    - Connect objects with lines (confidence=0.80)
+  Best program: Connect objects with lines (score=0.612)
+
+[Program Selection]
+  Extended primitives score: 0.612
+  V7 approach score: 0.830
+  → Using V7 approach (better score)
+
+======================================================================
+V7 Result: IoU 0.8571
+V9 Result: IoU 0.8571
+Change: +0.0000
+======================================================================
+
+======================================================================
+Task: 03560426 (V7 score: 0.8600)
+======================================================================
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+✓ Solver V9 Initialized (20 Extended Primitives)
+  Category 1: Spatial operations (5 primitives)
+    - Extract leftmost/rightmost/topmost/bottommost object
+    - Align objects to grid
+  Category 2: Object operations (5 primitives)
+    - Copy object horizontally/vertically
+    - Connect objects, intersection, union
+  Category 3: Color operations (5 primitives)
+    - Recolor by row/column, checkerboard
+    - Swap by size, color propagation
+  Category 4: Pattern operations (5 primitives)
+    - Symmetry (horizontal/vertical/rotational)
+    - Pattern completion, periodic tiling
+  Expected: +2-3% solve rate (target: 37 high-quality tasks)
+
+=== Solving task 03560426 (V9 - Extended Primitives) ===
+Train examples: 3, Test examples: 1
+
+[Extended Primitives]
+  Detecting applicable primitives...
+  No extended primitives detected
+
+[Program Selection]
+  Extended primitives score: 0.000
+  V7 approach score: 0.817
+  → Using V7 approach (better score)
+
+======================================================================
+V7 Result: IoU 0.8600
+V9 Result: IoU 0.8600
+Change: +0.0000
+======================================================================
+
+======================================================================
+Task: 0becf7df (V7 score: 0.8600)
+======================================================================
+Computing behavior vectors...
+✓ Built graph with 14 edges
+✓ Initialized ARC Graph Pendulum Solver
+  Nodes: 9
+  Edges: 14
+✓ Solver V3 Initialized (Example-Driven Rule Inference)
+✓ Solver V3+ Initialized (Enhanced Rule Inference)
+  - Enhanced differential analyzer (pattern tiling, pattern extraction, object ops)
+  - Enhanced targeted synthesizer (complex transformations)
+✓ Solver V4 Initialized (Shape Transformation Support)
+  - Object extraction detector
+  - Cropping/bounding box detector
+  - Region selection detector
+  - Color counting detector
+  - Shape rule inferencer (finds abstract patterns)
+  - Intelligent routing (shape-changing vs same-shape)
+✓ Solver V5 Initialized (Compositional Transformation Support)
+  - 2-step composition detection
+  - 3-step composition detection
+  - Intermediate state search
+  - Multi-step program synthesis
+✓ Solver V6 Initialized (Meta-Pattern Learning & Test-Time Adaptation)
+  - Variation analysis across training examples
+  - Conditional rule inference
+  - Adaptive program synthesis
+  - Test-time parameter adaptation
+✓ Solver V7 Initialized (Execution Refinement)
+  - Incomplete fill correction
+  - Edge/boundary handling fixes
+  - Color leakage correction
+  - Object boundary refinement
+✓ Solver V9 Initialized (20 Extended Primitives)
+  Category 1: Spatial operations (5 primitives)
+    - Extract leftmost/rightmost/topmost/bottommost object
+    - Align objects to grid
+  Category 2: Object operations (5 primitives)
+    - Copy object horizontally/vertically
+    - Connect objects, intersection, union
+  Category 3: Color operations (5 primitives)
+    - Recolor by row/column, checkerboard
+    - Swap by size, color propagation
+  Category 4: Pattern operations (5 primitives)
+    - Symmetry (horizontal/vertical/rotational)
+    - Pattern completion, periodic tiling
+  Expected: +2-3% solve rate (target: 37 high-quality tasks)
+
+=== Solving task 0becf7df (V9 - Extended Primitives) ===
+Train examples: 3, Test examples: 1
+
+[Extended Primitives]
+  Detecting applicable primitives...
+  Detected 1 potential primitives:
+    - Recolor in checkerboard pattern (confidence=0.90)
+  Best program: Recolor in checkerboard pattern (score=0.810)
+
+[Program Selection]
+  Extended primitives score: 0.810
+  V7 approach score: 0.910
+  → Using V7 approach (better score)
+
+======================================================================
+V7 Result: IoU 0.8600
+V9 Result: IoU 0.8600
+Change: +0.0000
+======================================================================
+
+
+======================================================================
+V9 SUMMARY (15 tasks)
+======================================================================
+Improvements: 0/15
+Regressions:  0/15
+No change:    15/15
+======================================================================
+
