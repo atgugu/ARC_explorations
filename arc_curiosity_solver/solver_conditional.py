@@ -20,6 +20,7 @@ from .core.conditional_pattern_inference import (
 )
 from .core.improved_conditional_inference import ImprovedConditionalPatternAnalyzer
 from .core.action_inference import ActionInference, ActionFocusedGenerator  # PHASE 6
+from .core.pipeline_transform import PipelineGenerator, PipelineTransform, PipelineStage  # PHASE 7
 from .transformations.conditional_transforms import (
     ConditionalTransform,
     ConditionLibrary,
@@ -76,6 +77,9 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
         self.action_inference = ActionInference()
         self.action_focused_generator = ActionFocusedGenerator(self.action_inference)
 
+        # Phase 7: Multi-stage pipelines
+        self.pipeline_generator = PipelineGenerator(max_stages=3, beam_width=5)
+
         # Configuration
         self.use_conditionals = True
         self.use_spatial_predicates = True
@@ -85,8 +89,10 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
         self.use_richer_predicates = True  # PHASE 4: Use expanded condition library
         self.use_composite_actions = True  # PHASE 5: Use geometric & grid transformations
         self.use_action_learning = True  # PHASE 6: Learn actions from training
+        self.use_multi_stage_pipelines = True  # PHASE 7: Generate multi-stage transformation pipelines
         self.conditional_priority_boost = 1.5  # Boost confidence of conditional hypotheses
         self.nested_priority_boost = 3.0  # Even higher boost for nested (more expressive)
+        self.pipeline_priority_boost = 2.5  # PHASE 7: Pipelines are highly expressive
         self.validation_threshold = 0.15  # PHASE 4/5: Optimal threshold from Phase 4 testing
 
         # Phase 3 components
@@ -214,6 +220,23 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
                         program=transform_obj,
                         name=f"composite_{len(hypotheses)}",
                         parameters={'description': description, 'variant': 'composite'},
+                        activation=boosted_confidence
+                    )
+                    hypotheses.append(hyp)
+            except Exception as e:
+                pass
+
+        # === PHASE 7: MULTI-STAGE PIPELINES - VERY HIGH PRIORITY ===
+        if self.use_multi_stage_pipelines:
+            try:
+                pipeline_hyps = self._generate_multi_stage_pipelines(train_pairs, test_input)
+                for transform_obj, description, confidence in pipeline_hyps:
+                    # Use pipeline_priority_boost (multi-stage = very expressive)
+                    boosted_confidence = confidence * self.pipeline_priority_boost
+                    hyp = Hypothesis(
+                        program=transform_obj,
+                        name=f"pipeline_{len(hypotheses)}",
+                        parameters={'description': description, 'variant': 'pipeline'},
                         activation=boosted_confidence
                     )
                     hypotheses.append(hyp)
@@ -1157,6 +1180,120 @@ class ConditionalARCCuriositySolver(DiverseARCCuriositySolver):
         # Sort by accuracy
         composite_hyps.sort(key=lambda x: x[2], reverse=True)
         return composite_hyps[:12]  # Top 12 composite action conditionals
+
+    def _generate_multi_stage_pipelines(
+        self,
+        train_pairs: List[Tuple[np.ndarray, np.ndarray]],
+        test_input: np.ndarray
+    ) -> List[Tuple[Transform, str, float]]:
+        """
+        PHASE 7: Generate multi-stage transformation pipelines.
+
+        Chains transformations in sequence to handle tasks requiring
+        sequential reasoning (the 28% of tasks that fail with single-stage).
+
+        Strategy:
+        1. Collect all successful single-stage transforms
+        2. Use greedy search to build 2-stage pipelines
+        3. Optionally extend to 3-stage for very complex tasks
+
+        Returns:
+            List of (Transform, description, confidence) tuples
+        """
+        pipeline_hyps = []
+
+        if not train_pairs:
+            return pipeline_hyps
+
+        # === COLLECT STAGE 1 CANDIDATES ===
+        # Gather all transforms that show some promise
+        stage1_candidates = []
+
+        # Simple unconditional transforms from parent solver
+        try:
+            from .belief_dynamics.belief_space import Hypothesis
+            parent_hyps = super(ConditionalARCCuriositySolver, self)._generate_hypotheses(train_pairs, test_input)
+
+            for hyp in parent_hyps[:30]:  # Top 30 from parent
+                transform = hyp.program
+                confidence = hyp.activation
+                stage1_candidates.append((transform.function, transform.name, confidence))
+        except:
+            pass
+
+        # Conditional transforms (without boost)
+        try:
+            conditional_hyps = self.conditional_generator.generate_from_training(train_pairs)
+            for transform_obj, description, confidence in conditional_hyps[:20]:
+                stage1_candidates.append((transform_obj.function, description, confidence))
+        except:
+            pass
+
+        # Composite action transforms
+        try:
+            composite_hyps = self._generate_composite_action_conditionals(train_pairs, test_input)
+            for transform_obj, description, confidence in composite_hyps[:15]:
+                # Use raw confidence (before boost)
+                raw_confidence = confidence / self.nested_priority_boost if confidence > 1.0 else confidence
+                stage1_candidates.append((transform_obj.function, description, raw_confidence))
+        except:
+            pass
+
+        if not stage1_candidates:
+            return pipeline_hyps
+
+        # === GENERATE 2-STAGE PIPELINES ===
+        try:
+            pipelines_2stage = self.pipeline_generator.generate_2stage_pipelines(
+                stage1_transforms=stage1_candidates[:30],  # Top 30 for stage 1
+                stage2_transforms=stage1_candidates[:30],  # Top 30 for stage 2
+                train_pairs=train_pairs
+            )
+
+            for pipeline, accuracy in pipelines_2stage:
+                # Create Transform wrapper
+                def make_pipeline_transform(p=pipeline):
+                    def transform_fn(grid: np.ndarray) -> np.ndarray:
+                        return p.apply(grid)
+                    return transform_fn
+
+                transform_obj = Transform(
+                    name=pipeline.name,
+                    function=make_pipeline_transform(),
+                    parameters={'variant': 'pipeline', 'stages': len(pipeline)},
+                    category='pipeline'
+                )
+
+                description = pipeline.get_description()
+
+                pipeline_hyps.append((
+                    transform_obj,
+                    description,
+                    accuracy
+                ))
+
+        except Exception as e:
+            pass
+
+        # === GENERATE 3-STAGE PIPELINES (if needed) ===
+        # Only try 3-stage if we have good 2-stage candidates
+        good_2stage = [(p, a) for p, d, a in pipeline_hyps if a > 0.3]
+
+        if len(good_2stage) > 0 and len(good_2stage) < 5:  # Some but not many 2-stage solutions
+            try:
+                # Convert back to pipeline objects
+                pipeline_objs = []
+                for transform_obj, description, accuracy in pipeline_hyps[:5]:
+                    # Reconstruct pipeline from transform
+                    # (This is a simplification - in practice we'd need to track the pipeline object)
+                    pass  # Skip 3-stage for now - adds complexity
+
+            except:
+                pass
+
+        # Sort by accuracy
+        pipeline_hyps.sort(key=lambda x: x[2], reverse=True)
+        return pipeline_hyps[:10]  # Top 10 pipeline hypotheses
 
 
 def test_conditional_solver():
