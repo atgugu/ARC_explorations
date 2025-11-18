@@ -15,6 +15,7 @@ import time
 from arc_active_inference_solver import (
     Grid, ARCTask, Hypothesis, PerceptionModule
 )
+from parameter_inference import ParameterInference, apply_color_mapping
 
 
 # =============================================================================
@@ -716,18 +717,28 @@ class ProgramSynthesizer:
         """
         Synthesize programs for task
 
+        Phase 3: Uses parameter inference to generate targeted programs
+
         Returns list of Program objects, ranked by training performance
         """
         if verbose:
-            print(f"\n=== Program Synthesis ===")
+            print(f"\n=== Program Synthesis (Phase 3: Parameter Inference) ===")
             print(f"Max depth: {self.max_depth}, Max programs: {self.max_programs}")
+
+        # Phase 3: Infer parameters from training examples
+        param_inferrer = ParameterInference()
+        inferred_params = param_inferrer.infer_all_parameters(task.train_pairs, verbose=verbose)
+
+        if verbose and inferred_params:
+            print(f"\nInferred {len(inferred_params)} parameter(s)")
 
         all_programs = []
 
-        # Level 0: Primitives
-        level_0 = self._generate_primitives()
+        # Level 0: Primitives (with inferred parameters)
+        level_0 = self._generate_primitives_with_params(inferred_params)
         if verbose:
-            print(f"Level 0: Generated {len(level_0)} primitives")
+            print(f"Level 0: Generated {len(level_0)} primitives (including {len([p for p in level_0 if 'learned' in p.op_name])} learned)")
+
 
         level_0_pruned = self._prune_by_training(level_0, task.train_pairs, keep_top=50)
         if verbose:
@@ -805,6 +816,90 @@ class ProgramSynthesizer:
         primitives.extend(get_geometric_primitives())
         primitives.extend(get_color_primitives())
         primitives.extend(get_scaling_primitives())
+
+        # Object operations (non-compositional)
+        primitives.append(Program("keep_largest", keep_largest_op, {}))
+        primitives.append(Program("keep_smallest", keep_smallest_op, {}))
+        primitives.append(Program("remove_largest", remove_largest_op, {}))
+        primitives.append(Program("remove_smallest", remove_smallest_op, {}))
+
+        return primitives
+
+    def _generate_primitives_with_params(self, inferred_params: Dict) -> List[Program]:
+        """
+        Generate primitives using inferred parameters (Phase 3)
+
+        Key innovation: Generate fewer, more targeted programs based on learned parameters
+        """
+        primitives = []
+
+        # Always include geometric primitives (small set)
+        primitives.extend(get_geometric_primitives())
+
+        # Phase 3: Use inferred parameters when available
+        if inferred_params.get('color_map'):
+            # Generate program with learned color mapping
+            color_map = inferred_params['color_map']
+            primitives.append(Program(
+                "replace_colors_learned",
+                lambda g, cm=color_map: apply_color_mapping(g, cm),
+                {"color_map": str(color_map)}
+            ))
+
+        else:
+            # Fallback: Generate small set of common color operations
+            primitives.extend(get_color_primitives()[:10])  # Only top 10
+
+        if inferred_params.get('scale_factor'):
+            # Generate program with learned scale
+            scale = inferred_params['scale_factor']
+            def zoom_learned(g, s=scale):
+                new_data = np.repeat(np.repeat(g.data, s, axis=0), s, axis=1)
+                return Grid(new_data)
+
+            primitives.append(Program(
+                f"zoom_{scale}x_learned",
+                zoom_learned,
+                {"scale": scale}
+            ))
+        else:
+            # Fallback: Include 2x and 3x zooms
+            primitives.extend(get_scaling_primitives())
+
+        if inferred_params.get('tile_factor'):
+            # Generate program with learned tiling
+            n, m = inferred_params['tile_factor']
+            primitives.append(Program(
+                f"tile_{n}x{m}_learned",
+                tile_nxm_op,
+                {"n": n, "m": m}
+            ))
+
+        if inferred_params.get('rotation'):
+            # Generate program with learned rotation
+            rotation = inferred_params['rotation']
+            k = rotation // 90
+            primitives.append(Program(
+                f"rotate_{rotation}_learned",
+                lambda g, k=k: Grid(np.rot90(g.data, k=k)),
+                {"rotation": rotation}
+            ))
+
+        if inferred_params.get('flip'):
+            # Generate program with learned flip
+            flip_dir = inferred_params['flip']
+            if flip_dir == 'horizontal':
+                primitives.append(Program(
+                    "flip_h_learned",
+                    lambda g: Grid(np.fliplr(g.data)),
+                    {"flip": flip_dir}
+                ))
+            elif flip_dir == 'vertical':
+                primitives.append(Program(
+                    "flip_v_learned",
+                    lambda g: Grid(np.flipud(g.data)),
+                    {"flip": flip_dir}
+                ))
 
         # Object operations (non-compositional)
         primitives.append(Program("keep_largest", keep_largest_op, {}))

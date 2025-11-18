@@ -1,0 +1,27 @@
+{
+  "phase2": {
+    "depth": 3,
+    "features": "conditionals + loops + patterns",
+    "total": 200,
+    "success": 2,
+    "attempt_1": 2,
+    "attempt_2": 0,
+    "identical": 128,
+    "avg_time": 0.1389077663421631
+  },
+  "phase3": {
+    "depth": 3,
+    "features": "parameter inference (learned params)",
+    "total": 200,
+    "success": 2,
+    "attempt_1": 2,
+    "attempt_2": 0,
+    "identical": 128,
+    "avg_time": 0.1366584849357605,
+    "tasks_solved": [
+      "60c09cac",
+      "68b67ca3"
+    ]
+  },
+  "improvement": 0
+}
