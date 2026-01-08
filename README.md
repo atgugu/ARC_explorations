@@ -1,6 +1,7 @@
 # ARC-AGI Challenge Explorations
 
 This repository contains wild ideas, experiments, and explorations for solving the [ARC-AGI Challenge](https://arcprize.org/).
+Consider this as AI-assisted solution doodling just for fun. 
 
 ## About ARC-AGI
 
