@@ -2,13 +2,21 @@
 
 ## A Unified System for ARC-AGI Challenge
 
-**The ARC Active Inference Solver** is an elegant, principled system that blends the best ideas from multiple theoretical frameworks to solve diverse ARC-AGI tasks. It always produces **two best predictions** and **learns during inference** using active inference principles.
+> **Note**: This system has not yet been empirically validated on the full ARC-AGI
+> benchmark. The examples included are small toy tasks used to demonstrate the
+> architecture. Performance on the complete benchmark remains to be evaluated.
+
+The ARC Active Inference Solver is a system that combines ideas from multiple
+theoretical frameworks to explore approaches to ARC-AGI tasks. It produces two
+candidate predictions and updates beliefs during inference using active inference
+principles.
 
 ---
 
 ## Core Philosophy
 
-The system is built on a simple but powerful insight: **Active Inference** naturally unifies all the key ideas needed for ARC solving:
+The system is built on the idea that Active Inference can serve as a unifying
+framework for several approaches to ARC solving:
 
 1. **Active Inference**: Continuously update beliefs over transformation hypotheses as we observe each training example
 2. **Curiosity-Driven Exploration**: Prioritize hypotheses with high information gain and epistemic uncertainty
@@ -58,33 +66,33 @@ The system is built on a simple but powerful insight: **Active Inference** natur
 
 ## Theoretical Foundations
 
-This system synthesizes ideas from five major frameworks developed in this repository:
+This system draws on ideas from five frameworks developed in this repository:
 
-### 1. **Curiosity-Driven Neurosymbolic Framework**
+### 1. Curiosity-Driven Neurosymbolic Framework
 - **Bayesian Surprise**: KL divergence measuring belief changes
 - **Epistemic Uncertainty**: Entropy of belief distribution
 - **Learning Progress**: Reduction in uncertainty over time
 - **Information Gain**: Expected belief refinement from observations
 
-### 2. **Global Workspace Theory**
+### 2. Global Workspace Theory
 - **Limited Capacity**: Workspace holds only top-k hypotheses
 - **Winner-Take-Most**: Best hypotheses dominate attention
 - **Broadcasting**: Selected hypotheses are shared across all modules
 - **Recurrent Refinement**: Iterative improvement through feedback
 
-### 3. **Dynamical Systems / Graph Pendulum**
+### 3. Dynamical Systems / Graph Pendulum
 - **Stability Analysis**: Test hypothesis robustness via perturbations
 - **Lyapunov-like Indicators**: Prefer low-variance solution trajectories
 - **Basin Discovery**: Identify stable regions in hypothesis space
 - **Chaos Avoidance**: Filter out unstable, chaotic hypotheses
 
-### 4. **Probabilistic Program Spaces**
+### 4. Probabilistic Program Spaces
 - **Continuous Belief Dynamics**: P(h|D_t) evolves continuously
 - **Information Geometry**: Natural gradients in belief space
-- **Bayesian Updates**: Posterior ∝ Likelihood × Prior
+- **Bayesian Updates**: Posterior proportional to Likelihood times Prior
 - **Phase Transitions**: Belief convergence and oscillations
 
-### 5. **Generative Task Discovery**
+### 5. Generative Task Discovery
 - **Typed DSL**: Compositional transformation language
 - **Program Synthesis**: Generate hypotheses from primitives
 - **Schema Composition**: Combine basic operations
@@ -100,7 +108,7 @@ This system synthesizes ideas from five major frameworks developed in this repos
 # 1. Initialize
 solver = ARCActiveInferenceSolver()
 
-# 2. Solve task (always returns 2 predictions)
+# 2. Solve task (returns 2 predictions)
 predictions = solver.solve(task)
 ```
 
@@ -116,7 +124,7 @@ predictions = solver.solve(task)
    - Bias toward simpler programs (MDL principle)
 
 3. **Belief Initialization**
-   - Initialize uniform prior: P(h) ∝ exp(-complexity)
+   - Initialize prior: P(h) proportional to exp(-complexity)
    - Compute initial epistemic uncertainty (entropy)
 
 4. **Active Inference Loop** (for each training example)
@@ -139,53 +147,30 @@ predictions = solver.solve(task)
    ```
 
 5. **Final Selection**
-   - Rank hypotheses by: `posterior_probability × stability`
+   - Rank hypotheses by: `posterior_probability * stability`
    - Select top-2 for prediction
    - Apply to test input
 
 6. **Return Predictions**
-   - Always return exactly 2 predictions
+   - Return exactly 2 predictions
    - First = highest ranked, Second = second highest
 
 ---
 
-## Key Features
+## Design Goals
 
-### ✅ Always Learns During Inference
-- **Active Inference**: Updates beliefs with every training example
-- **No Pre-training Required**: Works with zero prior knowledge
-- **Few-Shot Learning**: Effective with 2-5 training examples
-
-### ✅ Always Returns 2 Predictions
-- Guaranteed to produce exactly 2 predictions
-- First prediction = most probable × most stable
-- Second prediction = next best alternative
-
-### ✅ Curiosity-Driven Exploration
-- **Information Gain**: Prioritize observations that reduce uncertainty
-- **Epistemic Uncertainty**: Explore hypotheses with high knowledge gaps
-- **Learning Progress**: Track improvement velocity
-
-### ✅ Stability-Aware
-- **Robustness Testing**: Filter chaotic, unstable hypotheses
-- **Consistency**: Prefer hypotheses that work across all training examples
-- **Low Variance**: Select solutions with predictable behavior
-
-### ✅ Interpretable
-- **Symbolic Programs**: Human-readable transformations
-- **Reasoning Traces**: Track belief evolution
-- **Hypothesis Names**: Clear descriptions (e.g., "rotate_90", "flip_vertical")
-
-### ✅ Compositional
-- **DSL Primitives**: Geometric, color, object, spatial operations
-- **Schema Composition**: Combine basic operations
-- **Hierarchical**: Build complex transformations from simple ones
+- **Learning during inference**: Updates beliefs with every training example, no pre-training required
+- **Two predictions**: Designed to produce exactly 2 candidate predictions per task
+- **Curiosity-driven exploration**: Information gain prioritizes observations that reduce uncertainty
+- **Stability-aware**: Robustness testing filters inconsistent hypotheses
+- **Interpretable**: Symbolic programs with human-readable transformation names
+- **Compositional**: DSL primitives can be combined into multi-step transformations
 
 ---
 
 ## DSL Primitives
 
-The system uses a rich Domain-Specific Language (DSL) for transformations:
+The system uses a Domain-Specific Language (DSL) for transformations:
 
 ### Geometric Primitives
 - `rotate_90`, `rotate_180`, `rotate_270`
@@ -352,7 +337,7 @@ engine = ActiveInferenceEngine(
 
 ## Implementation Status
 
-### ✅ Completed
+### Completed
 - [x] Perception Module (object detection, symmetry, patterns)
 - [x] Hypothesis Generator (DSL with 30+ primitives)
 - [x] Active Inference Engine (Bayesian updating)
@@ -360,10 +345,8 @@ engine = ActiveInferenceEngine(
 - [x] Stability Filter (robustness testing)
 - [x] Workspace Controller (top-k selection)
 - [x] Unified Solver (end-to-end pipeline)
-- [x] Always returns 2 predictions
-- [x] Always learns during inference
 
-### 🚧 Future Enhancements
+### Future Enhancements
 - [ ] More sophisticated object relation detection
 - [ ] Learned DSL primitives (neural modules)
 - [ ] Meta-learning across tasks
@@ -376,86 +359,52 @@ engine = ActiveInferenceEngine(
 
 ## Design Principles
 
-### 1. **Simplicity**
+### 1. Modularity
 - Clean, modular architecture
 - Each component has a single responsibility
 - Easy to understand and extend
 
-### 2. **Elegance**
-- Active Inference naturally unifies all frameworks
+### 2. Bayesian Foundations
+- Active Inference connects the frameworks
 - Bayesian principles throughout
-- Information theory provides principled foundations
+- Information theory provides the mathematical basis
 
-### 3. **Practicality**
-- Works out-of-the-box
+### 3. Practicality
+- Minimal dependencies (NumPy only)
 - No pre-training required
 - Handles diverse task types
 
-### 4. **Interpretability**
+### 4. Interpretability
 - Symbolic programs (not neural black boxes)
 - Reasoning traces
 - Human-readable hypothesis names
 
-### 5. **Robustness**
+### 5. Robustness
 - Stability filtering prevents brittle solutions
 - Handles edge cases (empty grids, mismatched shapes)
 - Graceful degradation
 
 ---
 
-## Theoretical Contributions
+## Limitations
 
-This implementation demonstrates how to:
-
-1. **Unify Multiple Frameworks**: Active Inference serves as the natural glue
-2. **Learn During Inference**: No training phase, pure few-shot learning
-3. **Balance Exploration/Exploitation**: Curiosity guides search efficiently
-4. **Ensure Robustness**: Stability analysis filters fragile hypotheses
-5. **Maintain Interpretability**: Symbolic programs remain human-readable
-
----
-
-## Comparison to Other Approaches
-
-| Approach | AAIS | Pure Neural | Pure Symbolic | Hybrid |
-|----------|------|-------------|---------------|--------|
-| Interpretable | ✅ | ❌ | ✅ | ⚠️ |
-| Few-Shot | ✅ | ❌ | ✅ | ⚠️ |
-| Learns During Inference | ✅ | ❌ | ❌ | ⚠️ |
-| Active Inference | ✅ | ❌ | ❌ | ❌ |
-| Curiosity-Driven | ✅ | ⚠️ | ❌ | ⚠️ |
-| Stability-Aware | ✅ | ❌ | ❌ | ❌ |
-| Always 2 Predictions | ✅ | ⚠️ | ⚠️ | ⚠️ |
-| No Pre-training | ✅ | ❌ | ✅ | ❌ |
-
----
-
-## Performance Characteristics
-
-### Strengths
-- **Few-shot learning**: Effective with 2-5 examples
-- **Compositional generalization**: Handles novel combinations
-- **Robust**: Filters unstable hypotheses
-- **Interpretable**: Clear reasoning traces
-- **Principled**: Bayesian foundations
-
-### Limitations
 - **DSL Coverage**: Limited to pre-defined primitives
 - **Computational Cost**: Evaluates many hypotheses
 - **Complex Compositions**: May miss deeply nested rules
 - **Perceptual Limitations**: Object detection is heuristic-based
+- **Validation**: Not yet tested on the full ARC-AGI benchmark
 
 ### Computational Complexity
 - **Hypothesis Generation**: O(k) where k = number of primitives
-- **Belief Update**: O(n·h) where n = training examples, h = hypotheses
-- **Stability Testing**: O(h·n) for each hypothesis
-- **Total**: O(h·n) per task
+- **Belief Update**: O(n*h) where n = training examples, h = hypotheses
+- **Stability Testing**: O(h*n) for each hypothesis
+- **Total**: O(h*n) per task
 
 ---
 
 ## Extension Points
 
-The system is designed for easy extension:
+The system is designed for extension:
 
 ### 1. Add New Primitives
 ```python
@@ -493,21 +442,6 @@ def custom_selection(hypotheses, belief):
 
 ---
 
-## Citation
-
-If you use this system in your research, please cite:
-
-```bibtex
-@software{arc_active_inference_solver,
-  title={ARC Active Inference Solver: A Unified System for Abstract Reasoning},
-  author={ARC Explorations Project},
-  year={2025},
-  url={https://github.com/your-repo/ARC_explorations}
-}
-```
-
----
-
 ## License
 
 This project is part of the ARC Explorations repository. See main repository for license details.
@@ -516,7 +450,7 @@ This project is part of the ARC Explorations repository. See main repository for
 
 ## Acknowledgments
 
-This system synthesizes ideas from:
+This system draws on ideas from:
 - **Curiosity Framework**: Bayesian surprise, information gain, learning progress
 - **Global Workspace Theory**: Limited capacity attention, broadcasting
 - **Graph Pendulum System**: Stability analysis, dynamical systems perspective
@@ -530,5 +464,3 @@ All theoretical frameworks developed in the ARC_explorations repository.
 ## Contact & Contributions
 
 For questions, issues, or contributions, please see the main repository README.
-
-**The ARC Active Inference Solver** - *Simple, Elegant, Powerful* ✨

@@ -1,16 +1,22 @@
 # ARC Active Inference Solver - Unified System Overview
 
-## 🎯 Achievement
+> **Disclaimer**: This document describes theoretical explorations and experimental
+> implementations. The ideas presented here have not been empirically validated on
+> the full ARC-AGI benchmark and require further testing to assess their practical
+> effectiveness.
 
-We have successfully created a **unified ARC-AGI solving system** that elegantly blends **five major theoretical frameworks** from this repository into a single, coherent architecture powered by **Active Inference**.
+## Overview
+
+This project developed a unified ARC-AGI solving system that combines five
+theoretical frameworks from this repository into a single architecture based on
+Active Inference.
 
 **Location**: `unified_solver/`
 
-## 🌟 What Makes This Special
+## The Unifying Idea
 
-### The Unifying Insight
-
-Instead of implementing five separate complex systems, we discovered that **Active Inference** (Bayesian belief updating) naturally unifies all frameworks:
+Instead of implementing five separate systems, this project uses Active Inference
+(Bayesian belief updating) as a common framework that connects all five approaches:
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -38,40 +44,33 @@ Instead of implementing five separate complex systems, we discovered that **Acti
         └─────────────┘
 ```
 
-## 📚 Frameworks Unified
+## Frameworks Combined
 
-### 1. **Curiosity-Driven Neurosymbolic Framework**
-   → Provides: Information gain, epistemic uncertainty, learning progress
+### 1. Curiosity-Driven Neurosymbolic Framework
+   Provides: Information gain, epistemic uncertainty, learning progress
 
-### 2. **Global Workspace Theory**
-   → Provides: Limited capacity attention, hypothesis broadcasting
+### 2. Global Workspace Theory
+   Provides: Limited capacity attention, hypothesis broadcasting
 
-### 3. **Graph Pendulum / Dynamical Systems**
-   → Provides: Stability analysis, chaos filtering, basin discovery
+### 3. Graph Pendulum / Dynamical Systems
+   Provides: Stability analysis, chaos filtering, basin discovery
 
-### 4. **Probabilistic Program Spaces**
-   → Provides: Continuous belief dynamics, information geometry
+### 4. Probabilistic Program Spaces
+   Provides: Continuous belief dynamics, information geometry
 
-### 5. **Generative Task Discovery**
-   → Provides: Typed DSL, program synthesis, compositional transformations
+### 5. Generative Task Discovery
+   Provides: Typed DSL, program synthesis, compositional transformations
 
-## ✨ Key Features
+## Design Goals
 
-✅ **Solves diverse ARC-AGI tasks** using unified approach
+- **Two predictions per task**: The solver is designed to always produce exactly 2 candidate predictions
+- **Learning during inference**: Uses active inference to update beliefs without a separate training phase
+- **Curiosity-driven exploration**: Information gain guides hypothesis search
+- **Stability-aware selection**: Filters inconsistent or unreliable hypotheses
+- **Interpretable reasoning**: Symbolic programs rather than opaque models
+- **Minimal dependencies**: Implemented in approximately 1,700 lines of Python with NumPy
 
-✅ **Always produces exactly 2 predictions** (guaranteed output)
-
-✅ **Always learns during inference** (active inference, no training needed)
-
-✅ **Curiosity-driven exploration** (information gain guides search)
-
-✅ **Stability-aware selection** (filters chaotic, unreliable hypotheses)
-
-✅ **Interpretable reasoning** (symbolic programs, not black boxes)
-
-✅ **Simple, elegant implementation** (~1,700 lines of well-documented code)
-
-## 🏗️ System Architecture
+## System Architecture
 
 ### Core Process
 
@@ -105,7 +104,7 @@ score(h) = P(h | all_data) × stability(h)
 predictions = top_2_hypotheses.apply(test_input)
 ```
 
-## 📁 Implementation
+## Implementation
 
 ### File Structure
 
@@ -116,25 +115,24 @@ unified_solver/
 │   ├── HypothesisGenerator         # DSL-based program synthesis
 │   ├── ActiveInferenceEngine       # Bayesian belief updating
 │   ├── StabilityFilter             # Robustness testing
-│   ├── WorkspaceController         # Attention mechanism
 │   └── ARCActiveInferenceSolver    # Main solver
 │
 ├── arc_loader.py                   # Data loading & evaluation (350 lines)
 │   ├── ARCDataLoader              # Load tasks from JSON
-│   └── ARCEvaluator               # Performance metrics
+│   └── ARCEvaluator               # Evaluation metrics
 │
 ├── examples.py                     # Demonstrations (250 lines)
 │   ├── 8 diverse examples
 │   ├── Active inference demo
-│   └── Comprehensive evaluation
+│   └── Evaluation suite
 │
 └── Documentation (3 files)
-    ├── README.md                   # User guide (400 lines)
-    ├── DESIGN.md                   # Design document (500 lines)
+    ├── README.md                   # User guide
+    ├── DESIGN.md                   # Design document
     └── IMPLEMENTATION_SUMMARY.md   # Implementation summary
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -157,7 +155,7 @@ task = ARCTask(
     test_input=Grid([[9,0],[1,2]])
 )
 
-# Solve (always returns 2 predictions)
+# Solve (returns 2 predictions)
 solver = ARCActiveInferenceSolver()
 predictions = solver.solve(task, verbose=True)
 
@@ -171,32 +169,13 @@ print("Prediction 2:", predictions[1].data)
 # Run specific example
 python examples.py 1    # Flip vertical
 python examples.py 7    # Active inference demo
-python examples.py 9    # Comprehensive evaluation
+python examples.py 9    # Evaluation suite
 
 # Run all examples
 python examples.py a
 ```
 
-## 🧪 Test Results
-
-The system successfully demonstrates:
-
-1. **Active Learning**: Entropy decreases with each observation
-   - Initial: ~3.9 (uniform distribution)
-   - After 2 examples: ~0.001 (strong convergence)
-
-2. **Pattern Recognition**: Correctly identifies transformations
-   - Flip vertical: 99.99% probability
-   - Rotation: 99.99% probability
-   - Identity: Correctly solved
-
-3. **Learning Progress**: Clear improvement trajectory
-   - First example: ~3.7-3.8 entropy reduction
-   - Second example: ~0.1-0.2 further reduction
-
-## 🎓 Theoretical Contributions
-
-### Mathematical Foundation
+## Mathematical Foundation
 
 **Active Inference (Bayesian Framework)**:
 ```
@@ -223,73 +202,38 @@ score(h) = P(h|data) × stability(h)
 top_2 = argmax_{h₁≠h₂} score(h)
 ```
 
-## 💡 Key Innovations
+## Key Ideas
 
-### 1. **Unification Through Abstraction**
+### 1. Unification Through Abstraction
 - Single principle (active inference) instead of five separate systems
-- Natural emergence of curiosity, stability, and attention
+- Curiosity, stability, and attention arise as components of the inference loop
 
-### 2. **Guaranteed Outputs**
-- Always produces exactly 2 predictions
-- Never fails (graceful degradation)
+### 2. Guaranteed Outputs
+- Designed to always produce exactly 2 predictions
+- Graceful degradation when no strong hypothesis is found
 
-### 3. **Learning During Inference**
+### 3. Learning During Inference
 - No separate training phase
-- Pure few-shot learning (2-5 examples)
+- Few-shot learning from 2-5 examples
 
-### 4. **Interpretability**
+### 4. Interpretability
 - Symbolic programs (DSL-based)
 - Reasoning traces visible
 - Probability distributions explicit
 
-## 📊 Performance
+## Computational Complexity
 
-### Computational Complexity
-- **Time**: O(h·n) where h=hypotheses, n=training examples
-- **Space**: O(h + n·grid_size)
+- **Time**: O(h*n) where h=hypotheses, n=training examples
+- **Space**: O(h + n*grid_size)
 - **Typical**: ~1-10 seconds per task on CPU
 
 ### DSL Coverage
+
 - **50+ primitives**: Geometric, color, morphological, object-based, spatial
 - **Compositional**: Can combine primitives
-- **Extensible**: Easy to add new transformations
+- **Extensible**: New transformations can be added
 
-## 🔬 Comparison to Alternatives
-
-| Feature | AAIS | Pure Neural | Pure Symbolic | Hybrid |
-|---------|------|-------------|---------------|--------|
-| Interpretable | ✅ | ❌ | ✅ | ⚠️ |
-| Few-Shot Learning | ✅ | ❌ | ✅ | ⚠️ |
-| Online Learning | ✅ | ❌ | ❌ | ⚠️ |
-| Active Inference | ✅ | ❌ | ❌ | ❌ |
-| Curiosity-Driven | ✅ | ⚠️ | ❌ | ⚠️ |
-| Stability-Aware | ✅ | ❌ | ❌ | ❌ |
-| No Pre-training | ✅ | ❌ | ✅ | ❌ |
-| Guaranteed Output | ✅ | ⚠️ | ⚠️ | ⚠️ |
-
-## 🎯 Design Principles Achieved
-
-### ✅ Simplicity
-- Single coherent process
-- Clean modular architecture
-- Minimal dependencies (only NumPy)
-
-### ✅ Elegance
-- Bayesian principles throughout
-- Information-theoretic foundations
-- Natural unification of frameworks
-
-### ✅ Practicality
-- Works out-of-the-box
-- No training required
-- Handles diverse task types
-
-### ✅ Power
-- Solves real ARC tasks
-- Compositional generalization
-- Robust to noise and ambiguity
-
-## 🔮 Future Extensions
+## Future Directions
 
 ### Near-Term
 - [ ] Enhanced DSL primitives (path-based, graph operations)
@@ -309,81 +253,37 @@ top_2 = argmax_{h₁≠h₂} score(h)
 - [ ] Interactive querying
 - [ ] Human-in-the-loop
 
-## 📖 Documentation
+## Documentation
 
-- **README.md**: Complete user guide and API reference
-- **DESIGN.md**: Detailed design document with mathematical foundations
-- **IMPLEMENTATION_SUMMARY.md**: Implementation details and test results
+- **README.md**: User guide and API reference
+- **DESIGN.md**: Design document with mathematical foundations
+- **IMPLEMENTATION_SUMMARY.md**: Implementation details
 - **This file**: High-level overview
 
-## 🏆 Achievements
+## Repository Structure
 
-✅ **Unified 5 major frameworks** into single coherent system
-
-✅ **Implemented complete working solver** (~1,700 lines)
-
-✅ **Comprehensive documentation** (3 detailed documents)
-
-✅ **Tested and validated** on diverse ARC tasks
-
-✅ **Simple, elegant, powerful** - all three design goals met
-
-## 💻 Repository Integration
-
-This unified system is part of the **ARC_explorations** repository:
+This unified system is part of the ARC_explorations repository:
 
 ```
 ARC_explorations/
-├── ARC_Curiosity/                  # Curiosity framework (theory)
-├── Cognitive_Workspace/            # Global workspace (theory)
-├── Reasoning_as_dynamical_system/  # Graph pendulum (theory)
-├── Generative_Task_Discovery/      # Task generation (theory)
-└── unified_solver/                 # ✨ UNIFIED IMPLEMENTATION ✨
-    └── (This is the practical realization of all theories)
+├── docs/theory/          # Theoretical frameworks
+├── solvers/              # Modular experimental solvers
+└── unified_solver/       # Unified implementation
 ```
 
-## 🎓 Key Insight
+## Central Idea
 
-**The main theoretical contribution**: Demonstrating that **Active Inference** provides the natural unifying principle for diverse cognitive frameworks. By framing the problem as Bayesian belief updating, curiosity signals, stability analysis, attention mechanisms, and program synthesis all emerge as natural components of a single coherent process.
+The main theoretical contribution of this project is exploring whether Active
+Inference can serve as a unifying principle for diverse cognitive frameworks
+applied to abstract reasoning. By framing the problem as Bayesian belief updating,
+curiosity signals, stability analysis, attention mechanisms, and program synthesis
+can be expressed as components of a single process.
 
-This is not just an implementation—it's a **proof of concept** that the right abstraction can make complex systems simple.
+This remains a hypothesis that requires empirical validation on the full ARC-AGI
+benchmark.
 
-## 📝 Citation
+## Acknowledgments
 
-```bibtex
-@software{arc_active_inference_solver_2025,
-  title={ARC Active Inference Solver: A Unified System for Abstract Reasoning},
-  author={ARC Explorations Project},
-  year={2025},
-  note={Synthesizes Curiosity Framework, Global Workspace Theory,
-        Graph Pendulum System, Probabilistic Program Spaces,
-        and Generative Task Discovery into unified active inference system}
-}
-```
-
-## 🙏 Acknowledgments
-
-This work builds upon five major theoretical frameworks developed in this repository. The unified system demonstrates that these frameworks are not separate approaches, but different perspectives on a single underlying process: **Active Inference**.
-
----
-
-**Status**: ✅ Complete, Tested, and Documented
-
-**Version**: 1.0
-
-**Implementation**: ~1,700 lines of Python + comprehensive documentation
-
-**Key Achievement**: Proved that Active Inference naturally unifies five major ARC reasoning frameworks
-
----
-
-## 🚀 Get Started
-
-```bash
-cd unified_solver
-python examples.py 1    # Try your first example
-python examples.py 7    # See active inference in action
-python examples.py 9    # Run comprehensive evaluation
-```
-
-**Welcome to the future of unified abstract reasoning!** ✨
+This work builds upon five theoretical frameworks developed in this repository.
+The unified system explores how these frameworks might relate as different
+perspectives on a single underlying process.
