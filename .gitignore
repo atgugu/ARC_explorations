@@ -23,4 +23,11 @@ Thumbs.db
 
 # Project specific
 arc_data/
+graph_cache/
 *.log
+
+# Results and output files
+*_results.json
+*_output.txt
+*_analysis.json
+*.png
