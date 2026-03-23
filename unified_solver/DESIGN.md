@@ -4,7 +4,7 @@
 
 The **ARC Active Inference Solver (AAIS)** is a unified system that synthesizes five major theoretical frameworks from the ARC_explorations repository into a single, coherent architecture. The system solves ARC-AGI tasks by maintaining a probabilistic belief distribution over transformation hypotheses and updating these beliefs through **active inference** as it observes training examples.
 
-**Key Innovation**: Active Inference serves as the natural unifying principle that connects curiosity-driven search, stability-aware selection, workspace attention, and program synthesis into a simple, elegant process.
+**Key Idea**: Active Inference serves as the unifying principle that connects curiosity-driven search, stability-aware selection, workspace attention, and program synthesis into a single coherent process.
 
 ---
 
@@ -484,7 +484,7 @@ where:
 
 ## Conclusion
 
-The ARC Active Inference Solver demonstrates that **active inference** provides a natural, elegant framework for unifying multiple theoretical approaches to abstract reasoning. By maintaining probabilistic beliefs and updating them through Bayesian inference, the system achieves:
+The ARC Active Inference Solver explores whether **active inference** can serve as a unifying framework for multiple approaches to abstract reasoning. By maintaining probabilistic beliefs and updating them through Bayesian inference, the system aims to achieve:
 
 1. **Simplicity**: Single coherent process, not multiple subsystems
 2. **Elegance**: Information-theoretic principles throughout

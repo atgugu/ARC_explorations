@@ -1,44 +1,98 @@
-# ARC-AGI Challenge Explorations
+# ARC Active Inference Explorations
 
-Experimental approaches to solving the [ARC-AGI Challenge](https://arcprize.org/) using hybrid neurosymbolic systems.
+Exploring [Active Inference](https://en.wikipedia.org/wiki/Active_inference) as a unifying framework for abstract reasoning, applied to the [ARC-AGI Challenge](https://arcprize.org/).
 
-## Current System
+The central idea: curiosity-driven exploration, stability analysis, workspace attention, and program synthesis can all be viewed as components of a single Bayesian belief-updating process.
 
-**Unified Solver** (`unified_solver/`) - Program synthesis with Active Inference
-
-**Latest Results**: 1.0% success rate (2/200 evaluation tasks)
-
-**Journey**:
-- Baseline (primitives): 0.5%
-- Phase 1 (composition): 1.0% ✓
-- Phase 2 (conditionals/loops): 1.0% (no improvement)
-- Phase 3 (parameter inference): 1.0% (no improvement)
-
-**Next**: LLM integration for semantic understanding (target: 15-30%)
-
-## Quick Start
-
-```bash
-cd unified_solver
-python arc_program_solver.py  # Run solver
-python test_phase3_200.py     # Evaluate on 200 tasks
-```
-
-## Documentation
-
-- `unified_solver/COMPLETE_JOURNEY.md` - Full 3-phase development journey
-- `unified_solver/LLM_INTEGRATION_DESIGN.md` - Next phase technical design
-- `unified_solver/PHASE3_RESULTS.md` - Latest evaluation results
-
-## Key Insight
-
-ARC requires **semantic understanding**, not just syntactic composition. LLM-guided program synthesis is the promising next direction.
+> **Note:** This is a research exploration. The solvers have been tested on small synthetic tasks only; performance on the full ARC-AGI benchmark has not been evaluated.
 
 ## Repository Structure
 
 ```
-ARC_explorations/
-├── unified_solver/          # Main solver (Active Inference + Program Synthesis)
-├── temp_arc_data/          # ARC-AGI dataset (400 training, 400 evaluation)
-└── data/                   # Symlink to dataset
+├── unified_solver/          # Unified Active Inference solver (primary)
+│   ├── arc_active_inference_solver.py   # Core solver (~1,100 lines)
+│   ├── arc_loader.py                    # Data loading and evaluation
+│   ├── examples.py                      # Usage demonstrations
+│   ├── DESIGN.md                        # Architecture and design rationale
+│   └── IMPLEMENTATION_SUMMARY.md        # Implementation details
+│
+├── solvers/                 # Standalone experimental solvers
+│   ├── curiosity_solver/    # Curiosity-driven active inference
+│   ├── graph_pendulum/      # Stability-aware dynamical system
+│   └── generative_solver/   # Typed rule grammar + program synthesis
+│
+├── docs/theory/             # Theoretical foundations
+│   ├── curiosity/           # Bayesian surprise, information gain, learning progress
+│   ├── dynamical_systems/   # Graph pendulum, stability analysis
+│   ├── workspace/           # Cognitive workspace theory
+│   └── generative/          # Generative task discovery, typed DSL
+│
+├── data/arc_samples/        # Sample ARC training tasks
+└── tests/                   # Test suite
 ```
+
+## Unified Solver
+
+The primary implementation combines five theoretical frameworks into a single Active Inference architecture:
+
+1. **Curiosity-Driven Exploration** — information gain and epistemic uncertainty guide hypothesis search
+2. **Global Workspace Theory** — limited-capacity attention selects the most promising hypotheses
+3. **Dynamical Systems / Stability** — Lyapunov-like indicators filter unreliable hypotheses
+4. **Probabilistic Program Spaces** — continuous Bayesian belief dynamics over transformations
+5. **Program Synthesis** — typed DSL with 50+ composable primitives
+
+The solver maintains a probability distribution over transformation hypotheses, updates beliefs as it observes each training example, and returns the two highest-scoring predictions.
+
+See [unified_solver/README.md](unified_solver/README.md) for details.
+
+## Standalone Solvers
+
+Three modular solvers, each exploring a different angle:
+
+- **Curiosity Solver** — Bayesian belief updating with curiosity signals (information gain, epistemic uncertainty, learning progress) and hierarchical reasoning.
+- **Graph Pendulum Solver** — Models reasoning as a dynamical system with stability analysis, basin discovery, and chaos filtering.
+- **Generative Solver** — Typed rule grammar for program synthesis with active inference-based belief updates.
+
+## Quick Start
+
+```bash
+pip install numpy
+cd unified_solver
+python examples.py 1
+```
+
+```python
+from arc_active_inference_solver import ARCActiveInferenceSolver, ARCTask, Grid
+
+task = ARCTask(
+    train_pairs=[
+        (Grid([[1, 2], [3, 4]]), Grid([[2, 1], [4, 3]])),
+        (Grid([[5, 6], [7, 8]]), Grid([[6, 5], [8, 7]])),
+    ],
+    test_input=Grid([[9, 0], [1, 2]])
+)
+
+solver = ARCActiveInferenceSolver()
+predictions = solver.solve(task, verbose=True)
+```
+
+## Requirements
+
+- Python 3.7+
+- NumPy
+- Optional: SciPy, scikit-learn, matplotlib (graph pendulum solver only)
+
+## Tests
+
+```bash
+python -m pytest tests/
+```
+
+## License
+
+MIT — see [LICENSE](LICENSE).
+
+## Acknowledgments
+
+- [ARC-AGI Challenge](https://arcprize.org/) by Francois Chollet
+- [Active Inference](https://en.wikipedia.org/wiki/Active_inference) framework by Karl Friston
