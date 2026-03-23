@@ -1,0 +1,6 @@
+numpy>=1.20.0
+
+# Optional dependencies (uncomment as needed)
+# scipy>=1.10.0          # morphological operations, curiosity metrics
+# matplotlib>=3.7.0      # visualization
+# requests>=2.31.0       # downloading ARC dataset
