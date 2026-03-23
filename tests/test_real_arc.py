@@ -8,7 +8,7 @@ import sys
 import os
 import json
 import glob
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 import numpy as np
 from dsl.core_primitives import *

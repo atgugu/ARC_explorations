@@ -13,7 +13,7 @@ from pathlib import Path
 import sys
 import os
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 from hypothesis_proposer import HypothesisProposer, PatternAnalyzer
 
 
@@ -141,7 +141,7 @@ def test_on_real_arc_tasks(num_tasks=50):
     print("=" * 70)
 
     # Find ARC data
-    data_dir = Path(__file__).parent / "data" / "ARC-AGI" / "data" / "training"
+    data_dir = Path(__file__).parent.parent / "data" / "ARC-AGI" / "data" / "training"
 
     if not data_dir.exists():
         print(f"\n⚠ ARC data not found at {data_dir}")
